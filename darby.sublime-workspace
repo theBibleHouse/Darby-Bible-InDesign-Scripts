@@ -1,0 +1,610 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"verse",
+				"verse_snippet_fixed"
+			],
+			[
+				"verse_s",
+				"verse_snippet"
+			],
+			[
+				"ve",
+				"verse_snippet_fixed"
+			],
+			[
+				"vers",
+				"verse_snippet_fixed"
+			],
+			[
+				"ver",
+				"verse_snippet"
+			],
+			[
+				"len",
+				"len_v_s_two"
+			],
+			[
+				"verse_snip",
+				"verse_snippet_fixed"
+			],
+			[
+				"l",
+				"len_v_s_one"
+			],
+			[
+				"w",
+				"writeln"
+			],
+			[
+				"apli",
+				"appliedObjectStyle"
+			],
+			[
+				"new",
+				"new_note"
+			],
+			[
+				"myT",
+				"myTextToRemove"
+			],
+			[
+				"find",
+				"find_first_baseline"
+			],
+			[
+				"found",
+				"foundCross"
+			],
+			[
+				"format",
+				"format_cross_reference_verse_numbers"
+			],
+			[
+				"line",
+				"line_space_adder"
+			],
+			[
+				"remove",
+				"remove_verse_numbers_from_cross_references"
+			],
+			[
+				"cross",
+				"crossReferenceLocation"
+			],
+			[
+				"change",
+				"change_style_on_headings_in_col_2"
+			],
+			[
+				"chang",
+				"change_style_on_headings_in_col_2"
+			],
+			[
+				"move",
+				"move_chapter_numbers_to_anchored_frames"
+			],
+			[
+				"reference",
+				"referenceMaterial"
+			],
+			[
+				"number",
+				"number_of_verses"
+			],
+			[
+				"myFindC",
+				"myFindChangeFile"
+			],
+			[
+				"myFile",
+				"myFilePath"
+			],
+			[
+				"mySc",
+				"myScriptFolder"
+			],
+			[
+				"metrica",
+				"metricalVerseTwoColumn"
+			],
+			[
+				"right",
+				"right_column_right"
+			],
+			[
+				"to",
+				"to_run"
+			],
+			[
+				"myb",
+				"myBaseLine"
+			],
+			[
+				"A",
+				"AWAY_FROM_BINDING_SIDE"
+			],
+			[
+				"myx",
+				"myX2"
+			],
+			[
+				"myX",
+				"myX1"
+			],
+			[
+				"marg",
+				"left_margin"
+			],
+			[
+				"refere",
+				"reference_gutter"
+			],
+			[
+				"col",
+				"column_width"
+			],
+			[
+				"refer",
+				"reference_margin"
+			],
+			[
+				"page",
+				"page_width"
+			],
+			[
+				"page_",
+				"page_height"
+			],
+			[
+				"rit",
+				"right_margin"
+			],
+			[
+				"top",
+				"top_margin"
+			],
+			[
+				"appli",
+				"appliedObjectStyle"
+			],
+			[
+				"Sec",
+				"SectionHeadingRight"
+			],
+			[
+				"my",
+				"myDocument"
+			],
+			[
+				"fl",
+				"flq"
+			],
+			[
+				"index",
+				"indexOf"
+			],
+			[
+				"cro",
+				"crossReference"
+			],
+			[
+				"Lef",
+				"LEFT_ALIGN"
+			],
+			[
+				"ba",
+				"baselineDivision"
+			],
+			[
+				"fing",
+				"findGrepPreferences"
+			],
+			[
+				"findG",
+				"findGrep"
+			],
+			[
+				"chan",
+				"changeGrep"
+			],
+			[
+				"fou",
+				"foundVerse"
+			],
+			[
+				"margin",
+				"right_margin"
+			],
+			[
+				"riht",
+				"right_margin"
+			],
+			[
+				"bottom",
+				"bottom_margin"
+			],
+			[
+				"left",
+				"left_margin"
+			],
+			[
+				"applied",
+				"appliedParagraphStyle"
+			],
+			[
+				"paragra",
+				"paragraphStyles"
+			],
+			[
+				"cahnge",
+				"changeGrep"
+			],
+			[
+				"chng",
+				"changeGrepPreferences"
+			],
+			[
+				"release",
+				"releaseAnchoredObject"
+			],
+			[
+				"pro",
+				"properties"
+			],
+			[
+				"pr",
+				"properties"
+			],
+			[
+				"f2",
+				"f2_1"
+			],
+			[
+				"f1",
+				"f1_1"
+			],
+			[
+				"f",
+				"f1_f1"
+			],
+			[
+				"text",
+				"textFramePreferences"
+			],
+			[
+				"p",
+				"properties"
+			],
+			[
+				"Chap",
+				"Chapter"
+			],
+			[
+				"Cha",
+				"Chapter"
+			],
+			[
+				"Chapter",
+				"ChapterNum"
+			],
+			[
+				"foot",
+				"footnote_frame_col_1"
+			],
+			[
+				"check",
+				"check_for_footnotes"
+			],
+			[
+				"foonot",
+				"footnote_frame_col_1"
+			],
+			[
+				"add",
+				"addCrossreferenceTextFrame_right"
+			],
+			[
+				"last",
+				"lastDate"
+			],
+			[
+				"da",
+				"date_list_array"
+			],
+			[
+				"date",
+				"date_list"
+			],
+			[
+				"section",
+				"section_break_array"
+			],
+			[
+				"sec",
+				"section_break_array"
+			],
+			[
+				"section_break",
+				"section_break_array"
+			],
+			[
+				"book",
+				"book_name_list"
+			],
+			[
+				"verse_l",
+				"verse_list_morning"
+			],
+			[
+				"get",
+				"get_date_list"
+			],
+			[
+				"csv",
+				"csvfile2"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+		[
+			[
+				[
+					"Packages/Python/Python.sublime-build",
+					""
+				],
+				[
+					"Packages/Python/Python.sublime-build",
+					"Syntax Check"
+				]
+			],
+			[
+				"Packages/Python/Python.sublime-build",
+				""
+			]
+		]
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 29.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"for",
+				"Format: Javascript"
+			],
+			[
+				"form",
+				"Format: Javascript"
+			],
+			[
+				"pack",
+				"Package Control: Install Package"
+			],
+			[
+				"pac",
+				"Package Control: Install Package"
+			],
+			[
+				"install",
+				"Install Package Control"
+			]
+		],
+		"width": 428.0
+	},
+	"console":
+	{
+		"height": 0.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/Volumes/GoogleDrive/My Drive/Darby Bible Project/scripts/darby",
+		"/Volumes/GoogleDrive/My Drive/Darby Bible Project/scripts/darby/functions",
+		"/Volumes/GoogleDrive/My Drive/Darby Bible Project/scripts/darby/styles",
+		"/Volumes/GoogleDrive/My Drive/Darby Bible Project/Content/End Matter/Concordance"
+	],
+	"file_history":
+	[
+		"/Volumes/GoogleDrive/My Drive/Darby Bible Project/scripts/darby/main.jsx",
+		"/Volumes/GoogleDrive/My Drive/Darby Bible Project/Content/End Matter/Concordance/concordancetest.xml",
+		"/Volumes/GoogleDrive/My Drive/Darby Bible Project/Content/End Matter/Concordance/download_references_biblehub.py",
+		"/Volumes/GoogleDrive/My Drive/Darby Bible Project/Content/End Matter/Concordance/trim_verse_snippet.py",
+		"/Volumes/GoogleDrive/My Drive/Darby Bible Project/Content/End Matter/Concordance/get_verse_snippet.py",
+		"/Volumes/GoogleDrive/My Drive/Darby Bible Project/Content/End Matter/Concordance/test3.py",
+		"/Volumes/GoogleDrive/My Drive/Darby Bible Project/Content/End Matter/Concordance/conjugator.py",
+		"/Volumes/GoogleDrive/My Drive/Darby Bible Project/Content/End Matter/Concordance/reference parsing.py",
+		"/Volumes/GoogleDrive/My Drive/Darby Bible Project/Content/End Matter/Concordance/test3 topversescom.py",
+		"/Volumes/GoogleDrive/My Drive/Darby Bible Project/Content/End Matter/Concordance/test2.py",
+		"/Volumes/GoogleDrive/My Drive/Darby Bible Project/Content/End Matter/Concordance/concordance.xml",
+		"/Users/christopher/Desktop/references.htm",
+		"/Users/christopher/Google Drive/Darby Bible Project/scripts/darby/functions/heading.jsx",
+		"/Applications/Adobe InDesign CC 2018/Scripts/Scripts Panel/untitled.js",
+		"/Users/christopher/Google Drive/Darby Bible Project/scripts/darby/styles/character_styles.jsx",
+		"/Users/christopher/Google Drive/Darby Bible Project/scripts/darby/functions/document_setup.jsx",
+		"/Users/christopher/Google Drive/Darby Bible Project/scripts/darby/styles/paragraph_styles.jsx",
+		"/Users/christopher/Google Drive/Darby Bible Project/scripts/darby/functions/formatting.jsx",
+		"/Users/christopher/Google Drive/Darby Bible Project/scripts/darby/functions/functions.jsx",
+		"/Users/christopher/Google Drive/Darby Bible Project/scripts/darby/main.jsx",
+		"/Users/christopher/Google Drive/Darby Bible Project/scripts/darby/styles/object_styles.jsx",
+		"/Users/christopher/Google Drive/Darby Bible Project/scripts/darby/functions/footnotes.js",
+		"/Users/christopher/Desktop/DefaultKeyBinding.dict",
+		"/Users/christopher/Documents/vanguard/vaguard_funds.html",
+		"/Users/christopher/Documents/vanguard/fund_values.py",
+		"/Users/christopher/Google Drive/Daily light/scripts/daily_light.jsx",
+		"/Users/christopher/Google Drive/Daily light/scripts/book_name_lookup.py",
+		"/Users/christopher/Google Drive/Daily light/scripts/get_dates.py",
+		"/Users/christopher/Documents/forever21.py",
+		"/Users/christopher/Documents/amazon/product_scrape.py",
+		"/Users/christopher/Google Drive/Daily light/scripts/build_verse_list.py",
+		"/Users/christopher/Google Drive/Daily light/scripts/get_verses.py",
+		"/Users/christopher/Google Drive/Daily light/build_verse_list.py",
+		"/Users/christopher/Google Drive/Daily light/import CSV text.py"
+	],
+	"find":
+	{
+		"height": 39.0
+	},
+	"find_in_files":
+	{
+		"height": 101.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"6",
+			"\\n\"",
+			"\"\\n",
+			"\\n\"",
+			"\"\\n",
+			"verse_snippet_two",
+			"verses",
+			"\"\\n",
+			"\\n\"",
+			"\"",
+			"conjugator",
+			"conjugation",
+			"conjugation question",
+			"congugation question",
+			"beginning"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": true,
+		"replace_history":
+		[
+			"\\n",
+			""
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 26.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 523.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"output.unsaved_changes":
+	{
+		"height": 408.0
+	},
+	"pinned_build_system": "",
+	"project": "darby.sublime-project",
+	"replace":
+	{
+		"height": 70.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 380.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 211.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
