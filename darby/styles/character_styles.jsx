@@ -140,4 +140,6 @@ var myCharacterStyle;
 			position: Position.SUPERSCRIPT
 		}
 	}
+	//var _basedOnNone = app.activeDocument.characterStyles.add({name:"None", basedOn:app.activeDocument.characterStyles[0]})
+	
 }

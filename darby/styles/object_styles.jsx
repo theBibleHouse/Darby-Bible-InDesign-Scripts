@@ -13,11 +13,11 @@ function create_object_styles() {
 		}
 	}
 	try {
-		myObjectStyle = myDocument.objectStyles.item("Verse Marker");
+		myObjectStyle = myDocument.objectStyles.item("VerseMarker-frame1");
 		myName = myObjectStyle.name;
 	} catch (e) {
 		with(myDocument.objectStyles.add({
-			name: "Verse Marker"
+			name: "VerseMarker-frame1"
 		})) {
 			enableParagraphStyle = true;
 			appliedParagraphStyle = myDocument.paragraphStyles.item("VerseNum");
@@ -54,11 +54,11 @@ function create_object_styles() {
 		}
 	}
 	try {
-		myObjectStyle = myDocument.objectStyles.item("Verse Marker Right");
+		myObjectStyle = myDocument.objectStyles.item("VerseMarker-frame2");
 		myName = myObjectStyle.name;
 	} catch (e) {
 		with(myDocument.objectStyles.add({
-			name: "Verse Marker Right"
+			name: "VerseMarker-frame2"
 		})) {
 			enableParagraphStyle = true;
 			appliedParagraphStyle = myDocument.paragraphStyles.item("VerseNum");
@@ -185,8 +185,9 @@ function create_object_styles() {
 			textWrapMode: TextWrapModes.BOUNDING_BOX_TEXT_WRAP,
 		},
 		textFramePreferences: {
-			autoSizingReferencePoint: AutoSizingReferenceEnum.TOP_LEFT_POINT,
-			autoSizingType: AutoSizingTypeEnum.HEIGHT_AND_WIDTH
+			// currently causing a crash
+			//autoSizingReferencePoint: AutoSizingReferenceEnum.TOP_LEFT_POINT,
+			//autoSizingType: AutoSizingTypeEnum.HEIGHT_AND_WIDTH
 		}
 	}
 	myObjectStyle.properties = {textWrapPreferences: {
@@ -223,8 +224,10 @@ function create_object_styles() {
 			textWrapMode: TextWrapModes.BOUNDING_BOX_TEXT_WRAP,
 		},
 		textFramePreferences: {
-			autoSizingReferencePoint: AutoSizingReferenceEnum.TOP_RIGHT_POINT,
-			autoSizingType: AutoSizingTypeEnum.HEIGHT_AND_WIDTH
+			//currentlyc ausinga. crash
+
+			//autoSizingReferencePoint: AutoSizingReferenceEnum.TOP_RIGHT_POINT,
+			//autoSizingType: AutoSizingTypeEnum.HEIGHT_AND_WIDTH
 		}
 	}
 	myObjectStyle.properties = {textWrapPreferences: {

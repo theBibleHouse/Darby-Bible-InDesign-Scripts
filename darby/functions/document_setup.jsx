@@ -8,6 +8,7 @@ function document_setup(size) {
 			myDocument = app.documents.add();
 			myDocument.viewPreferences.horizontalMeasurementUnits = MeasurementUnits.millimeters; 
 			myDocument.viewPreferences.verticalMeasurementUnits = MeasurementUnits.millimeters;
+			myDocument.viewPreferences.rulerOrigin = RulerOrigin.PAGE_ORIGIN;
 			myDocument.documentPreferences.properties = {
             	pageWidth : meta.page_width,
             	pageHeight : meta.page_height,
@@ -27,6 +28,10 @@ function document_setup(size) {
 			baselineDivision = "9.995pt"; 
 			baselineShown = true; 
 			baselineGridRelativeOption=BaselineGridRelativeOption.TOP_OF_MARGIN_OF_BASELINE_GRID_RELATIVE_OPTION
+				var languageWithVendors = app.languagesWithVendors.itemByName("English: USA");  
+		    languageWithVendors.hyphenationVendor = "Proximity";  
+		      
+		    myDocument.textDefaults.appliedLanguage = languageWithVendors;  
 		}
 			break;
 		case "large":
@@ -34,6 +39,7 @@ function document_setup(size) {
 			myDocument = app.documents.add();
 			myDocument.viewPreferences.horizontalMeasurementUnits = MeasurementUnits.millimeters; 
 			myDocument.viewPreferences.verticalMeasurementUnits = MeasurementUnits.millimeters;
+			myDocument.viewPreferences.rulerOrigin = RulerOrigin.PAGE_ORIGIN;
 			myDocument.documentPreferences.properties = {
             	pageWidth : meta.page_width,
             	pageHeight : meta.page_height,
@@ -52,6 +58,12 @@ function document_setup(size) {
 			baselineDivision = "10.607pt"; 
 			baselineShown = true; 
 			baselineGridRelativeOption=BaselineGridRelativeOption.TOP_OF_MARGIN_OF_BASELINE_GRID_RELATIVE_OPTION
+
+
+			var languageWithVendors = app.languagesWithVendors.itemByName("English: USA");  
+		    languageWithVendors.hyphenationVendor = "Proximity";  
+		      
+		    myDocument.textDefaults.appliedLanguage = languageWithVendors;  
 
 			}
 			

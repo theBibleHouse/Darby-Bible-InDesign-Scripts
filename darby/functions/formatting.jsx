@@ -1,28 +1,68 @@
-function format_text(myFrame, currentPage) {
-	find_and_replace(myFrame, "~b~b", "~b");
-	find_and_replace(myFrame, "\\s~b", "~b");
-	insert_notes_and_references(myFrame);
-	apply_italics_style(myFrame);
+function format_text(myFrame) {
+
+	currentPage = myFrame.parentPage
+	
+	find_and_replace(myFrame, "~b{2}+", "~b");
+	find_and_replace(myFrame, " {2}+", " ");
+	find_and_replace(myFrame, "\\s+~b", "~b");
+	find_and_replace(myFrame, "\\s+$", "");
+	
+
+
+	// add section headings
+	section_headings(myFrame);
+	
+	//insert_notes_and_references(myFrame);
+	special_breaks(myFrame);
+	italics(myFrame);
 	apply_book_name_style(currentPage, myFrame);
 	apply_verse_number_style(myFrame);
 	apply_chapter_number_styles(myFrame);
-	headings(myFrame);
+		// don't hyphenate words with hyphen
+	// words before hyphen
+	noBreak(myFrame,"-\\K.+?\\w\\b")
+	// words after hyphen
+	noBreak(myFrame,"\\b\\w+?(?=-)")
+
+	app.findGrepPreferences = app.changeGrepPreferences = null
+	app.findGrepPreferences.findWhat = "-"
+	app.changeGrepPreferences.changeTo = "-~k"
+	myFrame.parentStory.changeGrep()
+
+	page_headings(myFrame);
 	referenceSuperscript(myFrame);
+	// keep last 2 words in paragraph together
 	noBreakAll(myFrame, "(\\H+?\\h?){2}$");
-	footnoteItalics(myFrame);
 
+	// tab after chapter numbers
+	app.findGrepPreferences = app.changeGrepPreferences = null
+	app.findGrepPreferences.findWhat = "\\d\\K~%"
+	app.changeGrepPreferences.changeTo = '\\t'
+	myFrame.parentStory.changeGrep()
 
+	// in front of verse numbers
+	app.findGrepPreferences = app.changeGrepPreferences = null
+	app.findGrepPreferences.findWhat = "~>";
+	app.changeGrepPreferences.changeTo = "\\s"
+	myFrame.parentStory.changeGrep()
 }
 
+function special_breaks(myFrame){
+	try {
+		app.changeGrepPreferences = app.findGrepPreferences = null;
+		app.findGrepPreferences.findWhat = "([;|-|\\*|,|~~|\\)|\\]|\\.|\\:|~_]+)";
+		app.changeGrepPreferences.changeTo = "$0~k";
+		myFrame.parentStory.changeGrep()
+	} catch (e) {}
+}
+
+
 function find_first_baseline(myFrame) {
-	//$.writeln("starting fuction find_first_baseline")
 	app.findGrepPreferences = app.changeGrepPreferences = null;
 	app.findGrepPreferences.findWhat = "\\<.+?\\>" //"[\\u|\\l]";
 	foundText = myFrame.findGrep()
 	foundTextBaseline = foundText[0].baseline
-	//$.writeln("finished function find_first_baseline")
 	return foundTextBaseline
-
 }
 
 function find_and_replace(myFrame, find, replace) { // search text, paragraph style
@@ -32,7 +72,7 @@ function find_and_replace(myFrame, find, replace) { // search text, paragraph st
 	myFrame.parentStory.changeGrep();
 }
 
-function apply_italics_style(myFrame) {
+function italics(myFrame) {
 	app.findGrepPreferences = app.changeGrepPreferences = null;
 	app.findGrepPreferences.fontStyle = "Italic";
 	app.changeGrepPreferences.appliedCharacterStyle = myDocument.characterStyles.item("Italics");
@@ -41,7 +81,6 @@ function apply_italics_style(myFrame) {
 }
 
 function apply_book_name_style(myPage, myFrame) {
-
 	app.findGrepPreferences = app.changeGrepPreferences = null;
 	app.findGrepPreferences.pointSize = 24;
 	app.changeGrepPreferences.appliedCharacterStyle = myDocument.characterStyles.item("bookName");
@@ -68,12 +107,11 @@ function apply_book_name_style(myPage, myFrame) {
 	bookFrame.changeGrep();
 }
 
-
-function apply_verse_number_style(myFrame) { // search text, paragraph style
-
+function apply_verse_number_style(myFrame) { 
+	// search text, paragraph style
 	// rounds indentation to a whole number, when importing from word sometimes it is not a round number
-
 	// for now I shut off, but might need it back
+
 	if (app.documents.length > 0)
 		RoundNumbers(app.documents[0]);
 
@@ -263,22 +301,17 @@ function apply_chapter_number_styles(myFrame) { // search text, paragraph style
 	app.changeGrepPreferences.changeTo = ("$1");
 	myFrame.parentStory.changeGrep();
 
-	// section headings
+	// section section
+	/*
 	app.findGrepPreferences = app.changeGrepPreferences = null;
 	app.findGrepPreferences.findWhat = "\\^(.+?)\\^";
 	app.changeGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("SectionHeading");
+	app.changeGrepPreferences.appliedCharacterStyle = myDocument.characterStyles.item("None");
 	app.changeGrepPreferences.changeTo = ("$1");
 	myFrame.parentStory.changeGrep();
+	*/
 }
 
-function footnoteItalics(myFrame) {
-	app.findGrepPreferences = app.changeGrepPreferences = null;
-	app.findGrepPreferences.findWhat = "\\*(\\<.+?\\>)\\*";
-	app.findGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("Footnote");
-	app.changeGrepPreferences.appliedCharacterStyle = myDocument.characterStyles.item("Italics");
-	//app.changeGrepPreferences.changeTo = "$1"
-	myFrame.parentStory.changeGrep();
-}
 
 function applyParagraphStyle(grepStr, styleName) { // search text, paragraph style
 	app.findGrepPreferences = app.changeGrepPreferences = null;
@@ -321,7 +354,24 @@ function footnoteSuperscript(myFrame) {
 	app.findGrepPreferences.findWhat = "\\s\\K(\\l)~%";
 	app.changeGrepPreferences.appliedCharacterStyle = myDocument.characterStyles.item("SuperScript");
 	app.changeGrepPreferences.changeTo = "$1~%";
-	myNoteFrame.changeGrep();
+	myFrame.changeGrep();
+	// italics
+
+	app.findGrepPreferences = app.changeGrepPreferences = null;
+	app.findGrepPreferences.findWhat = "\\*(\\<.+?\\>)\\*";
+	app.findGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("Footnote");
+	app.changeGrepPreferences.appliedCharacterStyle = myDocument.characterStyles.item("Italics");
+	//app.changeGrepPreferences.changeTo = "$1"
+	myFrame.parentStory.changeGrep();
+	//try {
+			// convert {{}} in footnotes to italics
+			app.changeGrepPreferences = app.findGrepPreferences = null;
+			app.findGrepPreferences.findWhat = "\\*(.+?)\\*";
+			app.changeGrepPreferences.appliedCharacterStyle = myDocument.characterStyles.item("Italics")
+			app.changeGrepPreferences.changeTo = "$1";
+			myFrame.changeGrep()
+			//} catch (e) {}
+
 }
 
 function referenceSuperscript(myFrame) {
@@ -341,7 +391,7 @@ function bold(myFrame, grep) {
 	} catch (e) {}
 }
 
-function headings(myFrame) {
+function page_headings(myFrame) {
 	app.findGrepPreferences = app.changeGrepPreferences = null;
 	app.findGrepPreferences.findWhat = "#(.+?)#";
 	app.changeGrepPreferences.appliedCharacterStyle = myDocument.characterStyles.item("Italics");
@@ -352,18 +402,17 @@ function headings(myFrame) {
 	} catch (e) {}
 }
 
-function format_cross_reference_verse_numbers(myPage, myFrame) {
+function format_cross_reference_verse_numbers( myFrame) {
 
-	noBreak(myCrossFrame, "\\*~k.+?\\d")
-		//noBreak(myCrossFrame, "[\\l\\u]\\.\\d")
-	noBreak(myCrossFrame, "\\d+~>.")
+	noBreak(myFrame, "\\*~k.+?\\d")
+	noBreak(myFrame, "\\d+~>.")
 		// make newberry marker
-	noBreak(myCrossFrame, "~8\\s.")
+	noBreak(myFrame, "~8\\s.")
 
 	app.findGrepPreferences = app.changeGrepPreferences = null;
 	app.findGrepPreferences.findWhat = "(\\l)\\."
 	app.changeGrepPreferences.changeTo = "$1\\s"
-	myCrossFrame.changeGrep()
+	try{myFrame.parentStory.changeGrep()}catch(e){$.writeln(e)}
 
 
 	// non break hyphen on verse ranges only on location
@@ -372,33 +421,34 @@ function format_cross_reference_verse_numbers(myPage, myFrame) {
 	app.changeGrepPreferences.changeTo = "~~";
 	try {
 		myFrame.changeGrep()
-	} catch (e) {}
+	} catch (e) {$.writeln(e)}
+	
 	// apply verse num style
-	app.findGrepPreferences = app.changeGrepPreferences = null;
+	/*app.findGrepPreferences = app.changeGrepPreferences = null;
 	app.findGrepPreferences.findWhat = "^\\<.+?(?=(~%|\\s))";
 	app.changeGrepPreferences.appliedCharacterStyle = myDocument.characterStyles.item("bold");
 	try {
 		//alert("cross vere num")
 		myFrame.changeGrep()
-	} catch (e) {}
-
+	} catch (e) {$.writeln(e)}
+*/
 
 	// replace first space with en space
-	app.findGrepPreferences = app.changeGrepPreferences = null;
+	/*app.findGrepPreferences = app.changeGrepPreferences = null;
 	app.findGrepPreferences.findWhat = "(^\\<.+?)(~%|\\s)";
 	app.changeGrepPreferences.changeTo = "$1~s"; // was ~>~k
 	try {
-		myFrame.changeGrep()
-	} catch (e) {}
-
+		myFrame.parentStory.changeGrep()
+	} catch (e) {$.writeln(e)}
+*/
 
 	// put a space between references
 	app.findGrepPreferences = app.changeGrepPreferences = null;
-	app.findGrepPreferences.findWhat = ";";
-	app.changeGrepPreferences.changeTo = ";~%";
+	app.findGrepPreferences.findWhat = ";(?=[^\\s])";
+	app.changeGrepPreferences.changeTo = ";\\s";
 	try {
-		myFrame.changeGrep()
-	} catch (e) {}
+		myFrame.parentStory.changeGrep()
+	} catch (e) {$.writeln(e)}
 
 
 	// replace * with • on newberry references
@@ -406,8 +456,8 @@ function format_cross_reference_verse_numbers(myPage, myFrame) {
 	app.findTextPreferences.findWhat = "*";
 	app.changeTextPreferences.changeTo = "^8"; // for grep search it would be ~8
 	try {
-		myFrame.changeText()
-	} catch (e) {}
+		myFrame.parentStory.changeText()
+	} catch (e) {$.writeln(e)}
 
 
 
@@ -430,22 +480,6 @@ function format_cross_reference_verse_numbers(myPage, myFrame) {
 	try{myFrame.parentStory.changeGrep()} catch(e){}*/
 }
 
-function remove_verse_numbers_from_cross_references(myFrame) {
-	// remove verse numbers from cross references in the large size... they are ugly
-
-	app.findGrepPreferences = app.changeGrepPreferences = null;
-	app.findGrepPreferences.findWhat = "^\\<.+?(:~%|\\s)";
-	app.changeGrepPreferences.changeTo = ""
-	try {
-		//alert("cross vere num")
-		me = myFrame.findGrep()
-		if (SpecialCharacters.autoPageNumber == '6') {
-			alert(me[0].contents)
-		}
-		myFrame.changeGrep()
-	} catch (e) {}
-
-}
 
 function metrical_fix(myframe) {
 
@@ -498,5 +532,31 @@ function noBreak(myFrame, grep) {
 	app.findGrepPreferences = app.changeGrepPreferences = null;
 	app.findGrepPreferences.findWhat = grep;
 	app.changeGrepPreferences.noBreak = true;
-	myFrame.changeGrep();
+	
+	try{myFrame.parentStory.changeGrep();}catch(e){$.writeln(e)}
+}
+
+function change_style_on_headings_in_col_2(myFrame) {
+	app.changeGrepPreferences = app.findGrepPreferences = null;
+	app.findGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("SectionHeading")
+	app.findGrepPreferences.findWhat = "^.+$";
+	app.changeGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("SectionHeadingRight")
+	try {
+		myFrame.changeGrep()	
+	} catch (e) {}
+}
+
+
+
+function release_anchored_objects() { // bug in ID
+	var a = app.activeDocument.allPageItems,
+		t;
+
+	while (t = a.pop()) {
+		t.isValid &&
+			t.hasOwnProperty('anchoredObjectSettings') &&
+			(t.parent instanceof Character) &&
+			(t = t.anchoredObjectSettings).isValid &&
+			t.releaseAnchoredObject();
+	}
 }

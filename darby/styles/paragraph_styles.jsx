@@ -66,6 +66,7 @@ var myParagraphStyle;
 			noBreak: true,
 			tracking:50,
 			justification: Justification.CENTER_ALIGN,
+			capitalization:Capitalization.ALL_CAPS,
 
 
 		}
@@ -111,6 +112,7 @@ capitalization: Capitalization.ALL_CAPS,
 			hyphenation: false,
 			keepWithNext: 1,
 		}
+		//app.selection[0].appliedCharacterStyle = _basedOnNone
 	}	
 	if (size == "large"){
 		myParagraphStyle = myDocument.paragraphStyles.item("SectionHeading");
@@ -232,11 +234,11 @@ try {
 
 	
 	try {
-		myParagraphStyle = myDocument.paragraphStyles.item("crossReference");
+		myParagraphStyle = myDocument.paragraphStyles.item("crossReference-frame1");
 		myName = myParagraphStyle.name;
 	} catch (e) {
 		myParagraphStyle = myDocument.paragraphStyles.add({
-			name: "crossReference"
+			name: "crossReference-frame1"
 		});
 		myParagraphStyle.properties = {
 			appliedFont: "Lexicon No1 A Tab",
@@ -249,7 +251,7 @@ try {
 	}
 	if(size == "large") {
 
-		myParagraphStyle = myDocument.paragraphStyles.item("crossReference");
+		myParagraphStyle = myDocument.paragraphStyles.item("crossReference-frame1");
 		myParagraphStyle.properties = {
 			justification: Justification.LEFT_ALIGN,
 						pointSize: 7,
@@ -257,11 +259,11 @@ try {
 		}
 	}
 	try {
-		myParagraphStyle = myDocument.paragraphStyles.item("crossReferenceright");
+		myParagraphStyle = myDocument.paragraphStyles.item("crossReference-frame2");
 		myName = myParagraphStyle.name;
 	} catch (e) {
 		myParagraphStyle = myDocument.paragraphStyles.add({
-			name: "crossReferenceright"
+			name: "crossReference-frame2"
 		});
 		myParagraphStyle.properties = {
 			appliedFont: "Lexicon No1 A Tab",
@@ -291,6 +293,7 @@ try {
 			keepLinesTogether: true,
 			keepFirstLines: 1,
 			keepLastLines: 1,
+//			hyphenation: false,
 			//composer: "Adobe World-Read Paragraph Composer",
 			// add on the left indent here
 			tabList: [{

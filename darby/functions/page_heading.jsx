@@ -3,7 +3,6 @@ function add_running_head(myPage, aContents) {
 	aFrame.textFramePreferences.verticalJustification = VerticalJustification.BOTTOM_ALIGN;
 	aFrame.contents = aContents;
 	aFrame.parentStory.characters.item(0).appliedParagraphStyle = myDocument.paragraphStyles.item("Heading");
-	
 
 	if (myPage.side == PageSideOptions.leftHand) {
 		var myX1 = meta.bottom_margin;
@@ -34,9 +33,36 @@ function add_running_head(myPage, aContents) {
 	return aFrame;
 }
 
-function create_page_heading(firstPage, myPage, myFrame) {
+function create_page_heading(firstPage, myFrame) {
+	// don't do duplicates
+	if(size=="large" && myFrame.name=="frame1" && myFrame.nextTextFrame.contents.length>0){
+		return true;
+	}
+
+	myPage = myFrame.parentPage
+	$.writeln('chapter headers for ' + myFrame.name)
+	$.writeln(lastChapter,chapter)
+	if (lastChapter == chapter) {
+		chapter_number = chapter;
+	}
+
+	else if (lastChapter == chapter - 1) {
+		chapter_number = lastChapter + ", " + chapter;		
+	} 
+
+	else if (lastChapter !== chapter) {
+			chapter_number = lastChapter + "-" + chapter;
+	}
+	
+	add_running_head(myPage, String(book_name + " " + chapter_number));
+
+	// didnt want to erase old stuff yet
+	return true
+
+
+	
 	var found = [],
-		styleBool
+		styleBool = false
 	try {
 		var myStyle = myFrame.words[0].appliedParagraphStyle.name;
 	} catch (e) {}
@@ -45,6 +71,7 @@ function create_page_heading(firstPage, myPage, myFrame) {
 	app.findGrepPreferences.appliedCharacterStyle = "ChapterNum";
 	app.findGrepPreferences.findWhat = "\\d+";
 
+	try{
 	if (size == "large") {
 		myFrame = myFrame.previousTextFrame
 		if (myFrame.findGrep() != "") {
@@ -58,6 +85,7 @@ function create_page_heading(firstPage, myPage, myFrame) {
 		}
 		myFrame = myFrame.nextTextFrame
 	}
+	} catch(e){}
 
 	try {
 		if (myFrame.findGrep() != "") {
@@ -73,7 +101,6 @@ function create_page_heading(firstPage, myPage, myFrame) {
 	} catch (e) {}
 
 	f2 = Math.max(f2_1, f2)
-
 	if (styleBool == true || f1 == 1) {
 		if (f1 == f2) {
 			chapter_number = last_chapter_number = f1;
@@ -102,100 +129,8 @@ function create_page_heading(firstPage, myPage, myFrame) {
 	f2 = last_chapter_number
 	f2_1 = last_chapter_number
 
-	if (myStyle !== "bookName" && firstPage != "1") {
-
-		if (size == "large") {
-			add_running_head(myPage, String(book_name.toUpperCase() + " " + chapter_number));
-		} else {
-			add_running_head(myPage, String(book_name + " " + chapter_number));
-		}
-
-	}
-	if (myStyle !== "bookName" && firstPage != "1" || size == "large") {
-		// add page numbers
-		areFacing = app.activeDocument.documentPreferences.facingPages
-		if (areFacing && myPage.side == PageSideOptions.LEFT_HAND) {
-			var myLeftPageNumber = myPage.textFrames.add();
-
-			// master page page numbers
-			with(myLeftPageNumber) {
-				geometricBounds = myPageNumLocation(myDocument, myPage); //[11.5, 70, 50, 100];
-				textFramePreferences.firstBaselineOffset = FirstBaseline.leadingOffset;
-				if (size == "large") {
-					textFramePreferences.verticalJustification = VerticalJustification.TOP_ALIGN;
-				} else {
-					textFramePreferences.verticalJustification = VerticalJustification.BOTTOM_ALIGN;
-				}
-				contents = SpecialCharacters.autoPageNumber;
-				parentStory.characters.item(0).appliedParagraphStyle = myDocument.paragraphStyles.item("Heading");
-				parentStory.characters.item(0).justification = Justification.rightAlign;
-				if (size == "large") {
-					parentStory.characters.item(0).appliedParagraphStyle = myDocument.paragraphStyles.item("Page Num Large");
-
-				}
-				if (size == "small") {
-					parentStory.characters.item(0).appliedParagraphStyle = myDocument.paragraphStyles.item("Page Num");
-
-				}
-			}
-			if (size == "large") {
-				myLeftPageNumber.appliedObjectStyle = myDocument.objectStyles.item("Page Number")
-			}
-		} else {
-			var myRightPageNumber = myPage.textFrames.add();
-			with(myRightPageNumber) {
-				geometricBounds = myPageNumLocation(myDocument, myPage); //= [4, 11.5, 9.5, 67.75]; // [top, left, bottom, right]
-				textFramePreferences.firstBaselineOffset = FirstBaseline.leadingOffset;
-				if (size == "large") {
-					textFramePreferences.verticalJustification = VerticalJustification.TOP_ALIGN;
-				} else {
-					textFramePreferences.verticalJustification = VerticalJustification.BOTTOM_ALIGN;
-				}
-				contents = SpecialCharacters.autoPageNumber;
-				parentStory.characters.item(0).appliedParagraphStyle = myDocument.paragraphStyles.item("Heading");
-				parentStory.characters.item(0).justification = Justification.leftAlign;
-				if (size == "large") {
-					parentStory.characters.item(0).appliedParagraphStyle = myDocument.paragraphStyles.item("Page Num Large");
-
-				}
-				if (size == "small") {
-					parentStory.characters.item(0).appliedParagraphStyle = myDocument.paragraphStyles.item("Page Num");
-
-				}
-			}
-			if (size == "large") {
-				myRightPageNumber.appliedObjectStyle = myDocument.objectStyles.item("Page Number")
-			}
-		}
-	}
-}
-
-function get_book_name(myFrame) {
-	app.findGrepPreferences = app.changeGrepPreferences = null;
-	app.findGrepPreferences.findWhat = "<<.*?>>~b";
-	me = myDocument.findGrep();
-	if (me[0].contents) {
-		book_name = me[0].contents.substring(2, me[0].contents.length - 3);
-		app.changeGrepPreferences.changeTo = "";
-		myDocument.changeGrep();
-		return book_name;
-	}
-}
-
-function myPageNumLocation(myDocument, myPage) {
-	if (myPage.side == PageSideOptions.leftHand) {
-		var myX1 = meta.bottom_margin;
-		var myX2 = meta.page_width - meta.right_margin;
-	} else {
-		var myX1 = meta.right_margin;
-		var myX2 = meta.page_width - meta.bottom_margin
-	}
-
-
-	if (size == "large" ) {
-		return [meta.page_height - meta.left_margin- 1.745, meta.page_width / 2 - 20, meta.page_height - meta.left_margin - 3.5, meta.page_width / 2 + 20];
-	} else {
-		return [meta.page_height - meta.gutter, myX1, meta.page_height - meta.bottom_margin, myX2 ];
+	if (myStyle !== "bookName" && firstPage != 1) {
+		add_running_head(myPage, String(book_name + " " + chapter_number));
 	}
 }
 
