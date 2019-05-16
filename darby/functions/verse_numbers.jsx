@@ -18,20 +18,29 @@ function move_verse_numbers_to_frame(me) {
 
 	// this is for verse 2 where the chapter number covers it
 	line_number = me.parentStory.insertionPoints.itemByRange(
-		me.paragraphs[0].index,
+		//me.paragraphs[0].index,
+		me.parentStory.paragraphs[0].insertionPoints[0].index,
 		me.index
 	).lines.length;
-
-	myvar = false;
-	if (
-		(line_number == 2 &&
+	myvar = myothervar = false;
+	if(new_note.contents == 2 && (line_number == 2||line_number == 3) &&
 			me.appliedParagraphStyle ==
-				myDocument.paragraphStyles.item("Verse1")) ||
+				myDocument.paragraphStyles.item("Verse1")) {
+		myothervar = true;
+		new_note.anchoredObjectSettings.anchorXoffset = "-7.7mm";
+
+	}
+
+
+
+	if (
+		
 		(new_note.contents == 2 &&
 			line_number == 1 &&
 			me.appliedParagraphStyle ==
 				myDocument.paragraphStyles.item("Verse"))
 	) {
+
 		myvar = true;
 		new_note.anchoredObjectSettings.anchorXoffset = "-5.8mm";
 	}
@@ -44,6 +53,13 @@ function move_verse_numbers_to_frame(me) {
 	if (myvar == true) {
 		new_note.anchoredObjectSettings.anchorXoffset = "-5.8mm";
 		myvar = false;
+	}
+
+	if (myothervar == true) {
+		new_note.anchoredObjectSettings.anchorXoffset = "-7.7mm";
+		new_note.properties.textWrapPreferences.textWrapMode =  TextWrapModes.BOUNDING_BOX_TEXT_WRAP;
+		
+		myothervar = false;
 	}
 
 	// fixed stacked verse numbers
@@ -62,20 +78,21 @@ function move_verse_numbers_to_frame(me) {
 				anchorYoffset = "-.9mm"
 
 			}
-			with(new_note.textFrames[0].baselineFrameGridOptions) {
+			with(new_note.baselineFrameGridOptions) {
 				useCustomBaselineFrameGrid = true
 				startingOffsetForBaselineFrameGrid = "2mm"
 				baselineFrameGridIncrement = "1pt"
 			}
-			with(new_note.textFrames[0].anchoredObjectSettings) {
-				anchorYoffset = "2.5mm"
+			//textFrames[0]
+			with(new_note.anchoredObjectSettings) {
+				// was 2.5
+				anchorYoffset = "1.2mm"
 			}
 
 		}
 		// might need to reapply style to new note here..
 	}
-	lastNote = new_note
 
-	
+	lastNote = new_note
 }
 

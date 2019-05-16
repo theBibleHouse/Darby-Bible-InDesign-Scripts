@@ -18,7 +18,7 @@ function add_running_head(myPage, aContents) {
 
 	}
 	if (size == "large") {
-		aFrame.geometricBounds = [meta.left_margin + 3.5 , meta.page_width / 2 - 20, meta.left_margin+ 1.745, meta.page_width / 2 + 20];
+		aFrame.geometricBounds = [meta.left_margin + 3.5 , meta.page_width / 2 - 40, meta.left_margin+ 1.745, meta.page_width / 2 + 40];
 		aFrame.parentStory.characters.item(0).appliedParagraphStyle = myDocument.paragraphStyles.item("Heading Large");
 		aFrame.textFramePreferences.verticalJustification = VerticalJustification.BOTTOM_ALIGN;
 		aFrame.appliedObjectStyle = myDocument.objectStyles.item("Page Heading")
@@ -40,8 +40,7 @@ function create_page_heading(firstPage, myFrame) {
 	}
 
 	myPage = myFrame.parentPage
-	$.writeln('chapter headers for ' + myFrame.name)
-	$.writeln(lastChapter,chapter)
+
 	if (lastChapter == chapter) {
 		chapter_number = chapter;
 	}

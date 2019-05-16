@@ -21,6 +21,7 @@ function create_object_styles() {
 		})) {
 			enableParagraphStyle = true;
 			appliedParagraphStyle = myDocument.paragraphStyles.item("VerseNum");
+			enableTextWrapAndOthers: true,
 
 			enabledStroke = true;
 			strokeWeight = 0;
@@ -61,6 +62,8 @@ function create_object_styles() {
 			name: "VerseMarker-frame2"
 		})) {
 			enableParagraphStyle = true;
+			enableTextWrapAndOthers: true,
+
 			appliedParagraphStyle = myDocument.paragraphStyles.item("VerseNum");
 			enabledStroke = true;
 			strokeWeight = 0;

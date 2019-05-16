@@ -417,6 +417,10 @@ try {
 				leader: ""
 			}]
 		}
+		if (size == "large" || size == "small") {
+			myParagraphStyle.properties = {
+				rightIndent: meta.gutter
+		}}
 	}
 	try {
 		myParagraphStyle = myDocument.paragraphStyles.item("Verse1");
@@ -625,5 +629,56 @@ dropCapCharacters: 2,
 			}
 		}
 	}
+
+	try {
+		myParagraphStyle = myDocument.paragraphStyles.item("intro");
+		myName = myParagraphStyle.name;
+	} catch (e) {
+		myParagraphStyle = myDocument.paragraphStyles.add({
+			name: "intro"
+		});
+		myParagraphStyle.properties = {
+			appliedFont: "Lexicon No1 A Tab",
+			fontStyle: "Normal",
+			pointSize: 8.75,
+			leading: 8,
+			alignToBaseline: true,
+			justification: Justification.LEFT_JUSTIFIED,
+			keepLinesTogether: true,
+			keepFirstLines: 1,
+			keepLastLines: 1,
+//			hyphenation: false,
+			//composer: "Adobe World-Read Paragraph Composer",
+			// add on the left indent here
+			tabList: [{
+				position: 7-meta.gutter,
+				alignment: TabStopAlignment.LEFT_ALIGN,
+				leader: ""
+			}, {
+				position: 12,
+				alignment: TabStopAlignment.LEFT_ALIGN,
+				leader: ""
+			}, {
+				position: 17,
+				alignment: TabStopAlignment.LEFT_ALIGN,
+				leader: ""
+			}]
+		}
+	
+	}
+	try {
+		myParagraphStyle = myDocument.paragraphStyles.item("intro-center");
+		myName = myParagraphStyle.name;
+	} catch (e) {
+		myParagraphStyle = myDocument.paragraphStyles.add({
+			name: "intro-center"
+		});
+		myParagraphStyle.properties = {
+			basedOn: myDocument.paragraphStyles.item("intro"),
+			justification: Justification.CENTER_ALIGN
+		}
+
+	}
+
 
 }

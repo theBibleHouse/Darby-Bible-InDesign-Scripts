@@ -70,7 +70,6 @@ function referenceMaterial(myFrame) {
 				currentNote = found[q].contents.substring(currentReference.length + 1, found[q].contents.length - 1);
 				// check if note is existing on page already
 				existingLocation = f_results.indexOf(currentNote);
-				$.writeln(existingLocation)
 				if (f_results == "") {
 					f_results = found[q].contents.substring(1, found[q].contents.length - 1);
 				} else {
@@ -86,8 +85,7 @@ function referenceMaterial(myFrame) {
 						}
 					}
 				}
-				$.writeln(lastNote)
-				$.writeln(lastReference)
+		
 				lastNote = currentNote;
 				lastReference = currentReference;
 			}

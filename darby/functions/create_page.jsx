@@ -33,14 +33,17 @@ function create_page(thisPage){
 	thisFrame = thisPage.textFrames.add()
 	thisFrame.name = 'frame1';
 
-	if(lastPage){
-		if(size=='large'){
-			lastPage.textFrames.itemByName('frame2').nextTextFrame = thisFrame
+	// will catch if book changes
+	try {
+		if(lastPage){
+			if(size=='large'){
+				lastPage.textFrames.itemByName('frame2').nextTextFrame = thisFrame
+			}
+			else {
+				lastPage.textFrames.itemByName('frame1').nextTextFrame = thisFrame
+			}
 		}
-		else {
-			lastPage.textFrames.itemByName('frame1').nextTextFrame = thisFrame
-		}
-	}
+	} catch(e) {}
 
 	if (size == "small") {
 		if (thisPage.side == PageSideOptions.LEFT_HAND) {

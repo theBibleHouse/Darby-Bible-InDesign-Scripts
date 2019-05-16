@@ -1,9 +1,10 @@
 function section_headings(myFrame){
+
     for (h = 0; h < heading.length; h++){
 		book = heading[h][0]
 		chapter = heading[h][1]
 		verse = heading[h][2]
-		content = heading[h][3]
+		content = heading[h][3].replace('\'','’')
 
 		if (verse == 1) {
 			app.changeGrepPreferences = app.findGrepPreferences = null;
@@ -14,7 +15,7 @@ function section_headings(myFrame){
 				me = me[0].insertionPoints[0];
 				pointone = me.index
 				me.contents = content + String.fromCharCode(13);
-			} catch (e) {$.writeln("Error: unable to find heading location for " + line)}
+			} catch (e) {$.writeln("Error: unable to find heading location for " + book + " " + chapter + ":" + verse + " " + content)}
 
 		} else {
 			app.changeGrepPreferences = app.findGrepPreferences = null;
@@ -24,7 +25,7 @@ function section_headings(myFrame){
 				me = me[0].insertionPoints[0];
 				pointone = me.index
 				me.contents = content + String.fromCharCode(13);
-			} catch (e) {$.writeln("Error: unable to find heading location for " + line)}
+			} catch (e) {$.writeln("Error: unable to find heading location for "  + book + " " + chapter + ":" + verse + " " + content)}
 		}
 		me.characters.itemByRange(myFrame.insertionPoints[pointone],me.insertionPoints[pointone+content.length]);
 		me.appliedParagraphStyle = myDocument.paragraphStyles.item("SectionHeading");

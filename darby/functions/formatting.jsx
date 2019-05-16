@@ -7,8 +7,6 @@ function format_text(myFrame) {
 	find_and_replace(myFrame, "\\s+~b", "~b");
 	find_and_replace(myFrame, "\\s+$", "");
 	
-
-
 	// add section headings
 	section_headings(myFrame);
 	
@@ -45,6 +43,7 @@ function format_text(myFrame) {
 	app.findGrepPreferences.findWhat = "~>";
 	app.changeGrepPreferences.changeTo = "\\s"
 	myFrame.parentStory.changeGrep()
+	
 }
 
 function special_breaks(myFrame){
@@ -72,6 +71,24 @@ function find_and_replace(myFrame, find, replace) { // search text, paragraph st
 	myFrame.parentStory.changeGrep();
 }
 
+
+function find_and_replace_w_p_style(myFrame, find, replace,style) { // search text, paragraph style
+	app.findGrepPreferences = app.changeGrepPreferences = null;
+	app.findGrepPreferences.findWhat = find;
+	app.changeGrepPreferences.changeTo = replace;
+	app.changeGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item(style);
+	myFrame.parentStory.changeGrep();
+}
+
+
+function find_and_replace_w_c_style(myFrame, find, replace,style) { // search text, paragraph style
+	app.findGrepPreferences = app.changeGrepPreferences = null;
+	app.findGrepPreferences.findWhat = find;
+	app.changeGrepPreferences.changeTo = replace;
+	app.changeGrepPreferences.appliedCharacterStyle = myDocument.characterStyles.item(style);
+	myFrame.parentStory.changeGrep();
+}
+
 function italics(myFrame) {
 	app.findGrepPreferences = app.changeGrepPreferences = null;
 	app.findGrepPreferences.fontStyle = "Italic";
@@ -85,26 +102,73 @@ function apply_book_name_style(myPage, myFrame) {
 	app.findGrepPreferences.pointSize = 24;
 	app.changeGrepPreferences.appliedCharacterStyle = myDocument.characterStyles.item("bookName");
 	app.changeGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("bookName");
-	myFrame.changeGrep();
+	myFrame.parentStory.changeGrep();
 
 	app.findGrepPreferences = app.changeGrepPreferences = null;
 	app.findGrepPreferences.pointSize = 11;
 	app.findGrepPreferences.leading = 26;
 	app.changeGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("bookName");
-	myFrame.changeGrep();
+	myFrame.parentStory.changeGrep();
 
 	app.findGrepPreferences = app.changeGrepPreferences = null;
 	app.findGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("bookName");
 	//app.findGrepPreferences.findWhat = "^[^/]+?(?=~bChapter 1)"
-	myFinds = myFrame.findGrep();
+	myFinds = myFrame.parentStory.findGrep();
 	bookFrame = addBookTextFrame(myPage)
 
 	myFinds[0].parentStory.insertionPoints.itemByRange(myFinds[0].texts[0].insertionPoints[0].index, myFinds[0].texts[0].insertionPoints[-1].index).texts[0].move(LocationOptions.atBeginning, bookFrame.insertionPoints[0]);
 
+	// insert intro
+	start_index = bookFrame.parentStory.insertionPoints[-1].index
+	// insert space to clear styles
+	bookFrame.insertionPoints[-1].contents = ' '
+
+	// apply style
+	bookFrame.insertionPoints.itemByRange(start_index,bookFrame.parentStory.insertionPoints[-1].index).appliedParagraphStyle = myDocument.paragraphStyles.item("intro");
+	bookFrame.insertionPoints.itemByRange(start_index,bookFrame.parentStory.insertionPoints[-1].index).appliedCharacterStyle = myDocument.characterStyles.item("None");
+
+	// insert intro
+	bookFrame.insertionPoints[-1].contents = get_intro()
+
+	// center
+	find_and_replace(bookFrame,"(</center>)",'$1~b')
+	find_and_replace_w_p_style(bookFrame, "<center>([\\H|\\h]+?)</center>", "$1", 'intro-center');
+	find_and_replace(bookFrame,'"','"')
+	find_and_replace(bookFrame,':','.')
+	
+	// remove trailing period on verse reference
+	app.findGrepPreferences = app.changeGrepPreferences = null;
+	app.findGrepPreferences.findWhat = "\\)\\.";
+	app.changeGrepPreferences.changeTo = ")";
+	app.findGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item('intro-center');
+	bookFrame.changeGrep()
+
+	// remove extra space
+	app.findGrepPreferences = app.changeGrepPreferences = null;
+	app.findGrepPreferences.findWhat = "\\n";
+	app.changeGrepPreferences.changeTo = "~b\\t";
+	app.findGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item('intro');
+	bookFrame.insertionPoints.itemByRange(start_index,bookFrame.parentStory.insertionPoints[-1].index).changeGrep();
+
+	// -- to em dash
+	find_and_replace(bookFrame,'--','~_')
+
+	// keep last 2 words together
+	noBreak(bookFrame, "(\\H+?\\h?){2}$");
+
+	find_and_replace(bookFrame,"^ ","")
+	find_and_replace(bookFrame,"…","...")
+
+	
 	app.findGrepPreferences = app.changeGrepPreferences = null;
 	app.findGrepPreferences.findWhat = "~b$";
+	app.findGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item('intro');
 	app.changeGrepPreferences.changeTo = "";
 	bookFrame.changeGrep();
+
+	// apply italics
+	find_and_replace_w_c_style(bookFrame,"\\*(.+?)\\*","$1",'Italics')
+	
 }
 
 function apply_verse_number_style(myFrame) { 
@@ -446,6 +510,16 @@ function format_cross_reference_verse_numbers( myFrame) {
 	app.findGrepPreferences = app.changeGrepPreferences = null;
 	app.findGrepPreferences.findWhat = ";(?=[^\\s])";
 	app.changeGrepPreferences.changeTo = ";\\s";
+	try {
+		myFrame.parentStory.changeGrep()
+	} catch (e) {$.writeln(e)}
+
+
+	// allow line break on comma
+	// put a space between references
+	app.findGrepPreferences = app.changeGrepPreferences = null;
+	app.findGrepPreferences.findWhat = ",";
+	app.changeGrepPreferences.changeTo = ",~k";
 	try {
 		myFrame.parentStory.changeGrep()
 	} catch (e) {$.writeln(e)}

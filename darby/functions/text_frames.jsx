@@ -63,3 +63,57 @@ function addFootnoteTextFrame(aPage) {
 	return aFrame;
 }
 
+
+function balanceFrames(myFrame){
+	// function to set column break on last page
+	// should be run after putting in footnotes
+	aPage = myFrame.parentPage
+	//$.writeln(myFrame.name)
+	if(size=="large") {
+
+		if(myFrame.name=='frame2') {
+
+			frame1_length = aPage.textFrames.itemByName('frame1').lines[-1].baseline
+			frame2_length = myFrame.lines[-1].baseline
+
+			break_point = (frame1_length - frame2_length) / 2 + frame2_length
+
+			//$.writeln(frame1_length)
+			//$.writeln(frame2_length)
+			//$.writeln(break_point)
+
+		}
+
+		else {
+
+			frame1_length = myFrame.lines[-1].baseline
+			starting_point = myFrame.lines[0].baseline
+
+			break_point = (frame1_length - starting_point)/2  + starting_point
+		}
+
+		baseline_adder = -myDocument.gridPreferences.baselineDivision/2
+		if(break_point < 150){baseline_adder *= -2}
+
+		frame1_geo_bounds = aPage.textFrames.itemByName('frame1').geometricBounds
+		//$.writeln(frame1_geo_bounds)
+		frame1_geo_bounds[2] = Math.ceil(break_point) + baseline_adder
+		//$.writeln(frame1_geo_bounds)
+		aPage.textFrames.itemByName('frame1').geometricBounds = frame1_geo_bounds
+
+		ref_frame1_geo_bounds = aPage.textFrames.itemByName('ref-frame1').geometricBounds
+		ref_frame1_geo_bounds[2] = Math.ceil(break_point) + baseline_adder
+		aPage.textFrames.itemByName('ref-frame1').geometricBounds = ref_frame1_geo_bounds
+
+		frame2_geo_bounds = aPage.textFrames.itemByName('frame2').geometricBounds
+		frame2_geo_bounds[2] = Math.ceil(break_point) + baseline_adder
+		aPage.textFrames.itemByName('frame2').geometricBounds = frame2_geo_bounds	
+
+		ref_frame2_geo_bounds = aPage.textFrames.itemByName('ref-frame2').geometricBounds
+		ref_frame2_geo_bounds[2] = Math.ceil(break_point) + baseline_adder
+		aPage.textFrames.itemByName('ref-frame2').geometricBounds = ref_frame2_geo_bounds
+
+
+		// if there is a footnote text frame scoot it up here.
+	}
+}
