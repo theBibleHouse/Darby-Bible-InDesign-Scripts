@@ -258,6 +258,19 @@ try {
 						
 		}
 	}
+try {
+		myParagraphStyle = myDocument.paragraphStyles.item("init-crossReference-frame1");
+		myName = myParagraphStyle.name;
+	} catch (e) {
+		myParagraphStyle = myDocument.paragraphStyles.add({
+			name: "init-crossReference-frame1"
+		});
+		myParagraphStyle.properties = {
+			basedOn: myDocument.paragraphStyles.item("crossReference-frame1"),
+
+		}
+	}
+
 	try {
 		myParagraphStyle = myDocument.paragraphStyles.item("crossReference-frame2");
 		myName = myParagraphStyle.name;
@@ -275,6 +288,19 @@ try {
 			
 		}
 	}
+try {
+		myParagraphStyle = myDocument.paragraphStyles.item("init-crossReference-frame2");
+		myName = myParagraphStyle.name;
+	} catch (e) {
+		myParagraphStyle = myDocument.paragraphStyles.add({
+			name: "init-crossReference-frame2"
+		});
+		myParagraphStyle.properties = {
+			basedOn: myDocument.paragraphStyles.item("crossReference-frame2"),
+
+		}
+	}
+
 	try {
 		myParagraphStyle = myDocument.paragraphStyles.item("Verse");
 		myName = myParagraphStyle.name;
