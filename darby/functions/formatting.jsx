@@ -466,74 +466,45 @@ function page_headings(myFrame) {
 	} catch (e) {}
 }
 
-function format_cross_reference_verse_numbers( myFrame) {
+function format_cross_reference_verse_numbers( myFrame ) {
 
+
+	start()
 	noBreak(myFrame, "\\*~k.+?\\d")
 	noBreak(myFrame, "\\d+~>.")
 		// make newberry marker
 	noBreak(myFrame, "~8\\s.")
 
 	app.findGrepPreferences = app.changeGrepPreferences = null;
+	app.findTextPreferences = app.changeTextPreferences = null;
+	app.findGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("init-crossReference-"+myFrame.name.replace('ref-',''));
+	app.findTextPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("init-crossReference-"+myFrame.name.replace('ref-',''));
+
+
 	app.findGrepPreferences.findWhat = "(\\l)\\."
 	app.changeGrepPreferences.changeTo = "$1\\s"
-	try{myFrame.parentStory.changeGrep()}catch(e){$.writeln(e)}
-
+	myFrame.parentStory.changeGrep()
 
 	// non break hyphen on verse ranges only on location
-	app.findGrepPreferences = app.changeGrepPreferences = null;
 	app.findGrepPreferences.findWhat = "^\\d+\\K-(?=\\d)";
 	app.changeGrepPreferences.changeTo = "~~";
-	try {
-		myFrame.changeGrep()
-	} catch (e) {$.writeln(e)}
-	
-	// apply verse num style
-	/*app.findGrepPreferences = app.changeGrepPreferences = null;
-	app.findGrepPreferences.findWhat = "^\\<.+?(?=(~%|\\s))";
-	app.changeGrepPreferences.appliedCharacterStyle = myDocument.characterStyles.item("bold");
-	try {
-		//alert("cross vere num")
-		myFrame.changeGrep()
-	} catch (e) {$.writeln(e)}
-*/
-
-	// replace first space with en space
-	/*app.findGrepPreferences = app.changeGrepPreferences = null;
-	app.findGrepPreferences.findWhat = "(^\\<.+?)(~%|\\s)";
-	app.changeGrepPreferences.changeTo = "$1~s"; // was ~>~k
-	try {
-		myFrame.parentStory.changeGrep()
-	} catch (e) {$.writeln(e)}
-*/
+	myFrame.parentStory.changeGrep()
 
 	// put a space between references
-	app.findGrepPreferences = app.changeGrepPreferences = null;
 	app.findGrepPreferences.findWhat = ";(?=[^\\s])";
 	app.changeGrepPreferences.changeTo = ";\\s";
-	try {
-		myFrame.parentStory.changeGrep()
-	} catch (e) {$.writeln(e)}
-
+	myFrame.parentStory.changeGrep()
 
 	// allow line break on comma
 	// put a space between references
-	app.findGrepPreferences = app.changeGrepPreferences = null;
 	app.findGrepPreferences.findWhat = ",";
 	app.changeGrepPreferences.changeTo = ",~k";
-	try {
-		myFrame.parentStory.changeGrep()
-	} catch (e) {$.writeln(e)}
-
+	myFrame.parentStory.changeGrep()
 
 	// replace * with • on newberry references
-	app.findTextPreferences = app.changeTextPreferences = null;
 	app.findTextPreferences.findWhat = "*";
 	app.changeTextPreferences.changeTo = "^8"; // for grep search it would be ~8
-	try {
-		myFrame.parentStory.changeText()
-	} catch (e) {$.writeln(e)}
-
-
+	myFrame.parentStory.changeGrep()
 
 	// apply raised style to hyphens and comas
 	/*app.findGrepPreferences = app.changeGrepPreferences = null;
