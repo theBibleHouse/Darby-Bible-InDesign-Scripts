@@ -468,61 +468,21 @@ function page_headings(myFrame) {
 
 function format_cross_reference_verse_numbers( myFrame ) {
 
-
-	start()
-	noBreak(myFrame, "\\*~k.+?\\d")
-	noBreak(myFrame, "\\d+~>.")
-		// make newberry marker
-	noBreak(myFrame, "~8\\s.")
-
 	app.findGrepPreferences = app.changeGrepPreferences = null;
 	app.findTextPreferences = app.changeTextPreferences = null;
 	app.findGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("init-crossReference-"+myFrame.name.replace('ref-',''));
 	app.findTextPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("init-crossReference-"+myFrame.name.replace('ref-',''));
-
-
-	app.findGrepPreferences.findWhat = "(\\l)\\."
-	app.changeGrepPreferences.changeTo = "$1\\s"
-	myFrame.parentStory.changeGrep()
 
 	// non break hyphen on verse ranges only on location
 	app.findGrepPreferences.findWhat = "^\\d+\\K-(?=\\d)";
 	app.changeGrepPreferences.changeTo = "~~";
 	myFrame.parentStory.changeGrep()
 
-	// put a space between references
-	app.findGrepPreferences.findWhat = ";(?=[^\\s])";
-	app.changeGrepPreferences.changeTo = ";\\s";
+	// allow line break on comma and semi colon.. only if there are more than 3 chars between
+	app.findGrepPreferences.findWhat = "([;|-|,])(?=[^~k][^;&^,&^-]{3})";
+	app.changeGrepPreferences.changeTo = "$1~k";
 	myFrame.parentStory.changeGrep()
 
-	// allow line break on comma
-	// put a space between references
-	app.findGrepPreferences.findWhat = ",";
-	app.changeGrepPreferences.changeTo = ",~k";
-	myFrame.parentStory.changeGrep()
-
-	// replace * with • on newberry references
-	app.findTextPreferences.findWhat = "*";
-	app.changeTextPreferences.changeTo = "^8"; // for grep search it would be ~8
-	myFrame.parentStory.changeGrep()
-
-	// apply raised style to hyphens and comas
-	/*app.findGrepPreferences = app.changeGrepPreferences = null;
-	app.findGrepPreferences.findWhat = "~~";
-	app.findGrepPreferences.appliedCharacterStyle = myDocument.characterStyles.item("crossVerseNum");
-	app.changeGrepPreferences.appliedFont = "Lexicon No1 C Tab"
-	app.changeGrepPreferences.position = Position.SUPERSCRIPT;
-	app.changeGrepPreferences.changeTo = "~~"
-	try{myFrame.parentStory.changeGrep()} catch(e){}
-	
-	app.findGrepPreferences = app.changeGrepPreferences = null;
-	app.findGrepPreferences.findWhat = "<002C>";
-	app.findGrepPreferences.appliedCharacterStyle = myDocument.characterStyles.item("crossVerseNum");
-	app.changeGrepPreferences.appliedFont = "Lexicon No1 C Tab";
-	app.changeGrepPreferences.baselineShift = "-.5";
-	app.changeGrepPreferences.position = Position.SUPERSCRIPT;
-	app.changeGrepPreferences.changeTo = ","
-	try{myFrame.parentStory.changeGrep()} catch(e){}*/
 }
 
 

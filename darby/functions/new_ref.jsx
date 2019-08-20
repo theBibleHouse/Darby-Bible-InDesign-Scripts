@@ -70,20 +70,15 @@ function dates_and_cross(myFrame, chapter, verse){
 				
 	var break_char = String.fromCharCode(13);
 	var cross_frame = myFrame.parentPage.textFrames.itemByName('ref-'+myFrame.name);
+	var cross_start = cross_frame.insertionPoints[-1];
 
 	// add last date and apply paragraph style. only if date is added.
-	cross_frame.contents.length < 1 && (cross_frame.parentStory.appliedParagraphStyle = myDocument.paragraphStyles.item("crossReference-"+myFrame.name));
+	cross_frame.contents.length < 1 && (cross_frame.parentStory.appliedParagraphStyle = myDocument.paragraphStyles.item("init-crossReference-"+myFrame.name));
 	cross_frame.contents.length < 1 && (thisdate || lastdate) && (cross_frame.contents += (thisdate || lastdate) + break_char) && (lastdate = thisdate || lastdate) && (thisdate = false);
 
 	// get current baseline.
-	var cross_start = cross_frame.insertionPoints[-1];
-	var cross_location = Math.round(cross_start.baseline);
-
-	//$.writeln(chapter,verse.contents,my_baseline,cross_location,cross_frame.parentStory.appliedParagraphStyle.properties.leading*0.352778)
-	//$.writeln((my_baseline - cross_location))
-	var x = (my_baseline - cross_location)
+	var x = (my_baseline - Math.round(cross_frame.insertionPoints[-1].baseline))
 	var l = cross_frame.parentStory.appliedParagraphStyle.properties.leading*0.352778
-	//$.writeln(x/l)
 	
 	// add break char until enough are added to get to verse # that belongs to the cross ref.
 	x > 0 && cross_frame.contents += Array(Math.round(x/l + 1)).join(break_char);
