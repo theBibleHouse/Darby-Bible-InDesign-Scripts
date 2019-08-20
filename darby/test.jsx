@@ -1,0 +1,1 @@
+var cross_frame = myFrame.parentPage.textFrames.itemByName('ref-'+myFrame.name)

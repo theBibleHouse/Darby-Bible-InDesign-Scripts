@@ -466,92 +466,23 @@ function page_headings(myFrame) {
 	} catch (e) {}
 }
 
-function format_cross_reference_verse_numbers( myFrame) {
-
-	noBreak(myFrame, "\\*~k.+?\\d")
-	noBreak(myFrame, "\\d+~>.")
-		// make newberry marker
-	noBreak(myFrame, "~8\\s.")
+function format_cross_reference_verse_numbers( myFrame ) {
 
 	app.findGrepPreferences = app.changeGrepPreferences = null;
-	app.findGrepPreferences.findWhat = "(\\l)\\."
-	app.changeGrepPreferences.changeTo = "$1\\s"
-	try{myFrame.parentStory.changeGrep()}catch(e){$.writeln(e)}
-
+	app.findTextPreferences = app.changeTextPreferences = null;
+	app.findGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("init-crossReference-"+myFrame.name.replace('ref-',''));
+	app.findTextPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("init-crossReference-"+myFrame.name.replace('ref-',''));
 
 	// non break hyphen on verse ranges only on location
-	app.findGrepPreferences = app.changeGrepPreferences = null;
 	app.findGrepPreferences.findWhat = "^\\d+\\K-(?=\\d)";
 	app.changeGrepPreferences.changeTo = "~~";
-	try {
-		myFrame.changeGrep()
-	} catch (e) {$.writeln(e)}
-	
-	// apply verse num style
-	/*app.findGrepPreferences = app.changeGrepPreferences = null;
-	app.findGrepPreferences.findWhat = "^\\<.+?(?=(~%|\\s))";
-	app.changeGrepPreferences.appliedCharacterStyle = myDocument.characterStyles.item("bold");
-	try {
-		//alert("cross vere num")
-		myFrame.changeGrep()
-	} catch (e) {$.writeln(e)}
-*/
+	myFrame.parentStory.changeGrep()
 
-	// replace first space with en space
-	/*app.findGrepPreferences = app.changeGrepPreferences = null;
-	app.findGrepPreferences.findWhat = "(^\\<.+?)(~%|\\s)";
-	app.changeGrepPreferences.changeTo = "$1~s"; // was ~>~k
-	try {
-		myFrame.parentStory.changeGrep()
-	} catch (e) {$.writeln(e)}
-*/
+	// allow line break on comma and semi colon.. only if there are more than 3 chars between
+	app.findGrepPreferences.findWhat = "([;|-|,])(?=[^~k][^;&^,&^-]{3})";
+	app.changeGrepPreferences.changeTo = "$1~k";
+	myFrame.parentStory.changeGrep()
 
-	// put a space between references
-	app.findGrepPreferences = app.changeGrepPreferences = null;
-	app.findGrepPreferences.findWhat = ";(?=[^\\s])";
-	app.changeGrepPreferences.changeTo = ";\\s";
-	try {
-		myFrame.parentStory.changeGrep()
-	} catch (e) {$.writeln(e)}
-
-
-	// allow line break on comma
-	// put a space between references
-	app.findGrepPreferences = app.changeGrepPreferences = null;
-	app.findGrepPreferences.findWhat = ",";
-	app.changeGrepPreferences.changeTo = ",~k";
-	try {
-		myFrame.parentStory.changeGrep()
-	} catch (e) {$.writeln(e)}
-
-
-	// replace * with • on newberry references
-	app.findTextPreferences = app.changeTextPreferences = null;
-	app.findTextPreferences.findWhat = "*";
-	app.changeTextPreferences.changeTo = "^8"; // for grep search it would be ~8
-	try {
-		myFrame.parentStory.changeText()
-	} catch (e) {$.writeln(e)}
-
-
-
-	// apply raised style to hyphens and comas
-	/*app.findGrepPreferences = app.changeGrepPreferences = null;
-	app.findGrepPreferences.findWhat = "~~";
-	app.findGrepPreferences.appliedCharacterStyle = myDocument.characterStyles.item("crossVerseNum");
-	app.changeGrepPreferences.appliedFont = "Lexicon No1 C Tab"
-	app.changeGrepPreferences.position = Position.SUPERSCRIPT;
-	app.changeGrepPreferences.changeTo = "~~"
-	try{myFrame.parentStory.changeGrep()} catch(e){}
-	
-	app.findGrepPreferences = app.changeGrepPreferences = null;
-	app.findGrepPreferences.findWhat = "<002C>";
-	app.findGrepPreferences.appliedCharacterStyle = myDocument.characterStyles.item("crossVerseNum");
-	app.changeGrepPreferences.appliedFont = "Lexicon No1 C Tab";
-	app.changeGrepPreferences.baselineShift = "-.5";
-	app.changeGrepPreferences.position = Position.SUPERSCRIPT;
-	app.changeGrepPreferences.changeTo = ","
-	try{myFrame.parentStory.changeGrep()} catch(e){}*/
 }
 
 
