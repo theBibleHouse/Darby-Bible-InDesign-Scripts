@@ -1,74 +1,52 @@
-lastNote = ''
 function move_verse_numbers_to_frame(me) {
-	myFrame = me.parentTextFrames[0];
-	
-	var new_note = me.insertionPoints[-1].textFrames.add({
-		appliedObjectStyle: myDocument.objectStyles.item(
-			"VerseMarker-" + myFrame.name
-		)
-	});
+	var lastNote
+	var myFrame = me.parentTextFrames[0];
+	var newNote = me.insertionPoints[-1].textFrames.add({appliedObjectStyle: myDocument.objectStyles.item("VerseMarker-" + myFrame.name)});
 
-	me.texts[-1].move(LocationOptions.atBeginning, new_note.insertionPoints[0]);
+	// move text to new note
+	me.texts[-1].move(LocationOptions.atBeginning, newNote.insertionPoints[0]);
 
-	new_note.fit(FitOptions.frameToContent);
+	// resize new note
+	newNote.fit(FitOptions.frameToContent);
 
-	new_note.appliedObjectStyle = myDocument.objectStyles.item(
-		"VerseMarker-" + myFrame.name
-	);
+	// put in correct location
+	newNote.appliedObjectStyle = myDocument.objectStyles.item("VerseMarker-" + myFrame.name);
 
 	// this is for verse 2 where the chapter number covers it
-	line_number = me.parentStory.insertionPoints.itemByRange(
-		//me.paragraphs[0].index,
-		me.parentStory.paragraphs[0].insertionPoints[0].index,
-		me.index
-	).lines.length;
-	myvar = myothervar = false;
-	if(new_note.contents == 2 && (line_number == 2||line_number == 3) &&
-			me.appliedParagraphStyle ==
-				myDocument.paragraphStyles.item("Verse1")) {
-		myothervar = true;
-		new_note.anchoredObjectSettings.anchorXoffset = "-7.7mm";
+	if (newNote.contents === 2) {
 
-	}
+		var line_number = me.parentStory.insertionPoints.itemByRange(me.parentStory.paragraphs[0].insertionPoints[0].index,me.index).lines.length;
+		var myvar = false;
+		var myothervar = false;
 
+		if((line_number === 2 || line_number === 3) && me.appliedParagraphStyle ==myDocument.paragraphStyles.item("Verse1")) {
+			myothervar = true;
+			newNote.anchoredObjectSettings.anchorXoffset = "-7.7mm";
+		} else if (line_number == 1 && me.appliedParagraphStyle == myDocument.paragraphStyles.item("Verse")) {
+			myvar = true;
+			newNote.anchoredObjectSettings.anchorXoffset = "-5.8mm";
+		}
 
-
-	if (
+		// reapply......
+		newNote.appliedObjectStyle = myDocument.objectStyles.item("VerseMarker-" + myFrame.name);
+		myvar == true && (newNote.anchoredObjectSettings.anchorXoffset = "-5.8mm")
+		myvar == true && myvar = false;
 		
-		(new_note.contents == 2 &&
-			line_number == 1 &&
-			me.appliedParagraphStyle ==
-				myDocument.paragraphStyles.item("Verse"))
-	) {
-
-		myvar = true;
-		new_note.anchoredObjectSettings.anchorXoffset = "-5.8mm";
-	}
-
-	new_note.appliedObjectStyle = myDocument.objectStyles.item(
-		"VerseMarker-" + myFrame.name
-	);
-
-	// this is for verse 2 where the chapter number covers it
-	if (myvar == true) {
-		new_note.anchoredObjectSettings.anchorXoffset = "-5.8mm";
-		myvar = false;
-	}
-
-	if (myothervar == true) {
-		new_note.anchoredObjectSettings.anchorXoffset = "-7.7mm";
-		new_note.properties.textWrapPreferences.textWrapMode =  TextWrapModes.BOUNDING_BOX_TEXT_WRAP;
-		
-		myothervar = false;
+		if (myothervar == true) {
+			newNote.anchoredObjectSettings.anchorXoffset = "-7.7mm";
+			newNote.properties.textWrapPreferences.textWrapMode =  TextWrapModes.BOUNDING_BOX_TEXT_WRAP;	
+			myothervar = false;
+		}
+	} else {
+		newNote.appliedObjectStyle = myDocument.objectStyles.item("VerseMarker-" + myFrame.name);
 	}
 
 	// fixed stacked verse numbers
-	if(lastNote.geometricBounds){
-		newBaseline = Math.round(new_note.geometricBounds[0])
-		lastBaseline = Math.round(lastNote.geometricBounds[0])
+	if(lastNote && lastNote.geometricBounds){
+		var newBaseline = Math.round(newNote.geometricBounds[0])
+		var lastBaseline = Math.round(lastNote.geometricBounds[0])
 
 		if(newBaseline == lastBaseline){
-
 			with(lastNote.baselineFrameGridOptions) {
 				useCustomBaselineFrameGrid = true
 				startingOffsetForBaselineFrameGrid = "3.5mm"
@@ -76,23 +54,18 @@ function move_verse_numbers_to_frame(me) {
 			}
 			with(lastNote.anchoredObjectSettings) {
 				anchorYoffset = "-.9mm"
-
 			}
-			with(new_note.baselineFrameGridOptions) {
+			with(newNote.baselineFrameGridOptions) {
 				useCustomBaselineFrameGrid = true
 				startingOffsetForBaselineFrameGrid = "2mm"
 				baselineFrameGridIncrement = "1pt"
 			}
-			//textFrames[0]
-			with(new_note.anchoredObjectSettings) {
-				// was 2.5
+			with(newNote.anchoredObjectSettings) {
 				anchorYoffset = "1.2mm"
 			}
-
-		}
-		// might need to reapply style to new note here..
+		}		
 	}
+	lastNote = newNote
 
-	lastNote = new_note
 }
 
