@@ -1,10 +1,10 @@
 function create_page(thisPage){
 	lastPage = thisPage
 
+
 	if(thisPage){
 		thisPage = myDocument.pages.add(LocationOptions.AFTER, thisPage)		
-	}
-	else{thisPage = myDocument.pages[0]}
+	} else{thisPage = myDocument.pages[0]}
 
 	if (size == "large") {
 		thisPage.marginPreferences.properties = {
@@ -18,9 +18,7 @@ function create_page(thisPage){
 			right: left_column_left,
 			}
 		}
-	}
-
-	if (size == "small") {
+	} else if (size == "small") {
 		thisPage.marginPreferences.properties = {
 			top: meta.top_margin,
 			left: meta.right_margin,
@@ -62,8 +60,7 @@ function create_page(thisPage){
 				meta.page_width - meta.left_margin
 			];
 		}
-	} 
-	else if (size == "large") {
+	} else if (size == "large") {
 		// 2 columns
 		thisFrame2 = thisPage.textFrames.add()
 		thisFrame2.name = 'frame2';
@@ -100,27 +97,22 @@ function create_page(thisPage){
 
 	if (size == "large") {
 		myLeft = meta.left_margin,
-			myRight = left_column_left - meta.reference_gutter;
+		myRight = left_column_left - meta.reference_gutter;
 	}
 
 	thisFrame.geometricBounds = [meta.top_margin, myLeft, main_frame_bottom, myRight];
-	thisFrame.textFramePreferences.insetSpacing = [1.6, 0, 0, 0];
-
+	thisFrame.textFramePreferences.insetSpacing = [1.6, 0, 0, 1.6];
 
 	if(size=="large"){
-	// cross frame 2
-	thisFrame = thisPage.textFrames.add();
-	thisFrame.name = 'ref-frame2'
-	myRight = meta.page_width - meta.right_margin + meta.gutter,
-	myLeft = meta.page_width - meta.reference_margin;
-
-	if (size == "large") {
+		// cross frame 2
+		thisFrame = thisPage.textFrames.add();
+		thisFrame.name = 'ref-frame2'
+		
 		myRight = right_column_right + meta.reference_gutter,
 		myLeft = meta.page_width - meta.right_margin;
-	}
 
-	thisFrame.geometricBounds = [meta.top_margin, myLeft, main_frame_bottom, myRight];
-	thisFrame.textFramePreferences.insetSpacing = [1.6, 0, 0, 0];
+		thisFrame.geometricBounds = [meta.top_margin, myLeft, main_frame_bottom, myRight];
+		thisFrame.textFramePreferences.insetSpacing = [1.6, 1.6, 0, 0];
 	}
 	
 	// page numbers
@@ -131,23 +123,25 @@ function create_page(thisPage){
 		geometricBounds = myPageNumLocation(thisPage);
 		textFramePreferences.firstBaselineOffset = FirstBaseline.leadingOffset;
 		textFramePreferences.verticalJustification = VerticalJustification.BOTTOM_ALIGN;
-		if (size == "large") {textFramePreferences.verticalJustification = VerticalJustification.TOP_ALIGN;}
+		size === "large" & textFramePreferences.verticalJustification = VerticalJustification.TOP_ALIGN;
 		contents = SpecialCharacters.autoPageNumber;
 		parentStory.characters.item(0).appliedParagraphStyle = myDocument.paragraphStyles.item("Heading");
 		parentStory.characters.item(0).justification = Justification.leftAlign;
-		if (thisPage.side == PageSideOptions.LEFT_HAND) {parentStory.characters.item(0).justification = Justification.rightAlign;}
+		
+		thisPage.side == PageSideOptions.LEFT_HAND && parentStory.characters.item(0).justification = Justification.rightAlign;
 
 		parentStory.characters.item(0).appliedParagraphStyle = myDocument.paragraphStyles.item("Page Num");
-		if (size == "large") {parentStory.characters.item(0).appliedParagraphStyle = myDocument.paragraphStyles.item("Page Num Large");}
-		if (size == "large") {page_number.appliedObjectStyle = myDocument.objectStyles.item("Page Number")}
+		if (size == "large") {
+			parentStory.characters.item(0).appliedParagraphStyle = myDocument.paragraphStyles.item("Page Num Large");
+			page_number.appliedObjectStyle = myDocument.objectStyles.item("Page Number")
+		}
 	}
-
 	return thisPage;
 }
 
 function myPageNumLocation(myPage) {
 	if (size == "large" ) {
-		return [meta.page_height - meta.left_margin- 1.745, meta.page_width / 2 - 20, meta.page_height - meta.left_margin - 3.5, meta.page_width / 2 + 20];
+		return [meta.page_height - meta.bottom_margin/1.2/1.2, meta.page_width / 2 - 20, meta.page_height - meta.bottom_margin/1.2, meta.page_width / 2 + 20];
 	}
 
 	if (myPage.side == PageSideOptions.leftHand) {
@@ -157,8 +151,5 @@ function myPageNumLocation(myPage) {
 		var myX1 = meta.right_margin;
 		var myX2 = meta.page_width - meta.bottom_margin
 	}
-
 	 return [meta.page_height - meta.gutter, myX1, meta.page_height - meta.bottom_margin, myX2 ];
-	
 }
-
