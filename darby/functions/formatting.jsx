@@ -247,7 +247,7 @@ function apply_verse_number_style(myFrame) {
 
 	app.findGrepPreferences = app.changeGrepPreferences = null;
 	app.findGrepPreferences.position = Position.SUPERSCRIPT;
-//	app.findGrepPreferences.findWhat = type === 'scofield' ? "(\\d+)%" : "(//d+)\\s";
+	app.findGrepPreferences.findWhat = "(\\d+)~%";
 	app.findGrepPreferences.appliedParagraphStyle !== myDocument.paragraphStyles.item("quoteVerse");
 	found = myFrame.parentStory.findGrep()
 
