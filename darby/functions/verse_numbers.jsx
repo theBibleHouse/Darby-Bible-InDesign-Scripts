@@ -1,8 +1,17 @@
 function move_verse_numbers_to_frame(me) {
 	var lastNote
 	var myFrame = me.parentTextFrames[0];
-	var newNote = me.insertionPoints[-1].textFrames.add({appliedObjectStyle: myDocument.objectStyles.item("VerseMarker-" + myFrame.name)});
 
+	var newNote = me.insertionPoints[-1].textFrames.add({appliedObjectStyle: myDocument.objectStyles.item("VerseMarker-" + myFrame.name)});
+	var line_number = me.parentStory.insertionPoints.itemByRange(me.parentStory.paragraphs[0].insertionPoints[0].index,me.index).lines.length;
+	var other_line_number =  me.parentStory.insertionPoints.itemByRange(me.parentStory.paragraphs[0].insertionPoints[0].index,me.index+1).lines.length;
+	// if there is a previous line, ending in space, add disc line break so there are no 
+	// funny things with text reshuffle happning when the verse # is moved out of the text frame.	
+	// other line number is used, because if the verse # is the first char on line, the line number is for the previous line.
+	if(me.parentStory.lines[other_line_number-1].characters[-1].contents === " "){	
+		me.parentStory.lines[other_line_number-1].characters[-1].insertionPoints[-1].contents = SpecialCharacters.FORCED_LINE_BREAK
+	}
+	
 	// move text to new note
 	me.texts[-1].move(LocationOptions.atBeginning, newNote.insertionPoints[0]);
 
@@ -14,8 +23,7 @@ function move_verse_numbers_to_frame(me) {
 
 	// this is for verse 2 where the chapter number covers it
 	if (newNote.contents === 2) {
-
-		var line_number = me.parentStory.insertionPoints.itemByRange(me.parentStory.paragraphs[0].insertionPoints[0].index,me.index).lines.length;
+		
 		var myvar = false;
 		var myothervar = false;
 

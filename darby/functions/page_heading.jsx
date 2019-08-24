@@ -18,7 +18,7 @@ function add_running_head(myPage, aContents) {
 
 	}
 	if (size == "large") {
-		aFrame.geometricBounds = [meta.left_margin + 3.5 , meta.page_width / 2 - 40, meta.left_margin+ 1.745, meta.page_width / 2 + 40];
+		aFrame.geometricBounds = [meta.top_margin/1.2/1.2 , meta.page_width / 2 - 40, meta.left_margin/1.2, meta.page_width / 2 + 40];
 		aFrame.parentStory.characters.item(0).appliedParagraphStyle = myDocument.paragraphStyles.item("Heading Large");
 		aFrame.textFramePreferences.verticalJustification = VerticalJustification.BOTTOM_ALIGN;
 		aFrame.appliedObjectStyle = myDocument.objectStyles.item("Page Heading")
@@ -131,31 +131,4 @@ function create_page_heading(firstPage, myFrame) {
 	if (myStyle !== "bookName" && firstPage != 1) {
 		add_running_head(myPage, String(book_name + " " + chapter_number));
 	}
-}
-
-function addHeadTextFrame(myPage) {
-	var pageMargins = myPage.marginPreferences,
-		aFrame = myPage.textFrames.add(),
-		areFacing = app.activeDocument.documentPreferences.facingPages,
-		myBottom = myDocument.documentPreferences.pageHeight - pageMargins.bottom,
-		myTop = 0 + pageMargins.top,
-		myLeft = myDocument.documentPreferences.pageWidth - pageMargins.right + 4,
-		myRight = myDocument.documentPreferences.pageWidth - 6.5
-
-	if (myPage.side == PageSideOptions.leftHand) {
-		var myX1 = meta.page_width / 2;
-		var myX2 = myPage.marginPreferences.left;
-		aFrame.textFramePreferences.autoSizingReferencePoint = AutoSizingReferenceEnum.RIGHT_CENTER_POINT;
-
-	} else {
-		var myX1 = myPage.marginPreferences.left;
-		var myX2 = meta.page_width / 2;
-		aFrame.textFramePreferences.autoSizingReferencePoint = AutoSizingReferenceEnum.LEFT_CENTER_POINT;
-	}
-	var myX2 = meta.page_width - myX2;
-	aFrame.geometricBounds = [4, myX1, 9.5, myX2];
-	aFrame.textFramePreferences.verticalJustification = VerticalJustification.BOTTOM_ALIGN;
-	aFrame.textFramePreferences.autoSizingType = AutoSizingTypeEnum.WIDTH_ONLY;
-	return aFrame;
-
 }

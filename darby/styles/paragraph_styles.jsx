@@ -460,7 +460,7 @@ try {
 			
 			alignToBaseline: true,
 			keepLinesTogether: true,
-			keepFirstLines: 1,
+			keepFirstLines: 2,
 			leftIndent: meta.gutter,
 			
 			keepLastLines: 2,
@@ -643,14 +643,14 @@ dropCapCharacters: 2,
 			keepLinesTogether: true,
 			keepAllLinesTogether: true,
 			hyphenation: false,
-						tracking:90,
+			tracking:90,
 
 		}
 		if (size == "large"){
 			myParagraphStyle = myDocument.paragraphStyles.item("bookName")
 			myParagraphStyle.properties = {
 				pointSize: 10.9,
-										tracking:50,
+				tracking:50,
 
 			}
 		}
@@ -668,6 +668,7 @@ dropCapCharacters: 2,
 			fontStyle: "Normal",
 			pointSize: 8.75,
 			leading: 8,
+			//spaceBefore: 1.6,
 			alignToBaseline: true,
 			justification: Justification.LEFT_JUSTIFIED,
 			keepLinesTogether: true,

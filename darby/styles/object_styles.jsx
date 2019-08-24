@@ -30,12 +30,12 @@ function create_object_styles() {
 
 			with(anchoredObjectSettings) {
 				//spineRelative = true;
-				anchorPoint = AnchorPoint.BOTTOM_RIGHT_ANCHOR;
+				anchorPoint = AnchorPoint.BOTTOM_LEFT_ANCHOR;
 				anchoredPosition = AnchorPosition.anchored;
 				horizontalReferencePoint = AnchoredRelativeTo.TEXT_FRAME;
 				horizontalAlignment = HorizontalAlignment.leftAlign;
 				verticalReferencePoint = VerticallyRelativeTo.LINE_BASELINE;
-				anchorXoffset = -2.5; //3
+				anchorXoffset = 0//-meta.gutter/2; 
 				anchorYoffset = 0;
 				pinPosition = true;
 
@@ -72,12 +72,12 @@ function create_object_styles() {
 
 			with(anchoredObjectSettings) {
 				//spineRelative = true;
-				anchorPoint = AnchorPoint.BOTTOM_LEFT_ANCHOR;
+				anchorPoint = AnchorPoint.BOTTOM_RIGHT_ANCHOR;
 				anchoredPosition = AnchorPosition.anchored;
 				horizontalReferencePoint = AnchoredRelativeTo.TEXT_FRAME;
 				horizontalAlignment = HorizontalAlignment.rightAlign;
 				verticalReferencePoint = VerticallyRelativeTo.LINE_BASELINE;
-				anchorXoffset = '-2.5mm'; //-3
+				anchorXoffset = 0//-meta.gutter/2; 
 				anchorYoffset = 0;
 				pinPosition = true;
 
@@ -253,16 +253,14 @@ function create_object_styles() {
 		textFramePreferences: {
 			autoSizingType: AutoSizingTypeEnum.HEIGHT_ONLY,
 			autoSizingReferencePoint: AutoSizingReferenceEnum.TOP_CENTER_POINT,
-			insetSpacing: [0, 0, '4mm', 0],
+			insetSpacing: [0, 0, '2mm', 0],
 		},
 		textWrapPreferences: {
 			textWrapMode: TextWrapModes.JUMP_OBJECT_TEXT_WRAP,
-			textWrapOffset: [0, 0, "3mm", 0]
+			textWrapOffset: [0, 0, "6mm", 0] // this is the min. when frame is created this is adjusted to hit the next basline.
 		}
 	}
-		myObjectStyle.properties = {textWrapPreferences: {
-			textWrapOffset: [0, 0, "3mm", 0]
-		}}
+	myObjectStyle.properties = {textWrapPreferences:{textWrapOffset:[0,0,6,0]}}
 		if (size == "small"){
 			myObjectStyle.properties = {textWrapPreferences: {
 			textWrapOffset: [0, 0, "1.5mm", 0]	
