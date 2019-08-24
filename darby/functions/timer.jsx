@@ -40,3 +40,22 @@ function timeit(func,args){
     return result
 }
 
+
+
+var startTime, endTime;
+
+function start() {
+  startTime = new Date();
+  return startTime;
+};
+function end() {
+  endTime = new Date();
+  var timeDiff = endTime - startTime; //in ms
+  // strip the ms
+  timeDiff /= 1000;
+
+  // get seconds 
+  var seconds = timeDiff;
+  start()
+  return seconds
+}
