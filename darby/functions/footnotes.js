@@ -101,8 +101,8 @@ function add_footnotes(myFrame){
 		footframe.parentStory.characters.item(0).appliedParagraphStyle = myDocument.paragraphStyles.item("Footnote")
 		
 		timeit(footnoteSuperscript,[footframe]);
-		timeit(bold,[footframe, "\\d+:\\d+"])
-		timeit(noBreak,[footframe, "\\d+:\\d+\\s\\l\\s[\\l\\u]+"]);
+		timeit(bold,[footframe, "\\d+\\.\\d+"])
+		timeit(noBreak,[footframe, "\\d+\\.\\d+\\s\\l\\s[\\l\\u]+"]);
 	}
 
 
