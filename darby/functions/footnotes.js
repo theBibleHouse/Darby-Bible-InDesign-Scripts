@@ -80,7 +80,7 @@ function add_footnotes(myFrame){
 				
 				// get reference only if verse changed
 				
-				verse !== lastverse && footframe.contents += thisnote[x].slice(1,2) + ":" + thisnote[x].slice(2,3) + String.fromCharCode(8201)  
+				verse !== lastverse && footframe.contents += thisnote[x].slice(1,2) + "." + thisnote[x].slice(2,3) + String.fromCharCode(8201)  
 
 				// add marker if notes are not the same
 				thisnote !== lastnote && marker = alpha_increment()
