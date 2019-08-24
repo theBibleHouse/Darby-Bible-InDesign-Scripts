@@ -39,7 +39,6 @@ function format_text(myFrame) {
 	myFrame.parentStory.changeGrep()
 
 	// in front of verse numbers
-	app.findGrepPreferences = app.changeGrepPreferences = null
 	app.findGrepPreferences.findWhat = "~>";
 	app.changeGrepPreferences.changeTo = "\\s"
 	myFrame.parentStory.changeGrep()
@@ -144,7 +143,6 @@ function apply_book_name_style(myPage, myFrame) {
 	bookFrame.changeGrep()
 
 	// remove extra space
-	app.findGrepPreferences = app.changeGrepPreferences = null;
 	app.findGrepPreferences.findWhat = "\\n";
 	app.changeGrepPreferences.changeTo = "~b\\t";
 	app.findGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item('intro');
@@ -168,7 +166,12 @@ function apply_book_name_style(myPage, myFrame) {
 
 	// apply italics
 	find_and_replace_w_c_style(bookFrame,"\\*(.+?)\\*","$1",'Italics')
+
+	// check book frame size. Change bottom outset to hit the next baseline
 	
+	var newOffset = Math.ceil(bookFrame.geometricBounds[2]  / myDocument.gridPreferences.baselineDivision) *  myDocument.gridPreferences.baselineDivision
+	newOffset = newOffset - bookFrame.geometricBounds[2] + bookFrame.properties.textWrapPreferences.textWrapOffset[2]  - .27*myDocument.gridPreferences.baselineDivision
+	bookFrame.properties.textWrapPreferences.textWrapOffset = [0,0,newOffset,0]
 }
 
 function apply_verse_number_style(myFrame) { 
@@ -400,41 +403,52 @@ function footnoteSuperscript(myFrame) {
 	app.findGrepPreferences = app.changeGrepPreferences = null;
 	app.findGrepPreferences.findWhat = "(:\\d+)\\s(\\l)";
 	app.findGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("Footnote");
-	app.changeGrepPreferences.changeTo = "$1~s$2"; // was ~%
-	myFrame.changeGrep();
+	app.changeGrepPreferences.changeTo = "$1~s$2"; // was 
+	myFrame.parentStory.changeGrep();
+
 	app.findGrepPreferences = app.changeGrepPreferences = null;
-	app.findGrepPreferences.findWhat = ":\\d+[\\s||~%]\\K(\\l)[\\s||~%]";
+	app.findGrepPreferences.findWhat = ":\\d+[\\s|~%|~s]\\K(\\l)~<*";
 	app.findGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("Footnote");
 	app.changeGrepPreferences.appliedCharacterStyle = myDocument.characterStyles.item("SuperScript");
-	app.changeGrepPreferences.changeTo = "$1~%";
-	myFrame.changeGrep();
+	app.changeGrepPreferences.changeTo = "$1~<";
+	myFrame.parentStory.changeGrep();
 	app.findGrepPreferences = app.changeGrepPreferences = null;
-	app.findGrepPreferences.findWhat = ":\\d+[\\s||~%]\\K(\\l)(?=,)";
+	app.findGrepPreferences.findWhat = ":\\d+[\\s|~<|~s]\\K(\\l)(?=,)";
 	app.findGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("Footnote");
 	app.changeGrepPreferences.appliedCharacterStyle = myDocument.characterStyles.item("SuperScript");
 	app.changeGrepPreferences.changeTo = "$1";
-	myFrame.changeGrep();
-	app.findGrepPreferences = app.changeGrepPreferences = null;
-	app.findGrepPreferences.findWhat = "\\s\\K(\\l)~%";
+	myFrame.parentStory.changeGrep();
+
+	// app.findGrepPreferences = app.changeGrepPreferences = null;
+	// app.findGrepPreferences.findWhat = "\\s\\K(\\l)~<";
+	// app.changeGrepPreferences.appliedCharacterStyle = myDocument.characterStyles.item("SuperScript");
+	// app.changeGrepPreferences.changeTo = "$1~<";
+	// myFrame.parentStory.changeGrep();
+
+	app.findGrepPreferences.findWhat = "~k[~>|~m]~k\\K(\\l)~<*";
 	app.changeGrepPreferences.appliedCharacterStyle = myDocument.characterStyles.item("SuperScript");
-	app.changeGrepPreferences.changeTo = "$1~%";
-	myFrame.changeGrep();
+	app.changeGrepPreferences.changeTo = "$1~<";
+	myFrame.parentStory.changeGrep();
+
+
+
+
 	// italics
 
 	app.findGrepPreferences = app.changeGrepPreferences = null;
-	app.findGrepPreferences.findWhat = "\\*(\\<.+?\\>)\\*";
+	app.findGrepPreferences.findWhat = "<i>(.+?)</i>";
 	app.findGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("Footnote");
 	app.changeGrepPreferences.appliedCharacterStyle = myDocument.characterStyles.item("Italics");
-	//app.changeGrepPreferences.changeTo = "$1"
+	app.changeGrepPreferences.changeTo = "$1"
 	myFrame.parentStory.changeGrep();
-	//try {
-			// convert {{}} in footnotes to italics
-			app.changeGrepPreferences = app.findGrepPreferences = null;
-			app.findGrepPreferences.findWhat = "\\*(.+?)\\*";
-			app.changeGrepPreferences.appliedCharacterStyle = myDocument.characterStyles.item("Italics")
-			app.changeGrepPreferences.changeTo = "$1";
-			myFrame.changeGrep()
-			//} catch (e) {}
+	// //try {
+	// 		// convert {{}} in footnotes to italics
+	// 		app.changeGrepPreferences = app.findGrepPreferences = null;
+	// 		app.findGrepPreferences.findWhat = "\\*(.+?)\\*";
+	// 		app.changeGrepPreferences.appliedCharacterStyle = myDocument.characterStyles.item("Italics")
+	// 		app.changeGrepPreferences.changeTo = "$1";
+	// 		myFrame.changeGrep()
+	// 		//} catch (e) {}
 
 }
 
@@ -480,11 +494,22 @@ function format_cross_reference_verse_numbers( myFrame ) {
 
 	// allow line break on comma and semi colon.. only if there are more than 3 chars between
 	app.findGrepPreferences.findWhat = "([;|-|,])(?=[^~k][^;&^,&^-]{3})";
-	app.changeGrepPreferences.changeTo = "$1~k";
+	app.changeGrepPreferences.changeTo = "$1\\s~k";
 	myFrame.parentStory.changeGrep()
 
-}
+	// remove ; from line endings
+ 	myLines = myFrame.parentStory.lines;
 
+ 	try {
+		for (k=0; k<myLines.length; k++){
+		 	if (myLines[k].length > 3){
+		    	if(myLines[k].characters[myLines[k].characters.length-3].contents === ";" && myLines[k].characters[myLines[k].characters.length-2].contents === " "){
+		    		myLines[k].characters[myLines[k].characters.length-3].contents = "";
+				}
+			}
+		}
+	} catch(e){}
+}
 
 function metrical_fix(myframe) {
 
