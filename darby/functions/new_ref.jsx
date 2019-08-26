@@ -93,7 +93,37 @@ function dates_and_cross(myFrame, chapter, verse){
 		
 		// reset paragraph style
 	    cross_frame.parentStory.appliedParagraphStyle = myDocument.paragraphStyles.item("crossReference-"+myFrame.name);
-			
+		
+		// no break on v 12; ch 1; etc, if there is no verse specified
+		app.findGrepPreferences = app.changeGrepPreferences = null;
+		//app.findGrepPreferences.findWhat = "~k\\l+\\s\\d+;";
+		//app.changeGrepPreferences.noBreak = true;
+		//cross_frame.parentStory.changeGrep()
+
+		// keep ch:v together
+		app.findGrepPreferences.findWhat = "\\d+:\\d+"
+		app.changeGrepPreferences.noBreak = true;
+		cross_frame.parentStory.changeGrep()
+
+
+		// keep name ch together
+		app.findGrepPreferences.findWhat = "\\l\\s\\d"
+		app.changeGrepPreferences.noBreak = true;
+		cross_frame.parentStory.changeGrep()
+
+		// remove ; from line endings
+	 	myLines = cross_frame.parentStory.lines;
+
+	 	try {
+			for (k=0; k<myLines.length; k++){
+			 	if (myLines[k].length > 3){
+			    	if(myLines[k].characters[myLines[k].characters.length-3].contents === ";" && myLines[k].characters[myLines[k].characters.length-2].contents === " "){
+			    		myLines[k].characters[myLines[k].characters.length-3].contents = "";
+					}
+				}
+			}
+		} catch(e){}
+
 		// remove breaks if references go off the end of the page.
 
 		if(cross_frame.overflows){
@@ -107,6 +137,5 @@ function dates_and_cross(myFrame, chapter, verse){
 			 	found.length < 1 ? while_cross_frame_overflows=100 : found[found.length-1].insertionPoints[0].parentStory.characters[(found[found.length-1].insertionPoints[0].index)].remove();
 			}	
 		}
-	//	if(thiscross=='Deut.25.5'){asdfadf}
 	}
 }
