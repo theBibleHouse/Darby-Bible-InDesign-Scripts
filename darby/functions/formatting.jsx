@@ -22,6 +22,9 @@ function format_text(myFrame) {
 	// words after hyphen
 	noBreak(myFrame,"\\b\\w+?(?=-)")
 
+	// proper words
+	noBreak(myFrame,"\\u\\l+")
+
 	app.findGrepPreferences = app.changeGrepPreferences = null
 	app.findGrepPreferences.findWhat = "-"
 	app.changeGrepPreferences.changeTo = "-~k"
@@ -248,7 +251,7 @@ function apply_verse_number_style(myFrame) {
 	app.findGrepPreferences = app.changeGrepPreferences = null;
 	app.findGrepPreferences.position = Position.SUPERSCRIPT;
 	//app.findGrepPreferences.findWhat = type === 'scofield' ? "(\\d+)%" : "(//d+)\\s";
-	app.findGrepPreferences.findWhat = "(//d+)\\s";
+	app.findGrepPreferences.findWhat = "(\\d+)\\s";
 	app.findGrepPreferences.appliedParagraphStyle !== myDocument.paragraphStyles.item("quoteVerse");
 	found = myFrame.parentStory.findGrep()
 
@@ -402,19 +405,19 @@ function footnoteSuperscript(myFrame) {
 
 	// set space between footnote reference and the superscript letter
 	app.findGrepPreferences = app.changeGrepPreferences = null;
-	app.findGrepPreferences.findWhat = "(\\.\\d+)\\s(\\l)";
+	app.findGrepPreferences.findWhat = "(:\\d+)\\s(\\l)";
 	app.findGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("Footnote");
 	app.changeGrepPreferences.changeTo = "$1~s$2"; // was 
 	myFrame.parentStory.changeGrep();
 
 	app.findGrepPreferences = app.changeGrepPreferences = null;
-	app.findGrepPreferences.findWhat = "\\.\\d+[\\s|~%|~s]\\K(\\l)~<*";
+	app.findGrepPreferences.findWhat = ":\\d+[\\s|~%|~s]\\K(\\l)~<*";
 	app.findGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("Footnote");
 	app.changeGrepPreferences.appliedCharacterStyle = myDocument.characterStyles.item("SuperScript");
 	app.changeGrepPreferences.changeTo = "$1~<";
 	myFrame.parentStory.changeGrep();
 	app.findGrepPreferences = app.changeGrepPreferences = null;
-	app.findGrepPreferences.findWhat = "\\.\\d+[\\s|~<|~s]\\K(\\l)(?=,)";
+	app.findGrepPreferences.findWhat = ":\\d+[\\s|~<|~s]\\K(\\l)(?=,)";
 	app.findGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("Footnote");
 	app.changeGrepPreferences.appliedCharacterStyle = myDocument.characterStyles.item("SuperScript");
 	app.changeGrepPreferences.changeTo = "$1";
@@ -498,6 +501,12 @@ function format_cross_reference_verse_numbers( myFrame ) {
 	app.changeGrepPreferences.changeTo = "$1\\s~k";
 	myFrame.parentStory.changeGrep()
 
+	// no break on v 12; ch 1; etc, if there is no verse specified
+	noBreak(myFrame,'~k\\l+\\s\\d+;')
+	// keep ch:v together
+	noBreak(myFrame,'\\d+:\\d+')
+	// keep name ch together
+	noBreak(myFrame,'\\l\\s\\d')
 	// remove ; from line endings
  	myLines = myFrame.parentStory.lines;
 
