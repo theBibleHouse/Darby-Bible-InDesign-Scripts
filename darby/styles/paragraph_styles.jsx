@@ -101,7 +101,7 @@ capitalization: Capitalization.ALL_CAPS,
 		myParagraphStyle.properties = {
 			appliedFont: "Lexicon No1 C Tab",
 			fontStyle: "Italic",
-			pointSize: 8.75,
+			pointSize: 7,
 			leading: 8,
 			noBreak: false,
 			spaceBefore: "2 mm",
@@ -117,7 +117,7 @@ capitalization: Capitalization.ALL_CAPS,
 	if (size == "large"){
 		myParagraphStyle = myDocument.paragraphStyles.item("SectionHeading");
 		myParagraphStyle.properties = {
-			rightIndent: meta.gutter,
+			leftIndent: meta.gutter,
 
 		}
 
@@ -134,7 +134,7 @@ try {
 			basedOn: myDocument.paragraphStyles.item("SectionHeading"),
 			rightIndent: "0mm",
 			leftIndent: meta.gutter,
-			justification: Justification.RIGHT_ALIGN,
+			justification: Justification.LEFT_ALIGN,
 			keepLinesTogether: true,
 			keepAllLinesTogether: true,
 			keepWithNext: 1,
@@ -142,7 +142,7 @@ try {
 	}}
 	myParagraphStyle = myDocument.paragraphStyles.item("SectionHeadingRight");
 	myParagraphStyle.properties = {
-		rightIndent:0
+		rightIndent:meta.gutter,
 	}
 
 
@@ -219,6 +219,7 @@ try {
 			fontStyle: "Normal",
 			pointSize: 6.75,
 			leading: 8,
+			alignToBaseline:true,
 			gridAlignFirstLineOnly:true, // aligns first line to grid
 			justification: Justification.LEFT_JUSTIFIED
 		}
@@ -318,7 +319,7 @@ try {
 			justification: Justification.LEFT_JUSTIFIED,
 			keepLinesTogether: true,
 			keepFirstLines: 1,
-			keepLastLines: 1,
+			keepLastLines: 2,
 //			hyphenation: false,
 			//composer: "Adobe World-Read Paragraph Composer",
 			// add on the left indent here
