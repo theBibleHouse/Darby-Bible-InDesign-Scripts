@@ -497,28 +497,14 @@ function format_cross_reference_verse_numbers( myFrame ) {
 	myFrame.parentStory.changeGrep()
 
 	// allow line break on comma and semi colon.. only if there are more than 3 chars between
-	app.findGrepPreferences.findWhat = "([;|-|,])(?=[^~k][^;&^,&^-]{3})";
+	app.findGrepPreferences.findWhat = "(;)(?=[^~k][^;]{3})";
 	app.changeGrepPreferences.changeTo = "$1\\s~k";
 	myFrame.parentStory.changeGrep()
-
-	// no break on v 12; ch 1; etc, if there is no verse specified
-	noBreak(myFrame,'~k\\l+\\s\\d+;')
-	// keep ch:v together
-	noBreak(myFrame,'\\d+:\\d+')
-	// keep name ch together
-	noBreak(myFrame,'\\l\\s\\d')
-	// remove ; from line endings
- 	myLines = myFrame.parentStory.lines;
-
- 	try {
-		for (k=0; k<myLines.length; k++){
-		 	if (myLines[k].length > 3){
-		    	if(myLines[k].characters[myLines[k].characters.length-3].contents === ";" && myLines[k].characters[myLines[k].characters.length-2].contents === " "){
-		    		myLines[k].characters[myLines[k].characters.length-3].contents = "";
-				}
-			}
-		}
-	} catch(e){}
+	// for comma and hyphen, idk what chars are after, as long as there are 3
+	app.findGrepPreferences.findWhat = "([-|,])(?=[^~k][^;]{3})";
+	app.changeGrepPreferences.changeTo = "$1~k";
+	myFrame.parentStory.changeGrep()
+	
 }
 
 function metrical_fix(myframe) {
