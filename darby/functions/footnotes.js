@@ -56,20 +56,20 @@ function add_footnotes(myFrame){
 
 		if(numbers[me].appliedCharacterStyle == myDocument.characterStyles.item("ChapterNum")){ 
 
-			chapter = numbers[me].contents
+			notechapter = numbers[me].contents
 			verse = 1
 
 		} else if(numbers[me].appliedCharacterStyle == myDocument.characterStyles.item("VerseNum")){ 
 			verse = numbers[me].contents
 		}
 
-		var thisnote = timeit(get_foot_array_val,[note,chapter,verse]) 
+		var thisnote = timeit(get_foot_array_val,[note,notechapter,verse]) 
 
 		if(thisnote){
 
 			
 			if(!myFrame.parentPage.textFrames.itemByName('note-frame').isValid){
-				var footframe = addFootnoteTextFrame(myFrame.parentPage)
+				var footframe = timeit(addFootnoteTextFrame,[myFrame.parentPage])
 			} else {
 				footframe = myFrame.parentPage.textFrames.itemByName('note-frame')	
 			}
@@ -80,7 +80,7 @@ function add_footnotes(myFrame){
 				
 				// get reference only if verse changed
 				
-				verse !== lastverse && footframe.contents += thisnote[x].slice(1,2) + "." + thisnote[x].slice(2,3) + String.fromCharCode(8201)  
+				verse !== lastverse && footframe.contents += thisnote[x].slice(1,2) + ":" + thisnote[x].slice(2,3) + String.fromCharCode(8201)  
 
 				// add marker if notes are not the same
 				thisnote !== lastnote && marker = alpha_increment()
@@ -92,27 +92,78 @@ function add_footnotes(myFrame){
 				// if notes are the same, put the marker in the new place as well... in the verse.
 				// add the marker to the verse.
 				
+				// if (myFindVerse == 1 || myFindWordNum <= 0) { // && myFindWordNum  != -1){
+				// 	if (myFindWordNum <= 0 && myFindVerse == 1) {
+				// 		app.changeGrepPreferences = app.findGrepPreferences = null;
+				// 		app.findGrepPreferences.findWhat = "(PSALM |Chapter )" + myFindChapter + "~b[^\"]+?\\<\\K";
+				// 	} else {
+				// 		app.changeGrepPreferences = app.findGrepPreferences = null;
+				// 		app.findGrepPreferences.findWhat = "(PSALM |Chapter )" + myFindChapter + "~b[^\"]+?\\<\\K(?=" + myFindWord + ")";
+				// 	}
+				// } else {
+				// 	app.changeGrepPreferences = app.findGrepPreferences = null;
+				// 	app.findGrepPreferences.findWhat = "(PSALM |Chapter )" + myFindChapter + "~b[^\"]+?\\<" + myFindVerse + "(~%|\\t)+(\\b\\w+?(-\\b\\w+?)?\\b.+?){" + myFindWordNum + "}\\<\\K(?=" + myFindWord + ")";
+				// }
+				// try {
+				// 	me = myFrame.parentStory.findGrep();
+				// 	me1 = me[0].insertionPoints[0];
+				// 	me1.contents = myChangeText;
+				// } catch (e) {
+				// 	try {
+				// 		app.changeGrepPreferences = app.findGrepPreferences = null;
+				// 		app.findGrepPreferences.findWhat = "(PSALM |Chapter )" + myFindChapter + "~b[^\"]+?\\<" + myFindVerse + "(~%|\\t)+[^\"]+?\\<\\K(?=" + myFindWord + ")";
+				// 		try {
+				// 			me = myFrame.parentStory.findGrep();
+				// 			me1 = me[0].insertionPoints[0];
+				// 			me1.contents = myChangeText;
+				// 		} catch (e) {alert(e)}
+				// 	} catch (e) {alert(e)}
+				// }
+
+
+				// to do :
+				// what if the verse crosses over pages?
+				// need to pop notes from parrent array so they are not intested 2 times
+				// what if the note is so long (adds a new line to the note paragraph) that the verse get pushed to the next page?
+
 				lastverse = verse
 				lastnote = thisnote[x]
 			}
 
 			if(myFrame.parentPage.textFrames.itemByName('note-frame').isValid){
 		
-		footframe.parentStory.characters.item(0).appliedParagraphStyle = myDocument.paragraphStyles.item("Footnote")
-		
-		timeit(footnoteSuperscript,[footframe]);
-		timeit(bold,[footframe, "\\d+\\.\\d+"])
-		timeit(noBreak,[footframe, "\\d+\\.\\d+\\s\\l\\s[\\l\\u]+"]);
-	}
-
-
+				footframe.parentStory.characters.item(0).appliedParagraphStyle = myDocument.paragraphStyles.item("Footnote")
+				
+				timeit(footnoteSuperscript,[footframe]);
+				timeit(bold,[footframe, "\\d+:\\d+~s"])
+				timeit(noBreak,[footframe, "\\d+:\\d+\\s\\l\\s[\\l\\u]+"]);
+			}
 		}
-	
-
-		
-		
 	}
-	
-	
-	// 		
 }
+
+
+function adjustFootFrame(){
+
+		// if there is a footnote text frame scoot it up here.
+		// 1 get base of text frame
+		// 2 set top of footframe to text frame baseline + 1
+
+		var noteFrame = aPage.textFrames.itemByName('note-frame')
+		// turn off autosizing.
+		noteFrame.textFramePreferences.autoSizingType = AutoSizingTypeEnum.OFF;
+
+		// get last baseline
+		var lastBaseline = aPage.textFrames.itemByName('frame1').lines[-1].characters[-1].baseline;
+		lastBaseline += .27*myDocument.gridPreferences.baselineDivision
+		
+		// update bounds
+		var bounds = noteFrame.geometricBounds
+		bounds[0] = lastBaseline
+		noteFrame.geometricBounds = bounds;
+	
+		// turn on auto sizing
+		noteFrame.textFramePreferences.autoSizingReferencePoint = AutoSizingReferenceEnum.TOP_CENTER_POINT;
+		noteFrame.textFramePreferences.autoSizingType = AutoSizingTypeEnum.HEIGHT_ONLY
+
+	}
