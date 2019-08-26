@@ -48,12 +48,10 @@ function addFootnoteTextFrame(aPage) {
 		myLeft = left_column_left + meta.gutter
 		myRight = meta.page_width - myLeft
 	}
-
+	
 	aFrame.geometricBounds = [myTop, myLeft, main_frame_bottom, myRight];
-	aFrame.textFramePreferences.autoSizingReferencePoint = AutoSizingReferenceEnum.BOTTOM_CENTER_POINT;
-	aFrame.textFramePreferences.autoSizingType = AutoSizingTypeEnum.HEIGHT_ONLY;
-	aFrame.textFramePreferences.insetSpacing = ["2mm", 0, 0, 0];
-	aFrame.textWrapPreferences.textWrapMode = TextWrapModes.BOUNDING_BOX_TEXT_WRAP;
+	aFrame.appliedObjectStyle = myDocument.objectStyles.item("Foot Note Frame")
+	
 	return aFrame;
 }
 
@@ -68,7 +66,7 @@ function balanceFrames(myFrame){
 
 			frame1_length = aPage.textFrames.itemByName('frame1').lines[-1].baseline
 			frame2_length = myFrame.lines.length > 0 ? myFrame.lines[-1].baseline : 0
-			break_point = (frame1_length - frame2_length) / 2 + frame2_length + myDocument.gridPreferences.baselineDivision
+			break_point = (frame1_length - frame2_length) / 2 + frame2_length + .27*myDocument.gridPreferences.baselineDivision
 
 		} else {
 
@@ -98,6 +96,6 @@ function balanceFrames(myFrame){
 		aPage.textFrames.itemByName('ref-frame2').geometricBounds = ref_frame2_geo_bounds
 
 
-		// if there is a footnote text frame scoot it up here.
+
 	}
 }
