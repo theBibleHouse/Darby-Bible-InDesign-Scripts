@@ -30,12 +30,12 @@ function create_object_styles() {
 
 			with(anchoredObjectSettings) {
 				//spineRelative = true;
-				anchorPoint = AnchorPoint.BOTTOM_LEFT_ANCHOR;
+				anchorPoint = AnchorPoint.BOTTOM_RIGHT_ANCHOR;
 				anchoredPosition = AnchorPosition.anchored;
 				horizontalReferencePoint = AnchoredRelativeTo.TEXT_FRAME;
 				horizontalAlignment = HorizontalAlignment.leftAlign;
 				verticalReferencePoint = VerticallyRelativeTo.LINE_BASELINE;
-				anchorXoffset = 0//-meta.gutter/2; 
+				anchorXoffset = -meta.gutter+1.6; 
 				anchorYoffset = 0;
 				pinPosition = true;
 
@@ -72,12 +72,12 @@ function create_object_styles() {
 
 			with(anchoredObjectSettings) {
 				//spineRelative = true;
-				anchorPoint = AnchorPoint.BOTTOM_RIGHT_ANCHOR;
+				anchorPoint = AnchorPoint.BOTTOM_LEFT_ANCHOR;
 				anchoredPosition = AnchorPosition.anchored;
 				horizontalReferencePoint = AnchoredRelativeTo.TEXT_FRAME;
 				horizontalAlignment = HorizontalAlignment.rightAlign;
 				verticalReferencePoint = VerticallyRelativeTo.LINE_BASELINE;
-				anchorXoffset = 0//-meta.gutter/2; 
+				anchorXoffset = -meta.gutter+1.6; 
 				anchorYoffset = 0;
 				pinPosition = true;
 
@@ -174,7 +174,7 @@ function create_object_styles() {
 			horizontalReferencePoint: AnchoredRelativeTo.COLUMN_EDGE,
 			horizontalAlignment: HorizontalAlignment.leftAlign,
 			verticalReferencePoint: VerticallyRelativeTo.TOP_OF_LEADING,
-			anchorXoffset: '0mm',
+			anchorXoffset: -meta.gutter,
 			anchorYoffset: '0mm',
 			pinPosition: true,
 		},
@@ -194,7 +194,7 @@ function create_object_styles() {
 		}
 	}
 	myObjectStyle.properties = {textWrapPreferences: {
-			textWrapOffset: [0, 0, '-1mm', '1.5mm']
+			textWrapOffset: [0, 0, '-1mm', '1.6mm']
 		}}
 
 	myObjectStyle = myDocument.objectStyles.add();
@@ -208,12 +208,12 @@ function create_object_styles() {
 		enableAnchoredObjectOptions: true,
 		enableTextFrameAutoSizingOptions: true,
 		anchoredObjectSettings: {
-			anchorPoint: AnchorPoint.TOP_RIGHT_ANCHOR,
+			anchorPoint: AnchorPoint.TOP_LEFT_ANCHOR,
 			anchoredPosition: AnchorPosition.anchored,
 			horizontalReferencePoint: AnchoredRelativeTo.TEXT_FRAME,
-			horizontalAlignment: HorizontalAlignment.rightAlign,
+			horizontalAlignment: HorizontalAlignment.leftAlign,
 			verticalReferencePoint: VerticallyRelativeTo.TOP_OF_LEADING,
-			anchorXoffset: '0mm',
+			anchorXoffset: -meta.gutter,
 			anchorYoffset: '0mm',
 			pinPosition: true,
 		},
@@ -234,7 +234,7 @@ function create_object_styles() {
 		}
 	}
 	myObjectStyle.properties = {textWrapPreferences: {
-			textWrapOffset: [0, "1.5mm", 0, 0]
+			textWrapOffset: [0, 0, '-1mm', '1.6mm']
 		}}
 
 	myObjectStyle = myDocument.objectStyles.add();
@@ -299,4 +299,32 @@ function create_object_styles() {
 			pinPosition: true,
 		},
 	}
+
+	myObjectStyle = myDocument.objectStyles.add();
+	myObjectStyle.properties = {
+		name: "Foot Note Frame",
+		appliedParagraphStyle: myDocument.paragraphStyles.item("Footnote"),
+		enableTextFrameBaselineOptions: true,
+		enableTextFrameGeneralOptions: true,
+		enableAnchoredObjectOptions: true,
+		enableFrameFittingOptions: true,
+		enableTextFrameAutoSizingOptions: true,
+		enableParagraphStyle: true,
+		enableStoryOptions: true,
+		enableTextWrapAndOthers: true,
+		enabledStroke: true,
+		strokeWeight: 0,
+
+		textFramePreferences: {
+			autoSizingType: AutoSizingTypeEnum.HEIGHT_ONLY,
+			autoSizingReferencePoint: AutoSizingReferenceEnum.BOTTOM_CENTER_POINT,
+			insetSpacing : [.5*myDocument.gridPreferences.baselineDivision.toFixed(2), 0, 0, 0],
+		},
+		textWrapPreferences: {
+			textWrapMode: TextWrapModes.BOUNDING_BOX_TEXT_WRAP,
+		},
+		
+	}
+
+
 }
