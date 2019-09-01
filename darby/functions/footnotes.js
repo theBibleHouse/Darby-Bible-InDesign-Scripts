@@ -58,7 +58,7 @@ function add_footnotes(myFrame){
 
 		// check if verse is still on page. if not, skip?
 		// what if the verse started on the last page?
-
+		$.writeln(numbers[me].contents)
 		app.findGrepPreferences = null
 		app.findGrepPreferences.findWhat = numbers[me].contents
 		var foundNumber = myFrame.findGrep()
@@ -96,15 +96,16 @@ function add_footnotes(myFrame){
 				myFindWordNum--
 				myFindWord = thisnote[x].slice(4,5)
 				$.writeln(myFindWord[0])
+
 				// verify that the word is still on the page.
 				app.findTextPreferences = null
 				app.findTextPreferences.findWhat = myFindWord[0]
 				var foundWord = myFrame.findText()
 
 				if (foundWord){
-					if (foundWord.length > 0){
-						if (foundWord[foundWord.length-1].insertionPoints[0].index >= numbers[me].insertionPoints[0].index + indexOffset){
-						} else {$.writeln("1");break;}
+					// if there was a word found that was after the verse #, then it is then we assume safe? 
+					// possibly I should be checking for the word # as well in case a word is repeated?
+					if (foundWord.length > 0 && foundWord[foundWord.length-1].insertionPoints[0].index >= numbers[me].insertionPoints[0].index + indexOffset){
 					} else {
 						// the word was not found on the page.. it must be on the next page!
 						// if its found we need to add it to the next page.
