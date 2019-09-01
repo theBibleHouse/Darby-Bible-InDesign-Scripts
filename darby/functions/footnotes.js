@@ -58,7 +58,6 @@ function add_footnotes(myFrame){
 
 		// check if verse is still on page. if not, skip?
 		// what if the verse started on the last page?
-		$.writeln(numbers[me].contents)
 		app.findGrepPreferences = null
 		app.findGrepPreferences.findWhat = numbers[me].contents
 		var foundNumber = myFrame.findGrep()
@@ -95,7 +94,6 @@ function add_footnotes(myFrame){
 				myFindWordNum = thisnote[x].slice(3,4)
 				myFindWordNum--
 				myFindWord = thisnote[x].slice(4,5)
-				$.writeln(myFindWord[0])
 
 				// verify that the word is still on the page.
 				app.findTextPreferences = null
