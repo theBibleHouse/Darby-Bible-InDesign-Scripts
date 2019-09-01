@@ -1,6 +1,5 @@
 function new_foot(myFrame){
 
-	
 	if(myFrame.name=='frame1'){
 		add_footnotes(myFrame)
 		if(myFrame.nextTextFrame.name=="frame2"){
@@ -11,10 +10,11 @@ function new_foot(myFrame){
 
 function get_foot_array_val(array,chapter,verse){
 	var data = []
-    for(var c=0;c<array.length;c++){
-        if(array[c][1]==chapter && array[c][2]==verse){data.push(array[c]);}
+    for(var c=array.length-1;c>=0;c--){
+        if(array[c][1]==chapter && array[c][2]==verse){data.unshift(array[c]); array.splice(c)}
     }
     var result = data.length < 1 ? false : data
+    
     return result
 }
 
@@ -31,7 +31,7 @@ function add_footnotes(myFrame){
 
 /*
 
-	1. get all numbers on page, loop through them. use lastchapter and chapter to know what chapter numbers are there.
+	1. get all numbers on page, loop through them. make sure number is still on the page
 	2. for each reference check the array and remove it when found. add in the note letter in the verse.
 	3. add it to the text box
 	4. verify that verse number is still on the page. 
@@ -42,7 +42,7 @@ function add_footnotes(myFrame){
 
 */
 
-	// get all numbers on page.
+	// get all numbers on page. need to get last number from previous page
 	app.changeGrepPreferences = app.findGrepPreferences = null;
 	app.findGrepPreferences.findWhat = "\\d+";
 	var numbers = myFrame.findGrep();
@@ -52,35 +52,81 @@ function add_footnotes(myFrame){
 	// if still on the page, then add the note. Don't care if it changed col, etc.
 	var lastverse = 0
 	var lastnote = ''
+	var indexOffset = 0
+
 	for(var me=0; me < numbers.length;me++){
+
+		// check if verse is still on page. if not, skip?
+		// what if the verse started on the last page?
+
+		app.findGrepPreferences = null
+		app.findGrepPreferences.findWhat = numbers[me].contents
+		var foundNumber = myFrame.findGrep()
+
+		if (foundNumber){
+			if (foundNumber.length > 0){				
+				if (foundNumber[foundNumber.length-1].insertionPoints[0].index >= numbers[me].insertionPoints[0].index + indexOffset){
+
+				}else {break;}
+			} else {$.writeln('not on page founds');break;}
+		} else {$.writeln('no founds');break;}
 
 		if(numbers[me].appliedCharacterStyle == myDocument.characterStyles.item("ChapterNum")){ 
 
 			notechapter = numbers[me].contents
-			verse = 1
+			noteverse = 1
 
 		} else if(numbers[me].appliedCharacterStyle == myDocument.characterStyles.item("VerseNum")){ 
-			verse = numbers[me].contents
+			noteverse = numbers[me].contents
 		}
 
-		var thisnote = timeit(get_foot_array_val,[note,notechapter,verse]) 
-
+		var thisnote = timeit(get_foot_array_val,[note,notechapter,noteverse]) 
 		if(thisnote){
-
-			
+		
 			if(!myFrame.parentPage.textFrames.itemByName('note-frame').isValid){
 				var footframe = timeit(addFootnoteTextFrame,[myFrame.parentPage])
 			} else {
 				footframe = myFrame.parentPage.textFrames.itemByName('note-frame')	
 			}
 
-			
+			var tempIndexOffset = 0
 			for(var x=0;x < thisnote.length;x++){
 
-				
+				myFindWordNum = thisnote[x].slice(3,4)
+				myFindWordNum--
+				myFindWord = thisnote[x].slice(4,5)
+				$.writeln(myFindWord[0])
+				// verify that the word is still on the page.
+				app.findTextPreferences = null
+				app.findTextPreferences.findWhat = myFindWord[0]
+				var foundWord = myFrame.findText()
+
+				if (foundWord){
+					if (foundWord.length > 0){
+						if (foundWord[foundWord.length-1].insertionPoints[0].index >= numbers[me].insertionPoints[0].index + indexOffset){
+						} else {$.writeln("1");break;}
+					} else {
+						// the word was not found on the page.. it must be on the next page!
+						// if its found we need to add it to the next page.
+						$.writeln('checking next page for potentional note location')
+						foundWord = myFrame.nextTextFrame.findText()
+						if (foundWord){
+							if (foundWord.length > 0){
+								if (foundWord[foundWord.length-1].insertionPoints[0].index >= numbers[me].insertionPoints[0].index + indexOffset){
+									if(!myFrame.nextTextFrame.parentPage.textFrames.itemByName('note-frame').isValid){
+										var footframe = timeit(addFootnoteTextFrame,[myFrame.nextTextFrame.parentPage])
+									} else {
+										footframe = myFrame.nextTextFrame.parentPage.textFrames.itemByName('note-frame')	
+			}
+								} else {$.writeln("2a");break;}
+							} else {$.writeln("2b");break;}
+						} else {$.writeln("2c");break;}
+				}
+
+				}else {$.writeln("3");break;}
+
 				// get reference only if verse changed
-				
-				verse !== lastverse && footframe.contents += thisnote[x].slice(1,2) + ":" + thisnote[x].slice(2,3) + String.fromCharCode(8201)  
+				noteverse !== lastverse && footframe.contents += thisnote[x].slice(1,2) + ":" + thisnote[x].slice(2,3) + String.fromCharCode(8201)  
 
 				// add marker if notes are not the same
 				thisnote !== lastnote && marker = alpha_increment()
@@ -91,45 +137,56 @@ function add_footnotes(myFrame){
 
 				// if notes are the same, put the marker in the new place as well... in the verse.
 				// add the marker to the verse.
-				
-				// if (myFindVerse == 1 || myFindWordNum <= 0) { // && myFindWordNum  != -1){
-				// 	if (myFindWordNum <= 0 && myFindVerse == 1) {
-				// 		app.changeGrepPreferences = app.findGrepPreferences = null;
-				// 		app.findGrepPreferences.findWhat = "(PSALM |Chapter )" + myFindChapter + "~b[^\"]+?\\<\\K";
-				// 	} else {
-				// 		app.changeGrepPreferences = app.findGrepPreferences = null;
-				// 		app.findGrepPreferences.findWhat = "(PSALM |Chapter )" + myFindChapter + "~b[^\"]+?\\<\\K(?=" + myFindWord + ")";
-				// 	}
-				// } else {
-				// 	app.changeGrepPreferences = app.findGrepPreferences = null;
-				// 	app.findGrepPreferences.findWhat = "(PSALM |Chapter )" + myFindChapter + "~b[^\"]+?\\<" + myFindVerse + "(~%|\\t)+(\\b\\w+?(-\\b\\w+?)?\\b.+?){" + myFindWordNum + "}\\<\\K(?=" + myFindWord + ")";
-				// }
-				// try {
-				// 	me = myFrame.parentStory.findGrep();
-				// 	me1 = me[0].insertionPoints[0];
-				// 	me1.contents = myChangeText;
-				// } catch (e) {
-				// 	try {
-				// 		app.changeGrepPreferences = app.findGrepPreferences = null;
-				// 		app.findGrepPreferences.findWhat = "(PSALM |Chapter )" + myFindChapter + "~b[^\"]+?\\<" + myFindVerse + "(~%|\\t)+[^\"]+?\\<\\K(?=" + myFindWord + ")";
-				// 		try {
-				// 			me = myFrame.parentStory.findGrep();
-				// 			me1 = me[0].insertionPoints[0];
-				// 			me1.contents = myChangeText;
-				// 		} catch (e) {alert(e)}
-				// 	} catch (e) {alert(e)}
-				// }
 
+				var currentInsertion = numbers[me].insertionPoints[0].index + indexOffset
+				var nextInsertion = me+1 < numbers.length ? numbers[me+1].insertionPoints[0].index + indexOffset : myFrame.parentStory.insertionPoints[-1].index - indexOffset
+				var searchText = myFrame.parentStory.insertionPoints.itemByRange(currentInsertion,nextInsertion).getElements()[0]
+				var myGrep = ''
+				app.changeGrepPreferences = app.findGrepPreferences = null;
+				
+				if (myFindWordNum <= 0) {
+					// this is for notes that are on the whole ch. typically psalms, or are on the first word of the vs
+					myGrep = "\\d+\\s*"
+					app.findGrepPreferences.findWhat = myGrep;
+				} else {
+					// if not a chapter # then we need to drop off one from find work # because the verse # is stuck againts
+					// the first word... so there is no word boundry
+					if(numbers[me].appliedCharacterStyle == myDocument.characterStyles.item("ChapterNum")){
+						myGrep = "^\\d+\\s*(\\b\\w+?(-\\b\\w+?)?\\b.+?){"+myFindWordNum.toString() +"}(?=" + myFindWord + ")";
+					} else {
+						myFindWordNum--
+						myGrep = "\\d+.+?(\\b\\w+?(-\\b\\w+?)?\\b.+?){"+myFindWordNum.toString() +"}(?=" + myFindWord + ")";
+					}
+				  		
+				  	app.findGrepPreferences.findWhat = myGrep
+				}
+					
+				 	foundNoteLoc =searchText.findGrep();
+				 	
+				 	if (foundNoteLoc) {			 		
+					 	if (foundNoteLoc.length > 0) {
+					 		var startIndex = foundNoteLoc[0].insertionPoints[-1].index
+					 		foundNoteLoc[0].insertionPoints[-1].contents= SpecialCharacters.SIXTH_SPACE
+							foundNoteLoc[0].insertionPoints[-1].contents = marker
+						
+							tempIndexOffset +=2
+					
+					 		myFrame.parentStory.characters.itemByRange(startIndex,startIndex+1).appliedCharacterStyle = myDocument.characterStyles.item("SuperScript")
+
+					 	} else {$.writeln(myGrep + "\rnote location not found for " + notechapter.toString() + ":" + noteverse.toString()); asdfdafda;}
+	
+			 		} else {$.writeln(myGrep + "\rnote location not found for " + notechapter.toString() + ":" + noteverse.toString()); asdf}			
 
 				// to do :
 				// what if the verse crosses over pages?
 				// need to pop notes from parrent array so they are not intested 2 times
 				// what if the note is so long (adds a new line to the note paragraph) that the verse get pushed to the next page?
 
-				lastverse = verse
+				lastverse = noteverse
 				lastnote = thisnote[x]
 			}
 
+			indexOffset += tempIndexOffset
 			if(myFrame.parentPage.textFrames.itemByName('note-frame').isValid){
 		
 				footframe.parentStory.characters.item(0).appliedParagraphStyle = myDocument.paragraphStyles.item("Footnote")
