@@ -26,6 +26,11 @@ function new_ref(myFrame){
 			timeit(dates_and_cross,[myFrame, chapter, me])
 			timeit(move_verse_numbers_to_frame,[me])
 		}
+
+		else {
+			timeit(dates_and_cross,[myFrame, chapter, 99999])
+		}
+
 		if(i==50){ break }else{i++}
 	}
 }
