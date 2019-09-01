@@ -321,6 +321,8 @@ try {
 			keepFirstLines: 1,
 			keepLastLines: 2,
 //			hyphenation: false,
+			hyphenateLadderLimit: 2,
+			hyphenWeight: 6,
 			//composer: "Adobe World-Read Paragraph Composer",
 			// add on the left indent here
 			tabList: [{

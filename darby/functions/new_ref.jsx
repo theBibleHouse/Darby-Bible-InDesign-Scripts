@@ -107,7 +107,7 @@ function dates_and_cross(myFrame, chapter, verse){
 
 
 		// keep name ch together
-		app.findGrepPreferences.findWhat = "\\l\\s\\d"
+		app.findGrepPreferences.findWhat = "\\l\\.*\\s\\d"
 		app.changeGrepPreferences.noBreak = true;
 		cross_frame.parentStory.changeGrep()
 

@@ -17,11 +17,8 @@ for (var x=0; x < pages.length; x++){
         contents : "draft"  ,
     };  
     newFrame.itemLayer = newLayer
-    newFrame.texts[0].fillTint= 12
+    newFrame.texts[0].fillTint= 7
     newFrame.texts[0].pointSize= 100
     newFrame.texts[0].tracking=400
-    //newFrame.rotationAngle = -45
  }
 
-
-// //var attachmentTextFrame = doc.layers["draft"].textFrames.add();

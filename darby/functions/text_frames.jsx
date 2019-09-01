@@ -66,7 +66,7 @@ function balanceFrames(myFrame){
 
 			frame1_length = aPage.textFrames.itemByName('frame1').lines[-1].baseline
 			frame2_length = myFrame.lines.length > 0 ? myFrame.lines[-1].baseline : 0
-			break_point = (frame1_length - frame2_length) / 2 + frame2_length + .27*myDocument.gridPreferences.baselineDivision
+			break_point = (frame1_length - frame2_length) / 2 + frame2_length + .5*myDocument.gridPreferences.baselineDivision
 
 		} else {
 

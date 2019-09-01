@@ -18,7 +18,7 @@ function add_running_head(myPage, aContents) {
 
 	}
 	if (size == "large") {
-		aFrame.geometricBounds = [meta.top_margin/1.2/1.2 , meta.page_width / 2 - 40, meta.left_margin/1.2, meta.page_width / 2 + 40];
+		aFrame.geometricBounds = [meta.top_margin/1.2/1.2/1.2 , meta.page_width / 2 - 40, meta.top_margin/1.2/1.2, meta.page_width / 2 + 40];
 		aFrame.parentStory.characters.item(0).appliedParagraphStyle = myDocument.paragraphStyles.item("Heading Large");
 		aFrame.textFramePreferences.verticalJustification = VerticalJustification.BOTTOM_ALIGN;
 		aFrame.appliedObjectStyle = myDocument.objectStyles.item("Page Heading")

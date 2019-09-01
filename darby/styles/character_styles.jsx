@@ -128,7 +128,6 @@ var myCharacterStyle;
 		
 	}
 
-
 	try {
 		myCharacterStyle = myDocument.characterStyles.item("SuperScript");
 		myName = myCharacterStyle.name;
@@ -137,7 +136,23 @@ var myCharacterStyle;
 			name: "SuperScript"
 		});
 		myCharacterStyle.properties = {
-			position: Position.SUPERSCRIPT
+			position: Position.SUPERSCRIPT,
+			fontStyle: "Italic"
+
+		}
+	}
+	try {
+		myCharacterStyle = myDocument.characterStyles.item("NoteSuperScript");
+		myName = myCharacterStyle.name;
+	} catch (e) {
+		myCharacterStyle = myDocument.characterStyles.add({
+			name: "NoteSuperScript"
+		});
+		myCharacterStyle.properties = {
+			position: Position.SUPERSCRIPT,
+			appliedFont: "Lexicon No1 C Tab",
+			fontStyle: "Italic"
+
 		}
 	}
 	//var _basedOnNone = app.activeDocument.characterStyles.add({name:"None", basedOn:app.activeDocument.characterStyles[0]})

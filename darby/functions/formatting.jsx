@@ -13,6 +13,7 @@ function format_text(myFrame) {
 	//insert_notes_and_references(myFrame);
 	special_breaks(myFrame);
 	italics(myFrame);
+	// heading
 	apply_book_name_style(currentPage, myFrame);
 	apply_verse_number_style(myFrame);
 	apply_chapter_number_styles(myFrame);
@@ -30,8 +31,8 @@ function format_text(myFrame) {
 	app.changeGrepPreferences.changeTo = "-~k"
 	myFrame.parentStory.changeGrep()
 
-	page_headings(myFrame);
-	referenceSuperscript(myFrame);
+//	page_headings(myFrame);
+//	referenceSuperscript(myFrame);
 	// keep last 2 words in paragraph together
 	noBreakAll(myFrame, "(\\H+?\\h?){2}$");
 
@@ -136,12 +137,12 @@ function apply_book_name_style(myPage, myFrame) {
 	find_and_replace(bookFrame,"(</center>)",'$1~b')
 	find_and_replace_w_p_style(bookFrame, "<center>([\\H|\\h]+?)</center>", "$1", 'intro-center');
 	find_and_replace(bookFrame,'"','"')
-	find_and_replace(bookFrame,':','.')
+	//find_and_replace(bookFrame,':','.')
 	
 	// remove trailing period on verse reference
 	app.findGrepPreferences = app.changeGrepPreferences = null;
-	app.findGrepPreferences.findWhat = "\\)\\.";
-	app.changeGrepPreferences.changeTo = ")";
+	app.findGrepPreferences.findWhat = "(\\)\\.)";
+	app.changeGrepPreferences.changeTo = "$0";
 	app.findGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item('intro-center');
 	bookFrame.changeGrep()
 
@@ -413,13 +414,13 @@ function footnoteSuperscript(myFrame) {
 	app.findGrepPreferences = app.changeGrepPreferences = null;
 	app.findGrepPreferences.findWhat = ":\\d+[\\s|~%|~s]\\K(\\l)~<*";
 	app.findGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("Footnote");
-	app.changeGrepPreferences.appliedCharacterStyle = myDocument.characterStyles.item("SuperScript");
+	app.changeGrepPreferences.appliedCharacterStyle = myDocument.characterStyles.item("NoteSuperScript");
 	app.changeGrepPreferences.changeTo = "$1~<";
 	myFrame.parentStory.changeGrep();
 	app.findGrepPreferences = app.changeGrepPreferences = null;
 	app.findGrepPreferences.findWhat = ":\\d+[\\s|~<|~s]\\K(\\l)(?=,)";
 	app.findGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("Footnote");
-	app.changeGrepPreferences.appliedCharacterStyle = myDocument.characterStyles.item("SuperScript");
+	app.changeGrepPreferences.appliedCharacterStyle = myDocument.characterStyles.item("NoteSuperScript");
 	app.changeGrepPreferences.changeTo = "$1";
 	myFrame.parentStory.changeGrep();
 
@@ -430,7 +431,7 @@ function footnoteSuperscript(myFrame) {
 	// myFrame.parentStory.changeGrep();
 
 	app.findGrepPreferences.findWhat = "~k[~>|~m]~k\\K(\\l)~<*";
-	app.changeGrepPreferences.appliedCharacterStyle = myDocument.characterStyles.item("SuperScript");
+	app.changeGrepPreferences.appliedCharacterStyle = myDocument.characterStyles.item("NoteSuperScript");
 	app.changeGrepPreferences.changeTo = "$1~<";
 	myFrame.parentStory.changeGrep();
 
