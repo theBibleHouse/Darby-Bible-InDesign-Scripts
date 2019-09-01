@@ -37,6 +37,9 @@ function document_setup(size) {
 		case "large":
 			//myDocument = app.documents.add(true, app.documentPresets.item("Darby Bible Plus"));
 			myDocument = app.documents.add();
+			// no spreads.. 
+			myDocument.documentPreferences.facingPages = false
+			
 			myDocument.viewPreferences.horizontalMeasurementUnits = MeasurementUnits.millimeters; 
 			myDocument.viewPreferences.verticalMeasurementUnits = MeasurementUnits.millimeters;
 			myDocument.viewPreferences.rulerOrigin = RulerOrigin.PAGE_ORIGIN;
