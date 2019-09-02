@@ -56,23 +56,24 @@ function addFootnoteTextFrame(aPage) {
 }
 
 function balanceFrames(myFrame){
+	
 	// function to set column break on last page
 	// should be run after putting in footnotes
 	aPage = myFrame.parentPage
-	//$.writeln(myFrame.name)
+	
 	if(size=="large") {
-
 		if(myFrame.name=='frame2') {
 
 			frame1_length = aPage.textFrames.itemByName('frame1').lines[-1].baseline
 			frame2_length = myFrame.lines.length > 0 ? myFrame.lines[-1].baseline : 0
-			break_point = (frame1_length - frame2_length) / 2 + frame2_length + .5*myDocument.gridPreferences.baselineDivision
+			// round to next baseline
+			break_point = Math.ceil(((frame1_length - frame2_length) / 2 + frame2_length)/myDocument.gridPreferences.baselineDivision) * myDocument.gridPreferences.baselineDivision
 
 		} else {
 
 			frame1_length = myFrame.lines[-1].baseline
 			starting_point = myFrame.lines[0].baseline
-			break_point = (frame1_length - starting_point)/2  + starting_point
+			break_point = Math.ceil(((frame1_length - starting_point)/2  + starting_point)/myDocument.gridPreferences.baselineDivision) * myDocument.gridPreferences.baselineDivision
 		}
 
 		baseline_adder = -myDocument.gridPreferences.baselineDivision/2
@@ -80,22 +81,44 @@ function balanceFrames(myFrame){
 		break_point < 150 && baseline_adder *= -2
 
 		frame1_geo_bounds = aPage.textFrames.itemByName('frame1').geometricBounds
-		frame1_geo_bounds[2] = Math.ceil(break_point) + baseline_adder
+		frame1_geo_bounds[2] = break_point + baseline_adder
 		aPage.textFrames.itemByName('frame1').geometricBounds = frame1_geo_bounds
 
 		ref_frame1_geo_bounds = aPage.textFrames.itemByName('ref-frame1').geometricBounds
-		ref_frame1_geo_bounds[2] = Math.ceil(break_point) + baseline_adder
+		ref_frame1_geo_bounds[2] = break_point + baseline_adder
 		aPage.textFrames.itemByName('ref-frame1').geometricBounds = ref_frame1_geo_bounds
 
 		frame2_geo_bounds = aPage.textFrames.itemByName('frame2').geometricBounds
-		frame2_geo_bounds[2] = Math.ceil(break_point) + baseline_adder
+		frame2_geo_bounds[2] = break_point + baseline_adder
 		aPage.textFrames.itemByName('frame2').geometricBounds = frame2_geo_bounds	
 
 		ref_frame2_geo_bounds = aPage.textFrames.itemByName('ref-frame2').geometricBounds
-		ref_frame2_geo_bounds[2] = Math.ceil(break_point) + baseline_adder
+		ref_frame2_geo_bounds[2] = break_point + baseline_adder
 		aPage.textFrames.itemByName('ref-frame2').geometricBounds = ref_frame2_geo_bounds
 
 
+		// while still over flowing (because of paragraph keep rules)
+		// add in another baseline.
+		var q = 0
+		while (q < 50 && (aPage.textFrames.itemByName('frame1').overflows || aPage.textFrames.itemByName('frame2').overflows)){
+			q++
+			frame1_geo_bounds = aPage.textFrames.itemByName('frame1').geometricBounds
+			frame1_geo_bounds[2] = frame1_geo_bounds[2] + baseline_adder
+			aPage.textFrames.itemByName('frame1').geometricBounds = frame1_geo_bounds
+
+			ref_frame1_geo_bounds = aPage.textFrames.itemByName('ref-frame1').geometricBounds
+			ref_frame1_geo_bounds[2] = ref_frame1_geo_bounds[2] + baseline_adder
+			aPage.textFrames.itemByName('ref-frame1').geometricBounds = ref_frame1_geo_bounds
+
+			frame2_geo_bounds = aPage.textFrames.itemByName('frame2').geometricBounds
+			frame2_geo_bounds[2] = frame2_geo_bounds[2] + baseline_adder
+			aPage.textFrames.itemByName('frame2').geometricBounds = frame2_geo_bounds	
+
+			ref_frame2_geo_bounds = aPage.textFrames.itemByName('ref-frame2').geometricBounds
+			ref_frame2_geo_bounds[2] = ref_frame2_geo_bounds[2] + baseline_adder
+			aPage.textFrames.itemByName('ref-frame2').geometricBounds = ref_frame2_geo_bounds
+
+		}
 
 	}
 }
