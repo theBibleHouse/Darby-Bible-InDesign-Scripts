@@ -498,8 +498,9 @@ function format_cross_reference_verse_numbers( myFrame ) {
 	myFrame.parentStory.changeGrep()
 
 	// allow line break on comma and semi colon.. only if there are more than 3 chars between
+	// using 6th space, not normal space as there is some odd compression of std spaces going on.
 	app.findGrepPreferences.findWhat = "(;)(?=[^~k][^;]{3})";
-	app.changeGrepPreferences.changeTo = "$1\\s~k";
+	app.changeGrepPreferences.changeTo = "$1~%~k";
 	myFrame.parentStory.changeGrep()
 	// for comma and hyphen, idk what chars are after, as long as there are 3
 	app.findGrepPreferences.findWhat = "([-|,])(?=[^~k][^;]{3})";
