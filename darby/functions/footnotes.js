@@ -176,7 +176,7 @@ function add_footnotes(myFrame){
 				// add the marker to the verse.
 				var currentInsertion = numbers[me].insertionPoints[0].index + indexOffset
 				var nextInsertion = me+1 < numbers.length ? numbers[me+1].insertionPoints[0].index + indexOffset : myFrame.parentStory.insertionPoints[-1].index - indexOffset
-				var searchText = myFrame.parentStory.insertionPoints.itemByRange(currentInsertion,nextInsertion).getElements()[0]
+				var searchText = myFrame.parentStory.insertionPoints.itemByRange(currentInsertion,nextInsertion + tempIndexOffset).getElements()[0]
 				var myGrep = ''
 				app.changeGrepPreferences = app.findGrepPreferences = null;
 				
@@ -198,9 +198,24 @@ function add_footnotes(myFrame){
 				}
 					
 			 	foundNoteLoc =searchText.findGrep();
-			 	
-			 	if (foundNoteLoc) {			 		
-				 	if (foundNoteLoc.length > 0) {
+			 			
+			 	if (foundNoteLoc.length > 0) {
+			 		var startIndex = foundNoteLoc[0].insertionPoints[-1].index
+			 		foundNoteLoc[0].insertionPoints[-1].contents= SpecialCharacters.SIXTH_SPACE
+					foundNoteLoc[0].insertionPoints[-1].contents = marker
+					tempIndexOffset +=2
+			
+			 		myFrame.parentStory.characters.itemByRange(startIndex,startIndex+1).appliedCharacterStyle = myDocument.characterStyles.item("SuperScript")
+
+			 	} else {
+			 		// try again, but just search for word. something must be off
+			 		// in word location. or there is a paragraph break in verse.
+			 		$.writeln(myGrep + "\rnote location not found initially for " + notechapter.toString() + ":" + noteverse.toString());
+			 		myGrep = "\\d+[^`]+(?=" + myFindWord + ")"
+			 		app.findGrepPreferences.findWhat = myGrep
+			 		
+			 		foundNoteLoc =searchText.findGrep();
+			 		if (foundNoteLoc.length > 0) {
 				 		var startIndex = foundNoteLoc[0].insertionPoints[-1].index
 				 		foundNoteLoc[0].insertionPoints[-1].contents= SpecialCharacters.SIXTH_SPACE
 						foundNoteLoc[0].insertionPoints[-1].contents = marker
@@ -209,9 +224,13 @@ function add_footnotes(myFrame){
 				
 				 		myFrame.parentStory.characters.itemByRange(startIndex,startIndex+1).appliedCharacterStyle = myDocument.characterStyles.item("SuperScript")
 
-				 	} else {$.writeln(myGrep + "\rnote location not found for " + notechapter.toString() + ":" + noteverse.toString()); asdfdafda;}
+				 	} else {
+				 		$.writeln(myGrep + "\rnote location not found  for " + notechapter.toString() + ":" + noteverse.toString()); asdfdafda;}
+				 	}
 
-		 		} else {$.writeln(myGrep + "\rnote location not found for " + notechapter.toString() + ":" + noteverse.toString()); asdf}			
+			 		
+
+		 		
 
 		 		// formatting must be done before doing location checks
 				if(myFrame.parentPage.textFrames.itemByName('note-frame').isValid){
