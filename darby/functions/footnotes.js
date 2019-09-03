@@ -168,6 +168,7 @@ function add_footnotes(myFrame){
 			} else {
 				// this is for first item added to frame.
 				noteverse !== lastverse && footframe.contents += thisnote[x].slice(1,2) + ":" + thisnote[x].slice(2,3) + String.fromCharCode(8201)
+				noteverse == lastverse && footframe.contents += String.fromCharCode(8203, 8194, 8203)
 				marker = alpha_increment()
 				footframe.contents += marker + currentNote + String.fromCharCode(8203, 8194, 8203)
 				lastverse = noteverse
@@ -238,6 +239,7 @@ function add_footnotes(myFrame){
 					footframe.parentStory.characters.item(0).appliedParagraphStyle = myDocument.paragraphStyles.item("Footnote")
 					
 					timeit(footnoteSuperscript,[footframe]);
+					// don't want all references bold, just the ones for the note 😀
 					timeit(bold,[footframe, "\\d+:\\d+~s"])
 					timeit(noBreak,[footframe, "\\d+:\\d+\\s\\l\\s[\\l\\u]+"]);
 				}
