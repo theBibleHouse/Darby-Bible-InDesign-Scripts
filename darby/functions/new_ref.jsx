@@ -39,40 +39,6 @@ function new_ref(myFrame){
 	}
 }
 
-
-function sectionMarkers(myFrame) {
-	app.findGrepPreferences = app.changeGrepPreferences = null;
-	if (book_name.toUpperCase() != 'PSALMS') {
-		app.findGrepPreferences.findWhat = "0(?=\\n|~b)";
-
-		try {
-			if (myFinds = myFrame.findGrep() != "") {
-				myFinds = myFrame.findGrep();
-				flq = myFinds.length;
-
-				while (flq--) {
-
-					var new_note = myFinds[flq].paragraphs[0].insertionPoints[0].textFrames.add({
-						appliedObjectStyle: myDocument.objectStyles.item("Section Marker"),
-						appliedParagraphStyle: myDocument.paragraphStyles.item("Section Marker")
-					});
-					myFinds[flq].parentStory.insertionPoints.itemByRange(myFinds[flq].texts[0].insertionPoints[0].index + 1, myFinds[flq].texts[0].insertionPoints[-1].index + 1).texts[0].move(LocationOptions.atBeginning, new_note.insertionPoints[0]);
-					new_note.parentStory.characters.item(0).appliedParagraphStyle = myDocument.paragraphStyles.item("Section Marker");
-					new_note.fit(FitOptions.frameToContent);
-					
-					new_note.geometricBounds = [new_note.geometricBounds[0], new_note.geometricBounds[3] - 3, new_note.geometricBounds[2], new_note.geometricBounds[3]];
-				}
-			}
-		} catch (e) {}
-
-	} else {
-		app.findGrepPreferences.findWhat = "(0)(?= PSALM)";
-		app.changeGrepPreferences.appliedCharacterStyle = myDocument.characterStyles.item("Section Marker");
-		app.changeGrepPreferences.changeTo = "$1";
-		myFrame.parentStory.changeGrep();
-	}
-}
-
 function find_number(myFrame){
 
 	app.changeGrepPreferences = app.findGrepPreferences = null;

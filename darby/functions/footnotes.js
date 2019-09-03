@@ -130,12 +130,14 @@ function add_footnotes(myFrame){
 
 					// the word was not found on the page.. it must be on the next page!
 					// if its found we need to add it to the next page.
-					$.writeln('checking next page for potentional note location')
+					//$.writeln('checking next page for potentional note location')
 					var wordOnNextPage = item_on_page(myFrame.nextTextFrame,myNumber,indexOffset,myFindWord[0])
 					
 					if (wordOnNextPage === true){
 						footframe = add_foot_frame(myFrame.nextTextFrame)
-					}	
+					} else {
+						asdf;
+					}
 				}							
 
 				// get reference only if verse changed
@@ -211,7 +213,7 @@ function add_footnotes(myFrame){
 			 	} else {
 			 		// try again, but just search for word. something must be off
 			 		// in word location. or there is a paragraph break in verse.
-			 		$.writeln(myGrep + "\rnote location not found initially for " + notechapter.toString() + ":" + noteverse.toString());
+			 		//$.writeln(myGrep + "\rnote location not found initially for " + notechapter.toString() + ":" + noteverse.toString());
 			 		myGrep = "\\d+[^`]+(?=" + myFindWord + ")"
 			 		app.findGrepPreferences.findWhat = myGrep
 			 		
