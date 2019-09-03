@@ -406,19 +406,19 @@ function footnoteSuperscript(myFrame) {
 
 	// set space between footnote reference and the superscript letter
 	app.findGrepPreferences = app.changeGrepPreferences = null;
-	app.findGrepPreferences.findWhat = "(:\\d+)[~%|~s|~<](\\l)";
+	app.findGrepPreferences.findWhat = "(:\\d+[,?\\d+]*)[~%|~s|~<](\\l)";
 	app.findGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("Footnote");
 	app.changeGrepPreferences.changeTo = "$1~s$2"; // was 
 	myFrame.parentStory.changeGrep();
 
 	app.findGrepPreferences = app.changeGrepPreferences = null;
-	app.findGrepPreferences.findWhat = ":\\d+[~%|~s|~<]\\K(\\l)~<*";
+	app.findGrepPreferences.findWhat = ":\\d+[,?\\d+]*[~%|~s|~<]\\K(\\l)~<*";
 	app.findGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("Footnote");
 	app.changeGrepPreferences.appliedCharacterStyle = myDocument.characterStyles.item("NoteSuperScript");
 	app.changeGrepPreferences.changeTo = "$1~<";
 	myFrame.parentStory.changeGrep();
 	app.findGrepPreferences = app.changeGrepPreferences = null;
-	app.findGrepPreferences.findWhat = ":\\d+[~<|~s]\\K(\\l)(?=,)";
+	app.findGrepPreferences.findWhat = ":\\d+[,?\\d+]*[~<|~s]\\K(\\l)(?=,)";
 	app.findGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("Footnote");
 	app.changeGrepPreferences.appliedCharacterStyle = myDocument.characterStyles.item("NoteSuperScript");
 	app.changeGrepPreferences.changeTo = "$1";

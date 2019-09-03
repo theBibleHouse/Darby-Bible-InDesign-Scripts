@@ -79,6 +79,8 @@ function add_footnotes(myFrame){
 	var lastnote = ''
 	var indexOffset = 0
 	var lastIndex = 0
+	var lastNoteChapter = 0
+	var noteverse = 0
 
 	for(var me=0; me < numbers.length;me++){
 		//$.writeln(numbers[me].contents)
@@ -86,7 +88,10 @@ function add_footnotes(myFrame){
 
 		// check if verse is still on page. if not, skip out
 		var verseOnPage = item_on_page(myFrame,myNumber,indexOffset,false)
-		if (verseOnPage == false){$.writeln('not on page founds');break;}
+		if (verseOnPage == false){
+			//$.writeln('not on page founds');
+			break;
+		}
 		
 		// set chapter and verse variables
 		if(myNumber.appliedCharacterStyle == myDocument.characterStyles.item("ChapterNum")){ 
@@ -136,6 +141,7 @@ function add_footnotes(myFrame){
 					if (wordOnNextPage === true){
 						footframe = add_foot_frame(myFrame.nextTextFrame)
 					} else {
+						$.writeln("note word location not found for " + notechapter.toString() + ":" + noteverse.toString() + " note word: " + myFindWord[0].toString());
 						asdf;
 					}
 				}							
@@ -143,9 +149,11 @@ function add_footnotes(myFrame){
 				// get reference only if verse changed
 				
 				var alreadyExists = ''
-							// em space 8195
+				
+				// em space 8195
 				// en space 8194
 				// thin space 8201
+				
 				// check if note already exists
 				if(footframe.contents.length > 0){
 				app.findTextPreferences = null
@@ -156,9 +164,20 @@ function add_footnotes(myFrame){
 					marker = footframe.parentStory.insertionPoints.itemByRange(alreadyExists[0].insertionPoints[0].index-2,alreadyExists[0].insertionPoints[0].index-1).getElements()[0].contents
 					if(noteverse !== lastverse){
 						// insert reference of current verse into footnotes.
-						footframe.parentStory.insertionPoints.itemByRange(alreadyExists[0].insertionPoints[0].index-3,alreadyExists[0].insertionPoints[0].index-3).contents = "," + thisnote[x].slice(2,3)
+						// if the foot note is already several long (ex: 1:17k asdfa l asdfaf), then we want to re-add the first 
+						// full reference.
+						var isNumberCheck = footframe.parentStory.insertionPoints.itemByRange(alreadyExists[0].insertionPoints[0].index-4,alreadyExists[0].insertionPoints[0].index-3).contents
+					
+						if(++isNumberCheck>0 && !isNaN(+isNumberCheck)){
+							var newRef = notechapter === lastNoteChapter ? thisnote[x].slice(2,3) : thisnote[x].slice(1,2) + ":" + thisnote[x].slice(2,3)
+							footframe.parentStory.insertionPoints.itemByRange(alreadyExists[0].insertionPoints[0].index-3,alreadyExists[0].insertionPoints[0].index-3).contents = "," + newRef
+						} else{
+							var lastRef = getLastFootRef(footframe,alreadyExists[0].insertionPoints[0].index-3)
+							var newRef = notechapter === lastNoteChapter ? thisnote[x].slice(2,3) : thisnote[x].slice(1,2) + ":" + thisnote[x].slice(2,3)
+							footframe.parentStory.insertionPoints.itemByRange(alreadyExists[0].insertionPoints[0].index-3,alreadyExists[0].insertionPoints[0].index-3).contents = lastRef + "," + newRef+ String.fromCharCode(8201)
+						}
 					}
-
+					lastverse = noteverse
 				} else {
 					// if the note does not already exist.
 					noteverse !== lastverse && footframe.contents += thisnote[x].slice(1,2) + ":" + thisnote[x].slice(2,3) + String.fromCharCode(8201)
@@ -242,8 +261,8 @@ function add_footnotes(myFrame){
 					
 					timeit(footnoteSuperscript,[footframe]);
 					// don't want all references bold, just the ones for the note 😀
-					timeit(bold,[footframe, "\\d+:\\d+~s"])
-					timeit(noBreak,[footframe, "\\d+:\\d+\\s\\l\\s[\\l\\u]+"]);
+					timeit(bold,[footframe, "\\d+:\\d+(,?\\d+)*~s"])
+					timeit(noBreak,[footframe, "\\d+:\\d+(,?\\d+)*\\s\\l\\s[\\l\\u]+"]);
 				}
 				thisIndex = footframe.insertionPoints[-1].index
 
@@ -290,6 +309,7 @@ function add_footnotes(myFrame){
 				
 				lastnote = currentNote
 				lastIndex = thisIndex
+				lastNoteChapter = notechapter
 				if (g == false){break;}
 			}
 
@@ -299,6 +319,19 @@ function add_footnotes(myFrame){
 	}
 }
 
+function getLastFootRef(me,location){
+
+	if (me.contents.length < 1) {return;}
+	app.findGrepPreferences = null;
+	app.findGrepPreferences.findWhat = "(\\d+:\\d+)(?=[~s|,])";
+	var myFinds = me.parentStory.findGrep().reverse()
+	for (var x = 0; x < myFinds.length; x++){
+		if (myFinds[x].insertionPoints[-1].index < location){
+			return myFinds[x].contents
+		}
+	}
+	$.writeln("dead in the water")
+}
 
 function adjustFootFrame(){
 
