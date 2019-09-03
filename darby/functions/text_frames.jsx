@@ -76,9 +76,9 @@ function balanceFrames(myFrame){
 			break_point = Math.ceil(((frame1_length - starting_point)/2  + starting_point)/myDocument.gridPreferences.baselineDivision) * myDocument.gridPreferences.baselineDivision
 		}
 
-		baseline_adder = -myDocument.gridPreferences.baselineDivision/2
+		var baseline_adder = myDocument.gridPreferences.baselineDivision
 		
-		break_point < 150 && baseline_adder *= -2
+		
 
 		frame1_geo_bounds = aPage.textFrames.itemByName('frame1').geometricBounds
 		frame1_geo_bounds[2] = break_point + baseline_adder
@@ -104,19 +104,19 @@ function balanceFrames(myFrame){
 			q++
 			
 			frame1_geo_bounds = aPage.textFrames.itemByName('frame1').geometricBounds
-			frame1_geo_bounds[2] = frame1_geo_bounds[2] - baseline_adder
+			frame1_geo_bounds[2] = frame1_geo_bounds[2] + baseline_adder
 			aPage.textFrames.itemByName('frame1').geometricBounds = frame1_geo_bounds
 
 			ref_frame1_geo_bounds = aPage.textFrames.itemByName('ref-frame1').geometricBounds
-			ref_frame1_geo_bounds[2] = ref_frame1_geo_bounds[2] - baseline_adder
+			ref_frame1_geo_bounds[2] = ref_frame1_geo_bounds[2] + baseline_adder
 			aPage.textFrames.itemByName('ref-frame1').geometricBounds = ref_frame1_geo_bounds
 
 			frame2_geo_bounds = aPage.textFrames.itemByName('frame2').geometricBounds
-			frame2_geo_bounds[2] = frame2_geo_bounds[2] - baseline_adder
+			frame2_geo_bounds[2] = frame2_geo_bounds[2] + baseline_adder
 			aPage.textFrames.itemByName('frame2').geometricBounds = frame2_geo_bounds	
 
 			ref_frame2_geo_bounds = aPage.textFrames.itemByName('ref-frame2').geometricBounds
-			ref_frame2_geo_bounds[2] = ref_frame2_geo_bounds[2] - baseline_adder
+			ref_frame2_geo_bounds[2] = ref_frame2_geo_bounds[2] + baseline_adder
 			aPage.textFrames.itemByName('ref-frame2').geometricBounds = ref_frame2_geo_bounds
 
 		}

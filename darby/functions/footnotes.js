@@ -81,7 +81,7 @@ function add_footnotes(myFrame){
 	var lastIndex = 0
 
 	for(var me=0; me < numbers.length;me++){
-
+		//$.writeln(numbers[me].contents)
 		var myNumber = numbers[me]
 
 		// check if verse is still on page. if not, skip out

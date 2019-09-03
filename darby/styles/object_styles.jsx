@@ -1,59 +1,42 @@
 function create_object_styles() {
 	var myObjectStyle;
-	try {
-		myObjectStyle = myDocument.objectStyles.item("Section Marker");
-		myName = myObjectStyle.name;
-	} catch (e) {
-		myObjectStyle = myDocument.objectStyles.add({
-			name: "Section Marker"
-		});
-		myObjectStyle.properties = {
-			enabledStroke: true,
-			strokeWeight: 0,
-		}
-	}
-	try {
-		myObjectStyle = myDocument.objectStyles.item("VerseMarker-frame1");
-		myName = myObjectStyle.name;
-	} catch (e) {
-		with(myDocument.objectStyles.add({
-			name: "VerseMarker-frame1"
-		})) {
-			enableParagraphStyle = true;
-			appliedParagraphStyle = myDocument.paragraphStyles.item("VerseNum");
-			enableTextWrapAndOthers: true,
-
-			enabledStroke = true;
-			strokeWeight = 0;
-			enableAnchoredObjectOptions = true;
-			enableTextFrameAutoSizingOptions= true;
-
-			with(anchoredObjectSettings) {
-				//spineRelative = true;
-				anchorPoint = AnchorPoint.BOTTOM_RIGHT_ANCHOR;
-				anchoredPosition = AnchorPosition.anchored;
-				horizontalReferencePoint = AnchoredRelativeTo.TEXT_FRAME;
-				horizontalAlignment = HorizontalAlignment.leftAlign;
-				verticalReferencePoint = VerticallyRelativeTo.LINE_BASELINE;
-				anchorXoffset = -meta.gutter+1.6; 
-				anchorYoffset = 0;
-				pinPosition = true;
-
-			}
-			enableTextFrameGeneralOptions = true;
-
-			enableFrameFittingOptions = true;
-			autoFit = true;
-			FrameFittingOption.FitOptions = FitOptions.frameToContent;
-
-			with (textFramePreferences) {
-			autoSizingReferencePoint= AutoSizingReferenceEnum.TOP_LEFT_POINT;
-			autoSizingType= AutoSizingTypeEnum.HEIGHT_AND_WIDTH
-		}
-			//textFramePreferences.useFixedColumnWidth = true;
-			//textFramePreferences.textColumnFixedWidth = sidenote.width
-		}
-	}
+	
+	myObjectStyle = myDocument.objectStyles.add();
+    myObjectStyle.properties = {
+        name: "VerseMarker-frame1",
+        enableParagraphStyle: true,
+        appliedParagraphStyle: myDocument.paragraphStyles.item("VerseNum"),
+        enabledStroke: true,
+        enableTextWrapAndOthers: true,
+        strokeWeight: 0,
+        enableTextFrameAutoSizingOptions: true,  
+        enableTextFrameGeneralOptions: true,
+        enableFrameFittingOptions: true,
+        enableAnchoredObjectOptions: true,
+    }
+    myObjectStyle.properties = {
+        anchoredObjectSettings : {
+            anchoredPosition : AnchorPosition.anchored,
+            anchorPoint : AnchorPoint.BOTTOM_RIGHT_ANCHOR,
+            horizontalReferencePoint : AnchoredRelativeTo.TEXT_FRAME,
+            horizontalAlignment : HorizontalAlignment.leftAlign,
+            verticalReferencePoint : VerticallyRelativeTo.LINE_BASELINE,
+            anchorXoffset : -meta.gutter+1.6, 
+            anchorYoffset : 0,
+            pinPosition : true,
+        }
+    }
+    myObjectStyle.properties = {
+        textFramePreferences : {
+        autoSizingType: AutoSizingTypeEnum.HEIGHT_AND_WIDTH,
+        autoSizingReferencePoint: AutoSizingReferenceEnum.TOP_LEFT_POINT
+    }
+}
+   myObjectStyle.properties = {
+    frameFittingOptions : {
+        autoFit: true,           
+    }
+    }
 	try {
 		myObjectStyle = myDocument.objectStyles.item("VerseMarker-frame2");
 		myName = myObjectStyle.name;
@@ -95,7 +78,6 @@ function create_object_styles() {
 			//textFramePreferences.textColumnFixedWidth = sidenote.width
 		}
 	}
-
 
 	myObjectStyle = myDocument.objectStyles.add();
 	myObjectStyle.properties = {
