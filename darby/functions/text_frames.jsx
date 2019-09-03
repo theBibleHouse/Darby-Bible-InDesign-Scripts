@@ -102,20 +102,21 @@ function balanceFrames(myFrame){
 		var q = 0
 		while (q < 50 && (aPage.textFrames.itemByName('frame1').overflows || aPage.textFrames.itemByName('frame2').overflows)){
 			q++
+			
 			frame1_geo_bounds = aPage.textFrames.itemByName('frame1').geometricBounds
-			frame1_geo_bounds[2] = frame1_geo_bounds[2] + baseline_adder
+			frame1_geo_bounds[2] = frame1_geo_bounds[2] - baseline_adder
 			aPage.textFrames.itemByName('frame1').geometricBounds = frame1_geo_bounds
 
 			ref_frame1_geo_bounds = aPage.textFrames.itemByName('ref-frame1').geometricBounds
-			ref_frame1_geo_bounds[2] = ref_frame1_geo_bounds[2] + baseline_adder
+			ref_frame1_geo_bounds[2] = ref_frame1_geo_bounds[2] - baseline_adder
 			aPage.textFrames.itemByName('ref-frame1').geometricBounds = ref_frame1_geo_bounds
 
 			frame2_geo_bounds = aPage.textFrames.itemByName('frame2').geometricBounds
-			frame2_geo_bounds[2] = frame2_geo_bounds[2] + baseline_adder
+			frame2_geo_bounds[2] = frame2_geo_bounds[2] - baseline_adder
 			aPage.textFrames.itemByName('frame2').geometricBounds = frame2_geo_bounds	
 
 			ref_frame2_geo_bounds = aPage.textFrames.itemByName('ref-frame2').geometricBounds
-			ref_frame2_geo_bounds[2] = ref_frame2_geo_bounds[2] + baseline_adder
+			ref_frame2_geo_bounds[2] = ref_frame2_geo_bounds[2] - baseline_adder
 			aPage.textFrames.itemByName('ref-frame2').geometricBounds = ref_frame2_geo_bounds
 
 		}
