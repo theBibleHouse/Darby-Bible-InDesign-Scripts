@@ -116,13 +116,18 @@ function dates_and_cross(myFrame, chapter, verse){
 		app.changeGrepPreferences.noBreak = true;
 		cross_frame.parentStory.changeGrep()
 
+		// replace space with sixth space
+		app.findGrepPreferences.findWhat = " ";
+		app.changeGrepPreferences.changeTo = "~%";
+		cross_frame.parentStory.changeGrep()
+
 		// remove ; from line endings
 	 	myLines = cross_frame.parentStory.lines;
 
 	 	try {
 			for (k=0; k<myLines.length; k++){
 			 	if (myLines[k].length > 3){
-			    	if(myLines[k].characters[myLines[k].characters.length-3].contents === ";" && myLines[k].characters[myLines[k].characters.length-2].contents === " "){
+			    	if(myLines[k].characters[myLines[k].characters.length-3].contents === ";" && myLines[k].characters[myLines[k].characters.length-2].contents === SpecialCharacters.SIXTH_SPACE){
 			    		myLines[k].characters[myLines[k].characters.length-3].contents = "";
 					}
 				}
