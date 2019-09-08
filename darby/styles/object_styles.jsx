@@ -300,7 +300,7 @@ function create_object_styles() {
 		textFramePreferences: {
 			autoSizingType: AutoSizingTypeEnum.HEIGHT_ONLY,
 			autoSizingReferencePoint: AutoSizingReferenceEnum.BOTTOM_CENTER_POINT,
-			insetSpacing : [.5*myDocument.gridPreferences.baselineDivision.toFixed(2), 0, 0, 0],
+			insetSpacing : [.5*myDocument.gridPreferences.baselineDivision.toFixed(2), meta.page_width / 2 - meta.column_width / 2 - meta.left_margin-meta.gutter/2, 0, meta.page_width / 2 - meta.column_width / 2 - meta.left_margin-meta.gutter/2],
 		},
 		textWrapPreferences: {
 			textWrapMode: TextWrapModes.BOUNDING_BOX_TEXT_WRAP,

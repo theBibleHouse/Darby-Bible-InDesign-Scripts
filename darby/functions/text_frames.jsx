@@ -32,6 +32,10 @@ function addBookTextFrame(aPage) {
 }
 
 function addFootnoteTextFrame(aPage) {
+
+	// frame will be full width, but have inset spacing on object style.
+	// this is so the references do not drop below text frame.
+
 	aFrame = aPage.textFrames.add();
 	aFrame.name='note-frame'
 
@@ -45,8 +49,8 @@ function addFootnoteTextFrame(aPage) {
 	}
 	
 	if (size == "large") {
-		myLeft = left_column_left + meta.gutter
-		myRight = meta.page_width - myLeft
+		myLeft = meta.left_margin
+		myRight = meta.page_width - meta.right_margin
 	}
 	
 	aFrame.geometricBounds = [myTop, myLeft, main_frame_bottom, myRight];

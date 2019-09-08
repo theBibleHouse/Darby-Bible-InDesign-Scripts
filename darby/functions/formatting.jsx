@@ -507,6 +507,7 @@ function format_cross_reference_verse_numbers( myFrame ) {
 	app.changeGrepPreferences.changeTo = "$1~k";
 	myFrame.parentStory.changeGrep()
 	
+	
 }
 
 function metrical_fix(myframe) {
