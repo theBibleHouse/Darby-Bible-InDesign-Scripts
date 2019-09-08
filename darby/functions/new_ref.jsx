@@ -73,8 +73,9 @@ function dates_and_cross(myFrame, chapter, verse){
 
 	// add last date and apply paragraph style. only if date is added.
 	cross_frame.contents.length < 1 && (cross_frame.parentStory.appliedParagraphStyle = myDocument.paragraphStyles.item("init-crossReference-"+myFrame.name));
-	cross_frame.contents.length < 1 && (thisdate || lastdate) && (cross_frame.contents += (thisdate || lastdate) + break_char) && (lastdate = thisdate || lastdate) && (thisdate = false);
 
+	cross_frame.contents.length < 1 && (thisdate || lastdate) && (cross_frame.contents += (thisdate || lastdate) + break_char) && (lastdate = thisdate || lastdate) && (thisdate = false);
+	
 	if(thisdate || thiscross){
 
 		// get current baseline.
@@ -86,11 +87,9 @@ function dates_and_cross(myFrame, chapter, verse){
 		x > 0 && cross_frame.contents += Array(Math.round(x/l + 1)).join(break_char);
 
 		// add date if exists and update last date
+		
 		thisdate && (lastdate = thisdate) && (cross_frame.contents += thisdate + break_char);
 		
-		// if verse is 1 add in a extra line break
-		//verse === 1 && cross_frame.contents += break_char;
-
 		// add cross reference
 		thiscross && cross_frame.contents += thiscross + break_char;
 		// apply temporary paragraph style before formatting
@@ -103,11 +102,8 @@ function dates_and_cross(myFrame, chapter, verse){
 		// reset paragraph style
 	    cross_frame.parentStory.appliedParagraphStyle = myDocument.paragraphStyles.item("crossReference-"+myFrame.name);
 		
-		// no break on v 12; ch 1; etc, if there is no verse specified
+
 		app.findGrepPreferences = app.changeGrepPreferences = null;
-		//app.findGrepPreferences.findWhat = "~k\\l+\\s\\d+;";
-		//app.changeGrepPreferences.noBreak = true;
-		//cross_frame.parentStory.changeGrep()
 
 		// keep ch:v together
 		app.findGrepPreferences.findWhat = "\\d+:\\d+"
@@ -120,10 +116,18 @@ function dates_and_cross(myFrame, chapter, verse){
 		app.changeGrepPreferences.noBreak = true;
 		cross_frame.parentStory.changeGrep()
 
+		
 		// replace space with sixth space
+		app.findGrepPreferences = app.changeGrepPreferences = null;
 		app.findGrepPreferences.findWhat = " ";
 		app.changeGrepPreferences.changeTo = "~%";
 		cross_frame.parentStory.changeGrep()
+
+		// discretionary break before (
+		app.findGrepPreferences.findWhat = "~%(?=\\()";
+		app.changeGrepPreferences.changeTo = "~%~k";
+		cross_frame.parentStory.changeGrep()
+
 
 		// remove ; from line endings
 	 	myLines = cross_frame.parentStory.lines;
