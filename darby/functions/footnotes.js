@@ -61,12 +61,14 @@ function verse_num_on_page(myFrame,item,indexOffset){
 
 function word_on_page(myFrame,verseNum,wordNum,word,nextVerseNum,indexOffset){
 	// if frame is emtpy return false
+	
 	if(myFrame.contents.length < 1){return false}
 
 	app.findGrepPreferences = null
 
 	// first check if the word is on the page, but before any numbers, except next verse, appear
 	var myGrep = nextVerseNum == false ? "[^\\d]*"+word+"(?=[^\\d]*)" : "[^\\d]*"+word+"(?=[^\\d]*"+nextVerseNum.toString()+")"
+	//$.writeln(myGrep)
 	app.findGrepPreferences.findWhat = myGrep
 	var foundItem = myFrame.findGrep()
 
@@ -77,6 +79,7 @@ function word_on_page(myFrame,verseNum,wordNum,word,nextVerseNum,indexOffset){
 
 		// if the # is a chapter #
 		myGrep = "^"+verseNum.contents.toString()+"\\s*(\\b\\w+?(-\\b\\w+?)?\\b.+?){"+wordNum.toString() +"}(?=" + word + ")";
+		//$.writeln(myGrep)
 		app.findGrepPreferences.findWhat = myGrep
 		var foundItem = myFrame.findGrep()
 	
@@ -88,7 +91,7 @@ function word_on_page(myFrame,verseNum,wordNum,word,nextVerseNum,indexOffset){
 			// if the # is a verse #
 			wordNum--
 			myGrep = verseNum.contents.toString() + ".+?(\\b\\w+?(-\\b\\w+?)?\\b.+?){"+wordNum.toString() +"}(?=" + word + ")";
-
+			//$.writeln(myGrep)
 			app.findGrepPreferences.findWhat = myGrep
 			var foundItem = myFrame.findGrep()
 
@@ -97,6 +100,41 @@ function word_on_page(myFrame,verseNum,wordNum,word,nextVerseNum,indexOffset){
 				return true
 			} else {
 			//			$.writeln("case4")
+			// it is possible that the word breaks over the page end..
+			// need to get the containing paragraph of the # and the check inside the paragraph.
+			// if the last index of finds is on the page, then cool.
+			// the last index is before the word starts so we should be good.
+
+			// get the index of the verse number (last time it is found in frame)
+				app.findGrepPreferences = app.changeGrepPreferences = null
+				app.findGrepPreferences.findWhat = verseNum.contents.toString();
+				me = myFrame.findGrep()
+
+				// if nothing found then give up
+				if (me.length < 1){return false;}
+
+				// get the start and stop indexes of the paragraph
+				var startIndex = me[me.length-1].insertionPoints[0].index
+				var endIndex = me[me.length-1].paragraphs[0].insertionPoints[-1].index
+				var searchText = myFrame.parentStory.insertionPoints.itemByRange(startIndex,endIndex).getElements()[0]
+
+				// try to find here...
+				// generic
+				var myGrep = nextVerseNum == false ? "[^\\d]*"+word+"(?=[^\\d]*)" : "[^\\d]*"+word+"(?=[^\\d]*"+nextVerseNum.toString()+")"
+				app.findGrepPreferences.findWhat = myGrep
+				var foundItem = searchText.findGrep()
+				if (foundItem.length > 0 && foundItem[0].insertionPoints[-1].index >= verseNum.insertionPoints[0].index + indexOffset && foundItem[0].insertionPoints[-1].index <= myFrame.insertionPoints[-1].index ){return true}
+								// chapter #
+				myGrep = "^"+verseNum.contents.toString()+"\\s*(\\b\\w+?(-\\b\\w+?)?\\b.+?){"+wordNum.toString() +"}(?=" + word + ")";
+				app.findGrepPreferences.findWhat = myGrep
+				var foundItem = searchText.findGrep()
+				if (foundItem.length > 0 && foundItem[0].insertionPoints[-1].index >= verseNum.insertionPoints[0].index + indexOffset && foundItem[0].insertionPoints[-1].index <= myFrame.insertionPoints[-1].index ){return true}
+				// verse #
+				myGrep = verseNum.contents.toString() + ".+?(\\b\\w+?(-\\b\\w+?)?\\b.+?){"+wordNum.toString() +"}(?=" + word + ")";
+				app.findGrepPreferences.findWhat = myGrep
+				var foundItem = searchText.findGrep()
+				if (foundItem.length > 0 && foundItem[0].insertionPoints[-1].index >= verseNum.insertionPoints[0].index + indexOffset && foundItem[0].insertionPoints[-1].index <= myFrame.insertionPoints[-1].index ){return true}
+
 				return false
 			}
 		}
@@ -105,7 +143,9 @@ function word_on_page(myFrame,verseNum,wordNum,word,nextVerseNum,indexOffset){
 		
 		
 }
-
+var lastNoteChapter = 0
+var lastverse = 0
+var lastnote = ''
 function add_footnotes(myFrame){
 
 /*
@@ -132,11 +172,11 @@ function add_footnotes(myFrame){
 	// loop through them, one at a time.
 	// check if they are still on the page. don't use grep, just check index/baseline?
 	// if still on the page, then add the note. Don't care if it changed col, etc.
-	var lastverse = 0
-	var lastnote = ''
+	myFrame.name == 'frame1' && lastverse = 0
+	myFrame.name == 'frame1' && lastnote = ''
 	var indexOffset = 0
 	var lastIndex = 0
-	var lastNoteChapter = 0
+	myFrame.name == 'frame1' && lastNoteChapter = 0
 	var noteverse = 0
 
 	for(var me=0; me < numbers.length;me++){
@@ -226,7 +266,6 @@ function add_footnotes(myFrame){
 							var isNumberCheck = footframe.parentStory.insertionPoints.itemByRange(alreadyExists[0].insertionPoints[0].index-4,alreadyExists[0].insertionPoints[0].index-3).contents
 
 							if(!isNaN(isNumberCheck.toString().replace(String.fromCharCode(8194),'asdf'))){
-								
 								var newRef = notechapter === lastNoteChapter ? thisnote[x].slice(2,3) : thisnote[x].slice(1,2) + ":" + thisnote[x].slice(2,3)
 								footframe.parentStory.insertionPoints.itemByRange(alreadyExists[0].insertionPoints[0].index-3,alreadyExists[0].insertionPoints[0].index-3).contents = "," + newRef
 							} else{
@@ -319,54 +358,77 @@ function add_footnotes(myFrame){
 					timeit(noBreak,[footframe, "\\d+:\\d+(,?\\d+)*\\s\\l\\s[\\l\\u]+"]);
 				}
 				thisIndex = footframe.insertionPoints[-1].index
-
-				// to do :
-				// what if the verse crosses over pages?
-				// need to pop notes from parrent array so they are not intested 2 times
-				// what if the note is so long (adds a new line to the note paragraph) that the verse get pushed to the next page?
-
+		
 				// check if the verse is still on the page. if not, then start pruning lines off the note frame
 				// and moving them to the next page. but... don't take off the whole note...
 
 				var q = 0
-				var verseOnPage = verse_num_on_page(myFrame,myNumber,indexOffset)	
+				var verseOnPage = verse_num_on_page(myFrame,myNumber,indexOffset)
+				var wordOnPage = word_on_page (myFrame,myNumber,myFindWordNum,myFindWord[0],myNextNumber,indexOffset)	
+				
 				// reset text frame to the current page. we may have already added one on the next page
 				// and don't care about it yet..
 				footframe = add_foot_frame(myFrame)		
-				while (q < 10 && !verseOnPage){
+				while (q < 10 && (!verseOnPage || !wordOnPage) && myFrame.name === 'frame2'){
+					
 					var textToMove = ' '
 				
 					// remove lines until ther verse number is found. if verse number is never found 
 					// move the entire note to the next page.
-					
+
+					// this fails if the content has already been moved to the next page above.
+					// so try catch
+
 					// don't remove anything that was not part of the current note.
 					
-					if (footframe.lines[-1].insertionPoints[0].index < lastIndex){
-						g = false
-						textToMove = textToMove + footframe.parentStory.insertionPoints.itemByRange(lastIndex,footframe.insertionPoints[-1].index).getElements()[0].contents
-						footframe.insertionPoints.itemByRange(lastIndex,footframe.insertionPoints[-1].index).remove()
-					} else {
-						textToMove = textToMove + footframe.lines[-1].contents
-						footframe.lines[-1].remove()
-					}
+					try{
+						if (footframe.lines[-1].insertionPoints[0].index < lastIndex){
+							g = false
+							textToMove = textToMove + footframe.parentStory.insertionPoints.itemByRange(lastIndex,footframe.insertionPoints[-1].index).getElements()[0].contents
+							footframe.insertionPoints.itemByRange(lastIndex,footframe.insertionPoints[-1].index).remove()
+							textToMove.length > 0 && newfootframe = add_foot_frame(myFrame.nextTextFrame)
+							textToMove.length > 0 && newfootframe.contents = textToMove + newfootframe.contents
+							
+							// if this happens we need to change the paragraph justify rull to justify all except last line left.
+							footframe.parentStory.justification=Justification.LEFT_JUSTIFIED;
 
-					textToMove.length > 0 && newfootframe = add_foot_frame(myFrame.nextTextFrame)
-					textToMove.length > 0 && newfootframe.contents = textToMove + newfootframe.contents
-					
-					if (g == false){break;}
-					q++
+							// break because we have already moved the full note.
+							break;
+
+						} else {
+							// move one line at a time
+							textToMove = textToMove + footframe.lines[-1].contents
+							footframe.lines[-1].remove()
+							textToMove.length > 0 && newfootframe = add_foot_frame(myFrame.nextTextFrame)
+							textToMove.length > 0 && newfootframe.contents = textToMove + newfootframe.contents
+
+							// if this happens we need to change the paragraph justify rull to justify all
+							footframe.parentStory.justification=Justification.FULLY_JUSTIFIED;
+						}
+
+						
+					} catch(e){break;}
+					// recompose is needed when letting text "come back" onto the page.
+
+					myDocument.recompose(); 
+					//$.writeln(myFrame.contents)
 					verseOnPage = verse_num_on_page(myFrame,myNumber,indexOffset)
+					wordOnPage = word_on_page (myFrame,myNumber,myFindWordNum,myFindWord[0],myNextNumber,indexOffset)	
+					//$.writeln(verseOnPage,wordOnPage)
+					q++
+	
 				}
 				
 				lastnote = currentNote
 				lastIndex = thisIndex
 				lastNoteChapter = notechapter
+				
 				if (g == false){break;}
 
 			}
 
 			indexOffset += tempIndexOffset
-			
+		//	if(marker == 'u'){asfasdfas;}
 		}
 	}
 }

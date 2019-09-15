@@ -144,10 +144,21 @@ function apply_book_name_style(myPage, myFrame) {
 	app.findGrepPreferences.findWhat = "(\\)\\.)";
 	app.changeGrepPreferences.changeTo = "$0";
 	app.findGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item('intro-center');
-	bookFrame.changeGrep()
+	//bookFrame.changeGrep()
 
-	// remove extra space
-	app.findGrepPreferences.findWhat = "\\n";
+	// remove quotes around intro verse
+	app.findGrepPreferences = app.changeGrepPreferences = null;
+	app.findGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item('intro-center');
+	app.findGrepPreferences.findWhat = '^\\s*"';
+	app.changeGrepPreferences.changeTo = "";
+	bookFrame.changeGrep();
+	app.findGrepPreferences.findWhat = '"(?=\\s\\()';
+	app.changeGrepPreferences.changeTo = '';
+	bookFrame.changeGrep();
+
+	// add tab at paragraph start, but not for first paragraph.
+	app.findGrepPreferences = app.changeGrepPreferences = null;
+	app.findGrepPreferences.findWhat = "[^<]\\K\\n";
 	app.changeGrepPreferences.changeTo = "~b\\t";
 	app.findGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item('intro');
 	bookFrame.insertionPoints.itemByRange(start_index,bookFrame.parentStory.insertionPoints[-1].index).changeGrep();
@@ -171,11 +182,24 @@ function apply_book_name_style(myPage, myFrame) {
 	// apply italics
 	find_and_replace_w_c_style(bookFrame,"\\*(.+?)\\*","$1",'Italics')
 
+	// format references to keep the chapter with book name.
+	app.findGrepPreferences = app.changeGrepPreferences = null;
+	app.findGrepPreferences.findWhat = "\\l\\.*\\s\\d"
+	app.changeGrepPreferences.noBreak = true;
+	bookFrame.parentStory.changeGrep()
+
+	// keep ch:v together
+	app.findGrepPreferences.findWhat = "\\d+:\\d+"
+	app.changeGrepPreferences.noBreak = true;
+	bookFrame.parentStory.changeGrep()
+
+
 	// check book frame size. Change bottom outset to hit the next baseline
 	
 	var newOffset = Math.ceil(bookFrame.geometricBounds[2]  / myDocument.gridPreferences.baselineDivision) *  myDocument.gridPreferences.baselineDivision
 	newOffset = newOffset - bookFrame.geometricBounds[2] + bookFrame.properties.textWrapPreferences.textWrapOffset[2]  - .27*myDocument.gridPreferences.baselineDivision
 	bookFrame.properties.textWrapPreferences.textWrapOffset = [0,0,newOffset,0]
+
 }
 
 function apply_verse_number_style(myFrame) { 
@@ -499,15 +523,20 @@ function format_cross_reference_verse_numbers( myFrame ) {
 
 	// allow line break on comma and semi colon.. only if there are more than 3 chars between
 	// using 6th space, not normal space as there is some odd compression of std spaces going on.
-	app.findGrepPreferences.findWhat = "(;)(?=[^~k][^;]{3})";
+	app.findGrepPreferences.findWhat = "(;)(?=[^~k][^;]{2})";
 	app.changeGrepPreferences.changeTo = "$1~%~k";
 	myFrame.parentStory.changeGrep()
+	// for comma, idc what chars are after
+	app.findGrepPreferences.findWhat = "(,)";
+	app.changeGrepPreferences.changeTo = "$1~k";
+	myFrame.parentStory.changeGrep()
+
 	// for comma and hyphen, idk what chars are after, as long as there are 3
-	app.findGrepPreferences.findWhat = "([-|,])(?=[^~k][^;]{3})";
+	app.findGrepPreferences.findWhat = "(-)(?=[^~k][^;]{3})";
 	app.changeGrepPreferences.changeTo = "$1~k";
 	myFrame.parentStory.changeGrep()
 	
-	
+
 }
 
 function metrical_fix(myframe) {

@@ -39,7 +39,7 @@ function addFootnoteTextFrame(aPage) {
 	aFrame = aPage.textFrames.add();
 	aFrame.name='note-frame'
 
-	myTop = main_frame_bottom - 3;
+	myTop = main_frame_bottom - 4;
 	myLeft = meta.right_margin + meta.gutter;
 	myRight = meta.page_width - meta.left_margin;
 

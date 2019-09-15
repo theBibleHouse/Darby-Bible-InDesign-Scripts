@@ -246,7 +246,8 @@ try {
 			fontStyle: "Normal",
 			pointSize: 6.75,
 			leading: 8,
-			justification: Justification.AWAY_FROM_BINDING_SIDE
+			justification: Justification.AWAY_FROM_BINDING_SIDE,
+			hyphenation: false,
 			
 		}
 	}
@@ -285,6 +286,7 @@ try {
 			pointSize: 7,
 			leading: 8,
 			justification: Justification.RIGHT_ALIGN,
+			hyphenation: false,
 
 			
 		}
@@ -705,7 +707,13 @@ dropCapCharacters: 2,
 		});
 		myParagraphStyle.properties = {
 			basedOn: myDocument.paragraphStyles.item("intro"),
-			justification: Justification.CENTER_ALIGN
+			justification: Justification.CENTER_ALIGN,
+			appliedFont: "Lexicon No1 A Tab",
+			fontStyle: "Italic",
+			pointSize: 7,
+			leading: 8,
+			leftIndent: meta.page_width/2 - meta.column_width/2- meta.left_margin - meta.gutter,
+			rightIndent: meta.page_width/2 - meta.column_width/2- meta.right_margin - meta.gutter,
 		}
 
 	}

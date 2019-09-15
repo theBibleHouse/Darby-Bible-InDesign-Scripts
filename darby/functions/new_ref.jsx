@@ -124,23 +124,37 @@ function dates_and_cross(myFrame, chapter, verse){
 		cross_frame.parentStory.changeGrep()
 
 		// discretionary break before (
-		app.findGrepPreferences.findWhat = "~%(?=\\()";
+		app.findGrepPreferences.findWhat = "~%[^~k]?(?=\\()";
 		app.changeGrepPreferences.changeTo = "~%~k";
 		cross_frame.parentStory.changeGrep()
 
 
 		// remove ; from line endings
+		// no longer happening... make it difficult to see devisions in references.
+		// now will take it a step further and add a '.' to the last ref in a section.
 	 	myLines = cross_frame.parentStory.lines;
 
-	 	try {
-			for (k=0; k<myLines.length; k++){
-			 	if (myLines[k].length > 3){
-			    	if(myLines[k].characters[myLines[k].characters.length-3].contents === ";" && myLines[k].characters[myLines[k].characters.length-2].contents === SpecialCharacters.SIXTH_SPACE){
-			    		myLines[k].characters[myLines[k].characters.length-3].contents = "";
-					}
-				}
-			}
-		} catch(e){}
+	 // 	try {
+		// 	for (k=0; k<myLines.length; k++){
+		// 	 	if (myLines[k].length > 3){
+		// 	    	if(myLines[k].characters[myLines[k].characters.length-3].contents === ";" && myLines[k].characters[myLines[k].characters.length-2].contents === SpecialCharacters.SIXTH_SPACE){
+		// 	    		myLines[k].characters[myLines[k].characters.length-3].contents = "";
+		// 			}
+		// 		}
+		// 	}
+		// } catch(e){}
+
+		// get last line
+		if (myLines[-1].length > 3){
+			// most do not end in a ;, but just in case, swap it with a .
+			if(myLines[-1].characters[myLines[-1].characters.length-3].contents === ";" && myLines[k].characters[myLines[k].characters.length-2].contents === SpecialCharacters.SIXTH_SPACE){
+		 		myLines[-1].characters[myLines[-1].characters.length-3].contents = ".";
+		 	}
+		 	else {
+		 		// insert . before line break
+		 		myLines[-1].insertionPoints[myLines[-1].characters.length-1].contents = ".";
+		 	}
+		}
 
 		// remove breaks if references go off the end of the page.
 
@@ -155,5 +169,22 @@ function dates_and_cross(myFrame, chapter, verse){
 			 	found.length < 1 ? while_cross_frame_overflows=100 : found[found.length-1].insertionPoints[0].parentStory.characters[(found[found.length-1].insertionPoints[0].index)].remove();
 			}	
 		}
+
+		// finally, check if the last ref is below the last text in main text frame (haning down close to notes)
+		// if it is, then we need to back out any spaces we can.
+
+		var textFrameBaseline = myFrame.characters[-1].baseline
+		var refFrameBaseline = cross_frame.characters[-1].baseline
+
+		while_cross_frame_overflows = 0
+		 while(refFrameBaseline > textFrameBaseline && while_cross_frame_overflows < 100 && cross_frame.contents.length > 0){
+		 	while_cross_frame_overflows ++
+		
+		 	app.findGrepPreferences.findWhat = "~b~b";
+		 	found = cross_frame.findGrep();
+		 	found.length < 1 ? while_cross_frame_overflows=100 : found[found.length-1].insertionPoints[0].parentStory.characters[(found[found.length-1].insertionPoints[0].index)].remove();
+			refFrameBaseline = cross_frame.characters[-1].baseline			 	
+		}	
+		
 	}
 }
