@@ -65,7 +65,7 @@ function word_on_page(myFrame,verseNum,wordNum,word,nextVerseNum,indexOffset){
 	if(myFrame.contents.length < 1){return false}
 
 	app.findGrepPreferences = null
-
+	//$.writeln(verseNum,word,nextVerseNum)
 	// first check if the word is on the page, but before any numbers, except next verse, appear
 	var myGrep = nextVerseNum == false ? "[^\\d]*"+word+"(?=[^\\d]*)" : "[^\\d]*"+word+"(?=[^\\d]*"+nextVerseNum.toString()+")"
 	//$.writeln(myGrep)
@@ -73,24 +73,24 @@ function word_on_page(myFrame,verseNum,wordNum,word,nextVerseNum,indexOffset){
 	var foundItem = myFrame.findGrep()
 
 	if (foundItem.length > 0 && foundItem[0].insertionPoints[-1].index >= verseNum.insertionPoints[0].index + indexOffset && foundItem[0].insertionPoints[-1].index <= myFrame.insertionPoints[-1].index ){
-	//	$.writeln("case1")
+		//$.writeln("case1")
 		return true
 	} else {
 
 		// if the # is a chapter #
-		myGrep = "^"+verseNum.contents.toString()+"\\s*(\\b\\w+?(-\\b\\w+?)?\\b.+?){"+wordNum.toString() +"}(?=" + word + ")";
+		myGrep = "^"+verseNum.contents.toString()+"\\s*(\\b\\w+?(-\\b\\w+?)?\\b[^`]+?){"+wordNum.toString() +"}(?=" + word + ")";
 		//$.writeln(myGrep)
 		app.findGrepPreferences.findWhat = myGrep
 		var foundItem = myFrame.findGrep()
 	
 		if (foundItem.length > 0 && foundItem[0].insertionPoints[-1].index >= verseNum.insertionPoints[0].index + indexOffset && foundItem[0].insertionPoints[-1].index <= myFrame.insertionPoints[-1].index ){
-		///			$.writeln("case2")
+			//		$.writeln("case2")
 			return true
 		} else {
 
 			// if the # is a verse #
 			wordNum--
-			myGrep = verseNum.contents.toString() + ".+?(\\b\\w+?(-\\b\\w+?)?\\b.+?){"+wordNum.toString() +"}(?=" + word + ")";
+			myGrep = verseNum.contents.toString() + "[^`]+?(\\b\\w+?(-\\b\\w+?)?\\b[^`]+?){"+wordNum.toString() +"}(?=" + word + ")";
 			//$.writeln(myGrep)
 			app.findGrepPreferences.findWhat = myGrep
 			var foundItem = myFrame.findGrep()
@@ -125,12 +125,12 @@ function word_on_page(myFrame,verseNum,wordNum,word,nextVerseNum,indexOffset){
 				var foundItem = searchText.findGrep()
 				if (foundItem.length > 0 && foundItem[0].insertionPoints[-1].index >= verseNum.insertionPoints[0].index + indexOffset && foundItem[0].insertionPoints[-1].index <= myFrame.insertionPoints[-1].index ){return true}
 								// chapter #
-				myGrep = "^"+verseNum.contents.toString()+"\\s*(\\b\\w+?(-\\b\\w+?)?\\b.+?){"+wordNum.toString() +"}(?=" + word + ")";
+				myGrep = "^"+verseNum.contents.toString()+"\\s*(\\b\\w+?(-\\b\\w+?)?\\b[^`]+?){"+wordNum.toString() +"}(?=" + word + ")";
 				app.findGrepPreferences.findWhat = myGrep
 				var foundItem = searchText.findGrep()
 				if (foundItem.length > 0 && foundItem[0].insertionPoints[-1].index >= verseNum.insertionPoints[0].index + indexOffset && foundItem[0].insertionPoints[-1].index <= myFrame.insertionPoints[-1].index ){return true}
 				// verse #
-				myGrep = verseNum.contents.toString() + ".+?(\\b\\w+?(-\\b\\w+?)?\\b.+?){"+wordNum.toString() +"}(?=" + word + ")";
+				myGrep = verseNum.contents.toString() + ".+?(\\b\\w+?(-\\b\\w+?)?\\b[^`]+?){"+wordNum.toString() +"}(?=" + word + ")";
 				app.findGrepPreferences.findWhat = myGrep
 				var foundItem = searchText.findGrep()
 				if (foundItem.length > 0 && foundItem[0].insertionPoints[-1].index >= verseNum.insertionPoints[0].index + indexOffset && foundItem[0].insertionPoints[-1].index <= myFrame.insertionPoints[-1].index ){return true}
@@ -309,12 +309,12 @@ function add_footnotes(myFrame){
 					// if not a chapter # then we need to drop off one from find work # because the verse # is stuck againts
 					// the first word... so there is no word boundry
 					if(numbers[me].appliedCharacterStyle == myDocument.characterStyles.item("ChapterNum")){
-						myGrep = "^\\d+\\s*(\\b\\w+?(-\\b\\w+?)?\\b.+?){"+myFindWordNum.toString() +"}(?=" + myFindWord + ")";
+						myGrep = "^\\d+\\s*(\\b\\w+?(-\\b\\w+?)?\\b[^`]+?){"+myFindWordNum.toString() +"}(?=" + myFindWord + ")";
 					} else {
 						myFindWordNum--
-						myGrep = "\\d+.+?(\\b\\w+?(-\\b\\w+?)?\\b.+?){"+myFindWordNum.toString() +"}(?=" + myFindWord + ")";
+						myGrep = "\\d+.+?(\\b\\w+?(-\\b\\w+?)?\\b[^`]+?){"+myFindWordNum.toString() +"}(?=" + myFindWord + ")";
 					}
-				  		
+				  	//$.writeln(myGrep)
 				  	app.findGrepPreferences.findWhat = myGrep
 				}
 					

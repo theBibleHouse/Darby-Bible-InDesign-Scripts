@@ -328,11 +328,11 @@ try {
 			//composer: "Adobe World-Read Paragraph Composer",
 			// add on the left indent here
 			tabList: [{
-				position: 7,
+				position: 7.9,
 				alignment: TabStopAlignment.LEFT_ALIGN,
 				leader: ""
 			}, {
-				position: 12,
+				position: 12.7,
 				alignment: TabStopAlignment.LEFT_ALIGN,
 				leader: ""
 			}, {
@@ -397,29 +397,34 @@ try {
 			fontStyle: "Normal",
 			pointSize: 8.75,
 			leading: 8,
+			hyphenation: false,
 			alignToBaseline: true,
 			keepLinesTogether: true,
-			keepFirstLines: 2,
+			keepFirstLines: 1,
 			keepLastLines: 2,			
-			leftIndent: "6mm",
-			rightIndent: "4mm",
-			spaceBefore: "5pt",
-			spaceAfter: "5pt",
+			leftIndent: meta.gutter,
+			rightIndent: meta.gutter,
+			spaceBefore: "2mm",
+			//spaceAfter: "5pt",
 			justification: Justification.LEFT_ALIGN,
 			tabList: [{
-				position: "7.761 mm",
-				alignment: TabStopAlignment.RIGHT_ALIGN,
-				leader: ""
-			}, {
-				position: "8.114 mm",
+				position: 96.1,
 				alignment: TabStopAlignment.LEFT_ALIGN,
 				leader: ""
 			}, {
-				position: "11.289 mm",
+				position: 7.9,
 				alignment: TabStopAlignment.LEFT_ALIGN,
 				leader: ""
 			}, {
-				position: "14.464 mm",
+				position: 10.1,
+				alignment: TabStopAlignment.LEFT_ALIGN,
+				leader: ""
+			}, {
+				position: 12.7,
+				alignment: TabStopAlignment.LEFT_ALIGN,
+				leader: ""
+			}, {
+				position: 17,
 				alignment: TabStopAlignment.LEFT_ALIGN,
 				leader: ""
 			}]

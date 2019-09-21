@@ -17,6 +17,7 @@ function format_text(myFrame) {
 	apply_book_name_style(currentPage, myFrame);
 	apply_verse_number_style(myFrame);
 	apply_chapter_number_styles(myFrame);
+
 		// don't hyphenate words with hyphen
 	// words before hyphen
 	noBreak(myFrame,"-\\K.+?\\w\\b")
@@ -46,7 +47,7 @@ function format_text(myFrame) {
 	app.findGrepPreferences.findWhat = "~>";
 	app.changeGrepPreferences.changeTo = "\\s"
 	myFrame.parentStory.changeGrep()
-	
+
 }
 
 function special_breaks(myFrame){
@@ -305,6 +306,43 @@ function apply_verse_number_style(myFrame) {
 	app.changeGrepPreferences.position = Position.SUPERSCRIPT;
 	app.activeDocument.changeGrep();
 
+	// if there is a heading before the metrical verse then we should change leading on verse to 0
+	app.findGrepPreferences = app.changeGrepPreferences = null;
+	app.findGrepPreferences.findWhat = "~b\\K.+?~b\\t\\d+";
+	app.changeGrepPreferences.spaceBefore = 0;
+	//myFrame.parentStory.changeGrep()
+	var myFinds = myFrame.parentStory.findGrep()
+
+	if(myFinds.length > 0){
+
+		for(var t = 0; t< myFinds.length; t++){
+			if(myFinds[t].insertionPoints[-1].appliedParagraphStyle.name == 'metricalVerseTwoColumn'){
+				app.findGrepPreferences.findWhat = myFinds[t].contents;
+				myFrame.parentStory.changeGrep()
+			}
+		}
+
+	}
+
+	// for lines in story
+	// if paragraph style is metrical
+	// if last char is a space
+	// add a manual line break and 3 tabs
+
+
+
+}
+
+function twoColMetricalFix(myFrame){
+	myDocument.recompose(); 
+	for (var x=0; x< myFrame.parentStory.lines.length;x++){
+		var line = myFrame.parentStory.lines[x]
+		if(line.characters[-1].contents === ' ' && line.characters[-1].appliedParagraphStyle.name === 'metricalVerseTwoColumn'){
+		//	$.writeln(line.characters[-1].appliedParagraphStyle.name)
+			line.characters[-1].contents = '\n\t\t\t'
+		//	$.writeln(line.contents)
+		}
+	}
 }
 
 function apply_chapter_number_styles(myFrame) { // search text, paragraph style
@@ -406,6 +444,15 @@ function apply_chapter_number_styles(myFrame) { // search text, paragraph style
 	app.changeGrepPreferences.changeTo = ("$1");
 	myFrame.parentStory.changeGrep();
 	*/
+
+	// check for any paragraph with "normal" style and apply the same style as the previous text?
+	// in metrical books (obadiah for ex), v1 is broken in half
+	app.findGrepPreferences = app.changeGrepPreferences = null
+	app.findGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("Normal");
+	app.changeGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("Verse");
+	myFrame.parentStory.changeGrep()
+	
+
 }
 
 
