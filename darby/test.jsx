@@ -1,8 +1,13 @@
 //var doc = myDocument = app.activeDocument;
 
   var selection = app.selection[0]
-  $.writeln(selection.appliedParagraphStyle.name)
-//  $.writeln(selection.insertionPoints[0].index)
+//.writeln(selection.appliedParagraphStyle.name)
+  $.writeln(selection.insertionPoints[0].index)
+    $.writeln(selection.insertionPoints[0].paragraphs[0].lines[0].characters[5].remove())
+  $.writeln(selection.insertionPoints[0].paragraphs[0].lines[0].characters[5].remove())
+
+
+
 //  $.writeln(selection.insertionPoints[0].parentTextFrames[0].name)
 //  var myFrame = selection.insertionPoints[0].parentTextFrames[0]
 // // $.writeln(selection.parentStory.insertionPoints.itemByRange(currentInsertion,nextInsertion + tempIndexOffset).getElements()[0])

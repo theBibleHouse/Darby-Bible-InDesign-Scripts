@@ -5,8 +5,9 @@ function new_ref(myFrame){
 	while(me){
 	
 		me = timeit(find_number,[myFrame])
+		//$.writeln(me.contents)
 		if(me.appliedCharacterStyle == myDocument.characterStyles.item("ChapterNum")){ 
-			
+			//$.writeln("chapter")
 			// if this is the first number on the page then update last chapter for heading
 			my_baseline = Math.round(me.baseline - myDocument.gridPreferences.baselineDivision/3*2)
 				
@@ -14,11 +15,18 @@ function new_ref(myFrame){
 
 			chapter = me.contents
 			verse = 1
-
+			var nextChar = me.parentStory.insertionPoints[me.insertionPoints[-1].index + 1].characters[0]
 			timeit(dates_and_cross,[myFrame, me, 1])
 			timeit(move_chapter_num_to_anchored_frames,[me])
 
+			// this is to fix manual line breaks 
+			// that were added with tabing, but are now messing up 
+
+			metricalChapterNumFix(me)
+			
+
 		} else if(me.appliedCharacterStyle == myDocument.characterStyles.item("VerseNum")){ 
+		//	$.writeln("verse")		
 			my_baseline = Math.round(me.baseline)
 			verse = me.contents
 
@@ -38,6 +46,33 @@ function new_ref(myFrame){
 		if(i==50){ break }else{i++}
 	}
 }
+
+function metricalChapterNumFix(stuff){
+
+	// 1. remove all manual line breaks with three tabs following
+	// 2. recompute
+	// 3. add back all manual line breaks
+
+ 	var myParagraph = stuff.paragraphs[0]
+ 	app.findGrepPreferences = app.changeGrepPreferences = null
+
+ 	app.findGrepPreferences.findWhat = "\\n\\t\\t\\t"
+ 	app.changeGrepPreferences.changeTo = ''
+ 	myParagraph.changeGrep()
+
+ 
+	myDocument.recompose(); 
+	for (var x=0; x< stuff.paragraphs[0].lines.length;x++){
+		var line = stuff.paragraphs[0].lines[x]
+		if((line.characters[-1].contents === ' ' || line.characters[-1].contents === SpecialCharacters.DISCRETIONARY_LINE_BREAK) && (line.characters[-1].appliedParagraphStyle.name === 'metricalVerseTwoColumn' || line.characters[-1].appliedParagraphStyle.name === 'mVerse1')){
+		//	$.writeln(line.characters[-1].appliedParagraphStyle.name)
+			line.characters[-1].contents = '\n\t\t\t'
+		//	$.writeln(line.contents)
+		}
+	}
+
+}
+
 
 function find_number(myFrame){
 

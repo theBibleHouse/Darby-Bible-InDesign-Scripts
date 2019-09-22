@@ -559,21 +559,39 @@ dropCapCharacters: 2,
 			hyphenation: true,
 			spaceBefore: ".706 mm",
 
-			dropCapCharacters: 2,
-			dropCapLines: 2,
-
+			//dropCapCharacters: 2,
+			//dropCapLines: 2,
+			leftIndent: meta.gutter,
+			rightIndent: meta.gutter,
+			
 			leftIndent: "0",
 			justification: Justification.LEFT_ALIGN,
 			tabList: [{
-				position: "3.175mm",
+				position: 96.1,
 				alignment: TabStopAlignment.LEFT_ALIGN,
 				leader: ""
 			}, {
-				position: "8.114",
+				position: 7.9,
+				alignment: TabStopAlignment.LEFT_ALIGN,
+				leader: ""
+			}, {
+				position: 10.1,
+				alignment: TabStopAlignment.LEFT_ALIGN,
+				leader: ""
+			}, {
+				position: 12.7,
+				alignment: TabStopAlignment.LEFT_ALIGN,
+				leader: ""
+			}, {
+				position: 17,
 				alignment: TabStopAlignment.LEFT_ALIGN,
 				leader: ""
 			}]
 		}
+
+		
+				
+		
 	}
 
 	try {

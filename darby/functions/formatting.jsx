@@ -307,18 +307,38 @@ function apply_verse_number_style(myFrame) {
 	app.activeDocument.changeGrep();
 
 	// if there is a heading before the metrical verse then we should change leading on verse to 0
+	// but only if the prior verse is metrical.
 	app.findGrepPreferences = app.changeGrepPreferences = null;
-	app.findGrepPreferences.findWhat = "~b\\K.+?~b\\t\\d+";
-	app.changeGrepPreferences.spaceBefore = 0;
-	//myFrame.parentStory.changeGrep()
+	app.findGrepPreferences.findWhat = "~b\\K.+?~b\\t\\d+"	
 	var myFinds = myFrame.parentStory.findGrep()
 
 	if(myFinds.length > 0){
 
 		for(var t = 0; t< myFinds.length; t++){
+
 			if(myFinds[t].insertionPoints[-1].appliedParagraphStyle.name == 'metricalVerseTwoColumn'){
-				app.findGrepPreferences.findWhat = myFinds[t].contents;
-				myFrame.parentStory.changeGrep()
+
+					myFinds[t].insertionPoints[-1].paragraphs[0].spaceBefore = 0
+
+			}
+		}
+
+	}
+
+	// find last line of metrical followed by a verse, then add leading
+	app.findGrepPreferences = app.changeGrepPreferences = null;
+	app.findGrepPreferences.findWhat = "\\t{2}.+?$~b\\t\\d+"
+	var myFinds = myFrame.parentStory.findGrep()
+
+	if(myFinds.length > 0){
+
+		for(var t = 0; t< myFinds.length; t++){
+
+			if(myFinds[t].insertionPoints[0].appliedParagraphStyle.name == 'metricalVerseTwoColumn' 
+				&& myFinds[t].insertionPoints[-1].appliedParagraphStyle.name == 'Verse' ){
+
+					myFinds[t].insertionPoints[-1].paragraphs[0].spaceBefore = 1
+
 			}
 		}
 
@@ -337,7 +357,7 @@ function twoColMetricalFix(myFrame){
 	myDocument.recompose(); 
 	for (var x=0; x< myFrame.parentStory.lines.length;x++){
 		var line = myFrame.parentStory.lines[x]
-		if(line.characters[-1].contents === ' ' && line.characters[-1].appliedParagraphStyle.name === 'metricalVerseTwoColumn'){
+		if((line.characters[-1].contents === ' ' || line.characters[-1].contents === SpecialCharacters.DISCRETIONARY_LINE_BREAK) && (line.characters[-1].appliedParagraphStyle.name === 'metricalVerseTwoColumn' || line.characters[-1].appliedParagraphStyle.name === 'mVerse1')){
 		//	$.writeln(line.characters[-1].appliedParagraphStyle.name)
 			line.characters[-1].contents = '\n\t\t\t'
 		//	$.writeln(line.contents)
@@ -447,10 +467,13 @@ function apply_chapter_number_styles(myFrame) { // search text, paragraph style
 
 	// check for any paragraph with "normal" style and apply the same style as the previous text?
 	// in metrical books (obadiah for ex), v1 is broken in half
+	try{
 	app.findGrepPreferences = app.changeGrepPreferences = null
 	app.findGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("Normal");
 	app.changeGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("Verse");
 	myFrame.parentStory.changeGrep()
+} catch(e){$.writeln(e)
+}
 	
 
 }

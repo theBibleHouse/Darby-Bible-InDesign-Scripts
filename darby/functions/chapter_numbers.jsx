@@ -7,7 +7,9 @@ function move_chapter_num_to_anchored_frames(me) {
 		else {
 			chapter_location = "left"
 		}
-		if (me.appliedParagraphStyle == myDocument.paragraphStyles.item("Verse1")) {
+
+		if (me.appliedParagraphStyle == myDocument.paragraphStyles.item("Verse1") ||
+			me.appliedParagraphStyle == myDocument.paragraphStyles.item("mVerse1")) {
 			
 			var new_note = me.insertionPoints[0].textFrames.add();
 			me.parentStory.insertionPoints.itemByRange(me.texts[0].insertionPoints[0].index + 1, me.texts[0].insertionPoints[-1].index + 1).texts[0].move(LocationOptions.atBeginning, new_note.insertionPoints[0]);
@@ -26,6 +28,4 @@ function move_chapter_num_to_anchored_frames(me) {
 			new_note.anchoredObjectSettings.releaseAnchoredObject();
 
 		}
-
-
 }
