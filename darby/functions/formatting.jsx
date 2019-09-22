@@ -354,15 +354,26 @@ function apply_verse_number_style(myFrame) {
 }
 
 function twoColMetricalFix(myFrame){
+	var g = 0;
 	myDocument.recompose(); 
-	for (var x=0; x< myFrame.parentStory.lines.length;x++){
-		var line = myFrame.parentStory.lines[x]
+	for (var x=0; x< myFrame.lines.length;x++){
+		var line = myFrame.lines[x]
 		if((line.characters[-1].contents === ' ' || line.characters[-1].contents === SpecialCharacters.DISCRETIONARY_LINE_BREAK) && (line.characters[-1].appliedParagraphStyle.name === 'metricalVerseTwoColumn' || line.characters[-1].appliedParagraphStyle.name === 'mVerse1')){
 		//	$.writeln(line.characters[-1].appliedParagraphStyle.name)
+		// if the second line in a mverse1 then we only need 2 tabs, not 3
+		line.characters[-1].appliedParagraphStyle.name === 'mVerse1' && g++
+
+		if(line.characters[-1].appliedParagraphStyle.name === 'mVerse1' && g==1){
+			 line.characters[-1].contents = '\n\t\t'
+		}else{ 
 			line.characters[-1].contents = '\n\t\t\t'
+			g = 0
+		}
+			
 		//	$.writeln(line.contents)
 		}
 	}
+//	asdf;
 }
 
 function apply_chapter_number_styles(myFrame) { // search text, paragraph style
@@ -540,6 +551,17 @@ function footnoteSuperscript(myFrame) {
 	app.changeGrepPreferences.appliedCharacterStyle = myDocument.characterStyles.item("Italics");
 	app.changeGrepPreferences.changeTo = "$1"
 	myFrame.parentStory.changeGrep();
+
+
+	// 7 followed by , or . need kerning
+	
+	app.findGrepPreferences.findWhat = "7(?=[,|\\.])"
+	var myFinds = myFrame.parentStory.findGrep()
+
+	for (var x=0;x< myFinds.length;x++){
+	    $.writeln(myFinds[x].contents)
+	    myFinds[x].insertionPoints[-1].kerningValue = -150
+	}
 	// //try {
 	// 		// convert {{}} in footnotes to italics
 	// 		app.changeGrepPreferences = app.findGrepPreferences = null;

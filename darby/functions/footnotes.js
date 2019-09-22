@@ -180,13 +180,13 @@ function add_footnotes(myFrame){
 	var noteverse = 0
 
 	for(var me=0; me < numbers.length;me++){
-
+		var myParagraphStyle = numbers[me].appliedParagraphStyle.name
 		var myNumber = numbers[me]
 		//$.writeln(myNumber.contents)
 		var myNextNumber = me+1 < numbers.length ? numbers[me+1].contents : false
 
 		// check if verse is still on page. if not, skip out
-		var verseOnPage = verse_num_on_page(myFrame,myNumber,indexOffset)
+		var verseOnPage = timeit(verse_num_on_page,[myFrame,myNumber,indexOffset])
 		if (verseOnPage == false){
 			//$.writeln(myNumber.contents.toString() + ' not on page founds');
 			break;
@@ -207,10 +207,10 @@ function add_footnotes(myFrame){
 		
 		if(thisnote){
 
-			// $.writeln(noteverse)
-			// $.writeln(thisnote)
+			 //$.writeln(noteverse)
+			 //$.writeln(thisnote)
 		
-			var footframe = add_foot_frame(myFrame)
+			var ootframe = timeit(add_foot_frame,[myFrame])
 			var tempIndexOffset = 0
 			var g = true
 
@@ -218,7 +218,7 @@ function add_footnotes(myFrame){
 			for(var x=0;x < thisnote.length;x++){
 				var currentNote = thisnote[x].slice(5)
 				// reset footframe to current page
-				footframe = add_foot_frame(myFrame)
+				footframe = timeit(add_foot_frame,[myFrame])
 				myFindWordNum = thisnote[x].slice(3,4); myFindWordNum--;
 				myFindWord = thisnote[x].slice(4,5)
 				// verify that the word is still on the page.
@@ -258,7 +258,18 @@ function add_footnotes(myFrame){
 					
 					if(alreadyExists.length > 0){
 						// get marker of existing note
+						markerIndex = footframe.parentStory.insertionPoints.itemByRange(alreadyExists[0].insertionPoints[0].index-2,alreadyExists[0].insertionPoints[0].index-1).insertionPoints[0].index
 						marker = footframe.parentStory.insertionPoints.itemByRange(alreadyExists[0].insertionPoints[0].index-2,alreadyExists[0].insertionPoints[0].index-1).getElements()[0].contents
+						// get chapter number of the marker. this could be different than
+						// the "lastNoteChapter" wich is the chapter # of the last note that 
+						// was insereted.
+
+						// safest way to get last chapter is to grep and get the match with an index
+						// just before the marker.
+
+
+						var myLocalLastChapter = timeit(getLastChapter,[footframe,markerIndex])
+
 						if(noteverse !== lastverse){
 							// insert reference of current verse into footnotes.
 							// if the foot note is already several long (ex: 1:17k asdfa l asdfaf), then we want to re-add the first 
@@ -266,17 +277,19 @@ function add_footnotes(myFrame){
 							var isNumberCheck = footframe.parentStory.insertionPoints.itemByRange(alreadyExists[0].insertionPoints[0].index-4,alreadyExists[0].insertionPoints[0].index-3).contents
 
 							if(!isNaN(isNumberCheck.toString().replace(String.fromCharCode(8194),'asdf'))){
-								var newRef = notechapter === lastNoteChapter ? thisnote[x].slice(2,3) : thisnote[x].slice(1,2) + ":" + thisnote[x].slice(2,3)
-								footframe.parentStory.insertionPoints.itemByRange(alreadyExists[0].insertionPoints[0].index-3,alreadyExists[0].insertionPoints[0].index-3).contents = "," + newRef
+								
+								var newRef = notechapter === myLocalLastChapter ? thisnote[x].slice(2,3) : thisnote[x].slice(1,2) + ":" + thisnote[x].slice(2,3)
+								footframe.parentStory.insertionPoints.itemByRange(alreadyExists[0].insertionPoints[0].index-3,alreadyExists[0].insertionPoints[0].index-3).contents = ", " + newRef
 							} else{
+
 								var lastRef = getLastFootRef(footframe,alreadyExists[0].insertionPoints[0].index-3)
-								var newRef = notechapter === lastNoteChapter ? thisnote[x].slice(2,3) : thisnote[x].slice(1,2) + ":" + thisnote[x].slice(2,3)
-								footframe.parentStory.insertionPoints.itemByRange(alreadyExists[0].insertionPoints[0].index-3,alreadyExists[0].insertionPoints[0].index-3).contents = lastRef + "," + newRef+ String.fromCharCode(8201)
+								var newRef = notechapter === myLocalLastChapter ? thisnote[x].slice(2,3) : thisnote[x].slice(1,2) + ":" + thisnote[x].slice(2,3)
+								footframe.parentStory.insertionPoints.itemByRange(alreadyExists[0].insertionPoints[0].index-3,alreadyExists[0].insertionPoints[0].index-3).contents = lastRef + ", " + newRef+ String.fromCharCode(8201)
 							}
 
 						}
 						lastverse = noteverse
-
+						//asfdasdfasfd;
 					} else {
 						// if the note does not already exist.
 						noteverse !== lastverse && footframe.contents += thisnote[x].slice(1,2) + ":" + thisnote[x].slice(2,3) + String.fromCharCode(8201)
@@ -336,7 +349,7 @@ function add_footnotes(myFrame){
 			 		foundNoteLoc =searchText.findGrep();
 			 		if (foundNoteLoc.length > 0) {
 				 		var startIndex = foundNoteLoc[0].insertionPoints[-1].index
-				 		foundNoteLoc[0].insertionPoints[-1].contents= SpecialCharacters.SIXTH_SPACE
+				 		foundNoteLoc[0].insertionPoints[-1].contents = SpecialCharacters.SIXTH_SPACE
 						foundNoteLoc[0].insertionPoints[-1].contents = marker
 					
 						tempIndexOffset +=2
@@ -363,12 +376,14 @@ function add_footnotes(myFrame){
 				// and moving them to the next page. but... don't take off the whole note...
 
 				var q = 0
-				var verseOnPage = verse_num_on_page(myFrame,myNumber,indexOffset)
-				var wordOnPage = word_on_page (myFrame,myNumber,myFindWordNum,myFindWord[0],myNextNumber,indexOffset)	
+				var verseOnPage = timeit(verse_num_on_page,[myFrame,myNumber,indexOffset])
+				var wordOnPage = timeit(word_on_page,[myFrame,myNumber,myFindWordNum,myFindWord[0],myNextNumber,indexOffset])	
 				
 				// reset text frame to the current page. we may have already added one on the next page
 				// and don't care about it yet..
-				footframe = add_foot_frame(myFrame)		
+
+				footframe = timeit(add_foot_frame,[myFrame])		
+				timeit(removeLeadingSpace,[footframe])
 				while (q < 10 && (!verseOnPage || !wordOnPage) && myFrame.name === 'frame2'){
 					
 					var textToMove = ' '
@@ -386,7 +401,7 @@ function add_footnotes(myFrame){
 							g = false
 							textToMove = textToMove + footframe.parentStory.insertionPoints.itemByRange(lastIndex,footframe.insertionPoints[-1].index).getElements()[0].contents
 							footframe.insertionPoints.itemByRange(lastIndex,footframe.insertionPoints[-1].index).remove()
-							textToMove.length > 0 && newfootframe = add_foot_frame(myFrame.nextTextFrame)
+							textToMove.length > 0 && newfootframe = timeit(add_foot_frame,[myFrame.nextTextFrame])
 							textToMove.length > 0 && newfootframe.contents = textToMove + newfootframe.contents
 							
 							// if this happens we need to change the paragraph justify rull to justify all except last line left.
@@ -399,21 +414,23 @@ function add_footnotes(myFrame){
 							// move one line at a time
 							textToMove = textToMove + footframe.lines[-1].contents
 							footframe.lines[-1].remove()
-							textToMove.length > 0 && newfootframe = add_foot_frame(myFrame.nextTextFrame)
+							textToMove.length > 0 && newfootframe = timeit(add_foot_frame,[myFrame.nextTextFrame])
 							textToMove.length > 0 && newfootframe.contents = textToMove + newfootframe.contents
 
 							// if this happens we need to change the paragraph justify rull to justify all
 							footframe.parentStory.justification=Justification.FULLY_JUSTIFIED;
 						}
+						timeit(removeLeadingSpace,[newfootframe])
 
 						
 					} catch(e){break;}
+
 					// recompose is needed when letting text "come back" onto the page.
 
 					myDocument.recompose(); 
 					//$.writeln(myFrame.contents)
-					verseOnPage = verse_num_on_page(myFrame,myNumber,indexOffset)
-					wordOnPage = word_on_page (myFrame,myNumber,myFindWordNum,myFindWord[0],myNextNumber,indexOffset)	
+					verseOnPage = timeit(verse_num_on_page,[myFrame,myNumber,indexOffset])
+					wordOnPage = timeit(word_on_page,[myFrame,myNumber,myFindWordNum,myFindWord[0],myNextNumber,indexOffset])	
 					//$.writeln(verseOnPage,wordOnPage)
 					q++
 	
@@ -428,11 +445,86 @@ function add_footnotes(myFrame){
 			}
 
 			indexOffset += tempIndexOffset
+
+
+			// this is to fix manual line breaks 
+			// sometimes the line wrap changes when the note symbol is added.
+
+			// that were added with tabing, but are now messing up 
+			// only needed with metrical
+
+
+			//if(myParagraphStyle == 'metricalVerseTwoColumn' || myParagraphStyle == 'mVerse1'){
+			//	metricalChapterNumFix(numbers[me])				
+			//}
+
+
+
 		//	if(marker == 'u'){asfasdfas;}
 		}
 	}
 }
 
+
+function metricalChapterNumFix(stuff){
+
+	// 1. remove all manual line breaks with three tabs following
+	// 2. recompute
+	// 3. add back all manual line breaks
+
+ 	var myParagraph = stuff.paragraphs[0]
+ 	app.findGrepPreferences = app.changeGrepPreferences = null
+
+ 	app.findGrepPreferences.findWhat = "\\n\\t\\t\\t"
+ 	app.changeGrepPreferences.changeTo = ''
+ 	myParagraph.changeGrep()
+
+ 
+	myDocument.recompose(); 
+	for (var x=0; x< stuff.paragraphs[0].lines.length;x++){
+		var line = stuff.paragraphs[0].lines[x]
+		if((line.characters[-1].contents === ' ' || line.characters[-1].contents === SpecialCharacters.DISCRETIONARY_LINE_BREAK) && (line.characters[-1].appliedParagraphStyle.name === 'metricalVerseTwoColumn' || line.characters[-1].appliedParagraphStyle.name === 'mVerse1')){
+		//	$.writeln(line.characters[-1].appliedParagraphStyle.name)
+		// if it is a metrical v1 and line 2 then we only need 2 tabs
+
+		if(line.characters[-1].appliedParagraphStyle.name === 'mVerse1' && x == 1){
+			line.characters[-1].contents = '\n\t\t'
+		}
+		else {
+			line.characters[-1].contents = '\n\t\t\t'
+		}
+		//	$.writeln(line.contents)
+		}
+	}
+
+}
+
+function getLastChapter(myFrame, myIndex){
+
+	app.findGrepPreferences = app.changeGrepPreferences = null
+	app.findGrepPreferences.findWhat = '\\d+:\\d+'
+	var myFinds = myFrame.findGrep()
+
+	// flip array so we start with biggest index. 
+	myFinds.reverse()
+	// loop through results. return when the index is < myIndex
+	for(var q=0;q <myFinds.length; q++){
+		if(myFinds[q].insertionPoints[-1].index < myIndex){
+			var myText = myFinds[q].contents
+
+			return myText.split(":")[0]
+		}
+	}
+
+
+
+}
+function removeLeadingSpace(myFrame){
+	app.findGrepPreferences = app.changeGrepPreferences = null
+	app.findGrepPreferences.findWhat = "^~k*\\s+~k*"
+	app.changeGrepPreferences.changeTo = ""
+	myFrame.parentStory.changeGrep()
+}
 function getLastFootRef(me,location){
 
 	if (me.contents.length < 1) {return;}

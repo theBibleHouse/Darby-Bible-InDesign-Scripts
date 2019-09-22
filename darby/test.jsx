@@ -3,10 +3,17 @@
   var selection = app.selection[0]
 //.writeln(selection.appliedParagraphStyle.name)
   $.writeln(selection.insertionPoints[0].index)
-    $.writeln(selection.insertionPoints[0].paragraphs[0].lines[0].characters[5].remove())
-  $.writeln(selection.insertionPoints[0].paragraphs[0].lines[0].characters[5].remove())
 
 
+app.findGrepPreferences.findWhat = "7(?=,)"
+app.changeGrepPreferences.changeTo = "$1"
+app.changeGrepPreferences.properties.kerning = "-150"
+var myFinds = selection.parentStory.findGrep()
+
+for (var x=0;x< myFinds.length;x++){
+    $.writeln(myFinds[x].contents)
+    myFinds[x].insertionPoints[-1].kerningValue = -150
+}
 
 //  $.writeln(selection.insertionPoints[0].parentTextFrames[0].name)
 //  var myFrame = selection.insertionPoints[0].parentTextFrames[0]

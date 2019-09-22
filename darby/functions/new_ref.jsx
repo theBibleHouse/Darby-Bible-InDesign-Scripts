@@ -19,10 +19,7 @@ function new_ref(myFrame){
 			timeit(dates_and_cross,[myFrame, me, 1])
 			timeit(move_chapter_num_to_anchored_frames,[me])
 
-			// this is to fix manual line breaks 
-			// that were added with tabing, but are now messing up 
-
-			metricalChapterNumFix(me)
+			
 			
 
 		} else if(me.appliedCharacterStyle == myDocument.characterStyles.item("VerseNum")){ 
@@ -47,31 +44,6 @@ function new_ref(myFrame){
 	}
 }
 
-function metricalChapterNumFix(stuff){
-
-	// 1. remove all manual line breaks with three tabs following
-	// 2. recompute
-	// 3. add back all manual line breaks
-
- 	var myParagraph = stuff.paragraphs[0]
- 	app.findGrepPreferences = app.changeGrepPreferences = null
-
- 	app.findGrepPreferences.findWhat = "\\n\\t\\t\\t"
- 	app.changeGrepPreferences.changeTo = ''
- 	myParagraph.changeGrep()
-
- 
-	myDocument.recompose(); 
-	for (var x=0; x< stuff.paragraphs[0].lines.length;x++){
-		var line = stuff.paragraphs[0].lines[x]
-		if((line.characters[-1].contents === ' ' || line.characters[-1].contents === SpecialCharacters.DISCRETIONARY_LINE_BREAK) && (line.characters[-1].appliedParagraphStyle.name === 'metricalVerseTwoColumn' || line.characters[-1].appliedParagraphStyle.name === 'mVerse1')){
-		//	$.writeln(line.characters[-1].appliedParagraphStyle.name)
-			line.characters[-1].contents = '\n\t\t\t'
-		//	$.writeln(line.contents)
-		}
-	}
-
-}
 
 
 function find_number(myFrame){
@@ -219,6 +191,16 @@ function dates_and_cross(myFrame, chapter, verse){
 		 	found = cross_frame.findGrep();
 		 	found.length < 1 ? while_cross_frame_overflows=100 : found[found.length-1].insertionPoints[0].parentStory.characters[(found[found.length-1].insertionPoints[0].index)].remove();
 			refFrameBaseline = cross_frame.characters[-1].baseline			 	
+		}
+
+		// 7 followed by , need kerning
+		app.findGrepPreferences = app.changeGrepPreferences = null;
+		app.findGrepPreferences.findWhat = "7(?=[,|\\.])"
+		var myFinds = cross_frame.parentStory.findGrep()
+
+		for (var x=0;x< myFinds.length;x++){
+		    $.writeln(myFinds[x].contents)
+		    myFinds[x].insertionPoints[-1].kerningValue = -150
 		}	
 		
 	}

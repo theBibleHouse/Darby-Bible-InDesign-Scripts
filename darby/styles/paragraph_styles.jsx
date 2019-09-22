@@ -556,7 +556,7 @@ dropCapCharacters: 2,
 			
 			keepLastLines: 2,
 			keepWithNext: 0,
-			hyphenation: true,
+			hyphenation: false,
 			spaceBefore: ".706 mm",
 
 			//dropCapCharacters: 2,
