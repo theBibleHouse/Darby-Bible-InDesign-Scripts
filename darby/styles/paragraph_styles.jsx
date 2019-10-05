@@ -702,11 +702,8 @@ dropCapCharacters: 2,
 			keepLinesTogether: true,
 			keepFirstLines: 1,
 			keepLastLines: 1,
-//			hyphenation: false,
-			//composer: "Adobe World-Read Paragraph Composer",
-			// add on the left indent here
 			tabList: [{
-				position: 7-meta.gutter,
+				position: 7.6-meta.gutter,
 				alignment: TabStopAlignment.LEFT_ALIGN,
 				leader: ""
 			}, {

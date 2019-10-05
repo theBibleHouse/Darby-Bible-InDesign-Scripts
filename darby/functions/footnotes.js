@@ -60,8 +60,8 @@ function verse_num_on_page(myFrame,item,indexOffset){
 }
 
 function word_on_page(myFrame,verseNum,wordNum,word,nextVerseNum,indexOffset){
-	// if frame is emtpy return false
 	
+	// if frame is emtpy return false
 	if(myFrame.contents.length < 1){return false}
 
 	app.findGrepPreferences = null
@@ -75,72 +75,70 @@ function word_on_page(myFrame,verseNum,wordNum,word,nextVerseNum,indexOffset){
 	if (foundItem.length > 0 && foundItem[0].insertionPoints[-1].index >= verseNum.insertionPoints[0].index + indexOffset && foundItem[0].insertionPoints[-1].index <= myFrame.insertionPoints[-1].index ){
 		//$.writeln("case1")
 		return true
-	} else {
+	} 
 
-		// if the # is a chapter #
-		myGrep = "^"+verseNum.contents.toString()+"\\s*(\\b\\w+?(-\\b\\w+?)?\\b[^`]+?){"+wordNum.toString() +"}(?=" + word + ")";
-		//$.writeln(myGrep)
-		app.findGrepPreferences.findWhat = myGrep
-		var foundItem = myFrame.findGrep()
-	
-		if (foundItem.length > 0 && foundItem[0].insertionPoints[-1].index >= verseNum.insertionPoints[0].index + indexOffset && foundItem[0].insertionPoints[-1].index <= myFrame.insertionPoints[-1].index ){
-			//		$.writeln("case2")
-			return true
-		} else {
+	// if the # is a chapter #
+	myGrep = "^"+verseNum.contents.toString()+"\\s*(\\b\\w+?(-\\b\\w+?)?\\b[^`]+?){"+wordNum.toString() +"}(?=" + word + ")";
+	//$.writeln(myGrep)
+	app.findGrepPreferences.findWhat = myGrep
+	var foundItem = myFrame.findGrep()
 
-			// if the # is a verse #
-			wordNum--
-			myGrep = verseNum.contents.toString() + "[^`]+?(\\b\\w+?(-\\b\\w+?)?\\b[^`]+?){"+wordNum.toString() +"}(?=" + word + ")";
-			//$.writeln(myGrep)
-			app.findGrepPreferences.findWhat = myGrep
-			var foundItem = myFrame.findGrep()
+	if (foundItem.length > 0 && foundItem[0].insertionPoints[-1].index >= verseNum.insertionPoints[0].index + indexOffset && foundItem[0].insertionPoints[-1].index <= myFrame.insertionPoints[-1].index ){
+		//$.writeln("case2")
+		return true
+	} 
 
-			if (foundItem.length > 0 && foundItem[0].insertionPoints[-1].index >= verseNum.insertionPoints[0].index + indexOffset && foundItem[0].insertionPoints[-1].index <= myFrame.insertionPoints[-1].index ){
-			//			$.writeln("case3")
-				return true
-			} else {
-			//			$.writeln("case4")
-			// it is possible that the word breaks over the page end..
-			// need to get the containing paragraph of the # and the check inside the paragraph.
-			// if the last index of finds is on the page, then cool.
-			// the last index is before the word starts so we should be good.
+	// if the # is a verse #
+	wordNum--
+	myGrep = verseNum.contents.toString() + "[^`]+?(\\b\\w+?(-\\b\\w+?)?\\b[^`]+?){"+wordNum.toString() +"}(?=" + word + ")";
+	//$.writeln(myGrep)
+	app.findGrepPreferences.findWhat = myGrep
+	var foundItem = myFrame.findGrep()
 
-			// get the index of the verse number (last time it is found in frame)
-				app.findGrepPreferences = app.changeGrepPreferences = null
-				app.findGrepPreferences.findWhat = verseNum.contents.toString();
-				me = myFrame.findGrep()
+	if (foundItem.length > 0 && foundItem[0].insertionPoints[-1].index >= verseNum.insertionPoints[0].index + indexOffset && foundItem[0].insertionPoints[-1].index <= myFrame.insertionPoints[-1].index ){
+	//			$.writeln("case3")
+		return true
+	} 
+	//			$.writeln("case4")
+	// it is possible that the word breaks over the page end..
+	// need to get the containing paragraph of the # and the check inside the paragraph.
+	// if the last index of finds is on the page, then cool.
+	// the last index is before the word starts so we should be good.
 
-				// if nothing found then give up
-				if (me.length < 1){return false;}
+	// get the index of the verse number (last time it is found in frame)
+	app.findGrepPreferences = app.changeGrepPreferences = null
+	app.findGrepPreferences.findWhat = verseNum.contents.toString();
+	me = myFrame.findGrep()
 
-				// get the start and stop indexes of the paragraph
-				var startIndex = me[me.length-1].insertionPoints[0].index
-				var endIndex = me[me.length-1].paragraphs[0].insertionPoints[-1].index
-				var searchText = myFrame.parentStory.insertionPoints.itemByRange(startIndex,endIndex).getElements()[0]
+	// if nothing found then give up
+	if (me.length < 1){return false;}
 
-				// try to find here...
-				// generic
-				var myGrep = nextVerseNum == false ? "[^\\d]*"+word+"(?=[^\\d]*)" : "[^\\d]*"+word+"(?=[^\\d]*"+nextVerseNum.toString()+")"
-				app.findGrepPreferences.findWhat = myGrep
-				var foundItem = searchText.findGrep()
-				if (foundItem.length > 0 && foundItem[0].insertionPoints[-1].index >= verseNum.insertionPoints[0].index + indexOffset && foundItem[0].insertionPoints[-1].index <= myFrame.insertionPoints[-1].index ){return true}
-								// chapter #
-				myGrep = "^"+verseNum.contents.toString()+"\\s*(\\b\\w+?(-\\b\\w+?)?\\b[^`]+?){"+wordNum.toString() +"}(?=" + word + ")";
-				app.findGrepPreferences.findWhat = myGrep
-				var foundItem = searchText.findGrep()
-				if (foundItem.length > 0 && foundItem[0].insertionPoints[-1].index >= verseNum.insertionPoints[0].index + indexOffset && foundItem[0].insertionPoints[-1].index <= myFrame.insertionPoints[-1].index ){return true}
-				// verse #
-				myGrep = verseNum.contents.toString() + ".+?(\\b\\w+?(-\\b\\w+?)?\\b[^`]+?){"+wordNum.toString() +"}(?=" + word + ")";
-				app.findGrepPreferences.findWhat = myGrep
-				var foundItem = searchText.findGrep()
-				if (foundItem.length > 0 && foundItem[0].insertionPoints[-1].index >= verseNum.insertionPoints[0].index + indexOffset && foundItem[0].insertionPoints[-1].index <= myFrame.insertionPoints[-1].index ){return true}
+	// get the start and stop indexes of the paragraph
+	var startIndex = me[me.length-1].insertionPoints[0].index
+	var endIndex = me[me.length-1].paragraphs[0].insertionPoints[-1].index
+	var searchText = myFrame.parentStory.insertionPoints.itemByRange(startIndex,endIndex).getElements()[0]
 
-				return false
-			}
-		}
-	}
-	asdfs;
+	// try to find here...
+	// generic
+	var myGrep = nextVerseNum == false ? "[^\\d]*"+word+"(?=[^\\d]*)" : "[^\\d]*"+word+"(?=[^\\d]*"+nextVerseNum.toString()+")"
+	app.findGrepPreferences.findWhat = myGrep
+	var foundItem = searchText.findGrep()
+	if (foundItem.length > 0 && foundItem[0].insertionPoints[-1].index >= verseNum.insertionPoints[0].index + indexOffset && foundItem[0].insertionPoints[-1].index <= myFrame.insertionPoints[-1].index ){return true}
+					// chapter #
+	myGrep = "^"+verseNum.contents.toString()+"\\s*(\\b\\w+?(-\\b\\w+?)?\\b[^`]+?){"+wordNum.toString() +"}(?=" + word + ")";
+	app.findGrepPreferences.findWhat = myGrep
+	var foundItem = searchText.findGrep()
+	if (foundItem.length > 0 && foundItem[0].insertionPoints[-1].index >= verseNum.insertionPoints[0].index + indexOffset && foundItem[0].insertionPoints[-1].index <= myFrame.insertionPoints[-1].index ){return true}
+	// verse #
+	myGrep = verseNum.contents.toString() + ".+?(\\b\\w+?(-\\b\\w+?)?\\b[^`]+?){"+wordNum.toString() +"}(?=" + word + ")";
+	app.findGrepPreferences.findWhat = myGrep
+	var foundItem = searchText.findGrep()
+	if (foundItem.length > 0 && foundItem[0].insertionPoints[-1].index >= verseNum.insertionPoints[0].index + indexOffset && foundItem[0].insertionPoints[-1].index <= myFrame.insertionPoints[-1].index ){return true}
+
+	return false
 		
+	
+			
 		
 }
 var lastNoteChapter = 0
