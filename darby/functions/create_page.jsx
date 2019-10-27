@@ -2,8 +2,8 @@ function create_page(thisPage){
 	lastPage = thisPage
 
 
-	if(thisPage){
-		thisPage = myDocument.pages.add(LocationOptions.AFTER, thisPage)		
+	if(lastPage){
+		thisPage = myDocument.pages.add(LocationOptions.AFTER, lastPage)		
 	} else{thisPage = myDocument.pages[0]}
 
 	if (size == "large") {

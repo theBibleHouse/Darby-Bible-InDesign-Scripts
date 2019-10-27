@@ -559,7 +559,7 @@ function footnoteSuperscript(myFrame) {
 	var myFinds = myFrame.parentStory.findGrep()
 
 	for (var x=0;x< myFinds.length;x++){
-	    $.writeln(myFinds[x].contents)
+	    //$.writeln(myFinds[x].contents)
 	    myFinds[x].insertionPoints[-1].kerningValue = -150
 	}
 	// //try {

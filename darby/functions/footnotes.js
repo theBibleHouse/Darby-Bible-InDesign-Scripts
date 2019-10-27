@@ -355,6 +355,7 @@ function add_footnotes(myFrame){
 				 		myFrame.parentStory.characters.itemByRange(startIndex,startIndex+1).appliedCharacterStyle = myDocument.characterStyles.item("SuperScript")
 
 				 	} else {
+				 		$.writeln(searchText.contents)
 				 		$.writeln(myGrep + "\rnote location not found  for " + notechapter.toString() + ":" + noteverse.toString()); asdfdafda;}
 				 	}	
 
@@ -367,6 +368,8 @@ function add_footnotes(myFrame){
 					// don't want all references bold, just the ones for the note 😀
 					timeit(bold,[footframe, "\\d+:\\d+(,?\\d+)*~s"])
 					timeit(noBreak,[footframe, "\\d+:\\d+(,?\\d+)*\\s\\l\\s[\\l\\u]+"]);
+					timeit(noBreak, [footframe, "\\l\\.\\d+:\\d+"])
+					timeit(noBreak, [footframe, "\\d+:\\d+"])
 				}
 				thisIndex = footframe.insertionPoints[-1].index
 		
@@ -445,16 +448,6 @@ function add_footnotes(myFrame){
 			indexOffset += tempIndexOffset
 
 
-			// this is to fix manual line breaks 
-			// sometimes the line wrap changes when the note symbol is added.
-
-			// that were added with tabing, but are now messing up 
-			// only needed with metrical
-
-
-			//if(myParagraphStyle == 'metricalVerseTwoColumn' || myParagraphStyle == 'mVerse1'){
-			//	metricalChapterNumFix(numbers[me])				
-			//}
 
 
 

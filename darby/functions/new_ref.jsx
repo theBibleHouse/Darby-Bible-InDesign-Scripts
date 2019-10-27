@@ -199,7 +199,7 @@ function dates_and_cross(myFrame, chapter, verse){
 		var myFinds = cross_frame.parentStory.findGrep()
 
 		for (var x=0;x< myFinds.length;x++){
-		    $.writeln(myFinds[x].contents)
+		   // $.writeln(myFinds[x].contents)
 		    myFinds[x].insertionPoints[-1].kerningValue = -150
 		}	
 		
