@@ -18,7 +18,7 @@ var myCharacterStyle;
 			name: "VerseNum"
 		});
 		myCharacterStyle.properties = {
-			appliedFont: "Lexicon No1 C TAB",
+			appliedFont: "Lexicon No1 C Tab",
 			fontStyle: "Normal",
 			baselineShift: "1.8 pt",
 			pointSize: "6.75pt",
@@ -40,7 +40,7 @@ var myCharacterStyle;
 			name: "VerseNumM"
 		});
 		myCharacterStyle.properties = {
-			appliedFont: "Lexicon No1 C TAB",
+			appliedFont: "Lexicon No1 C Tab",
 			fontStyle: "Normal",
 			baselineShift: "1.8 pt",
 			pointSize: "6.75pt",

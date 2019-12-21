@@ -350,6 +350,20 @@ function apply_verse_number_style(myFrame) {
 	// add a manual line break and 3 tabs
 
 
+	// added this function to fix the spaceBefore when a metrical verse is followed by a normal verse.
+	app.findGrepPreferences = app.changeGrepPreferences = null;
+	app.findGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("metricalVerseTwoColumn");
+	myFinds = myFrame.parentStory.findGrep();
+
+	for(g=0; g<myFinds.length; g++)
+	{
+		q = myFinds[g].characters[-1]
+		a = myFrame.parentStory.characters[q.index + 1].appliedParagraphStyle.name
+		if(a == "Verse"){
+			myParagraph = myFrame.parentStory.characters[q.index + 1].paragraphs[0]
+			myParagraph.spaceBefore = "2mm";
+		}
+	}
 
 }
 
@@ -479,14 +493,14 @@ function apply_chapter_number_styles(myFrame) { // search text, paragraph style
 	// check for any paragraph with "normal" style and apply the same style as the previous text?
 	// in metrical books (obadiah for ex), v1 is broken in half
 	try{
-	app.findGrepPreferences = app.changeGrepPreferences = null
-	app.findGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("Normal");
-	app.changeGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("Verse");
-	myFrame.parentStory.changeGrep()
-} catch(e){$.writeln(e)
-}
+		app.findGrepPreferences = app.changeGrepPreferences = null
+		app.findGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("Normal");
+		app.changeGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("Verse");
+		myFrame.parentStory.changeGrep()
+	} catch(e){
+		//$.writeln(e)
+	}
 	
-
 }
 
 

@@ -6,6 +6,7 @@ function new_ref(myFrame){
 	
 		me = timeit(find_number,[myFrame])
 		//$.writeln(me.contents)
+
 		if(me.appliedCharacterStyle == myDocument.characterStyles.item("ChapterNum")){ 
 			//$.writeln("chapter")
 			// if this is the first number on the page then update last chapter for heading

@@ -174,7 +174,7 @@ try {
 			name: "VerseNum"
 		});
 		myParagraphStyle.properties = {
-			appliedFont: "Lexicon No1 C TAB",
+			appliedFont: "Lexicon No1 C Tab",
 						appliedCharacterStyle: myDocument.characterStyles.item("VerseNum"),
 			alignToBaseline: true,
 
