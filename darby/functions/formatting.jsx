@@ -6,7 +6,8 @@ function format_text(myFrame) {
 	find_and_replace(myFrame, " {2}+", " ");
 	find_and_replace(myFrame, "\\s+~b", "~b");
 	find_and_replace(myFrame, "\\s+$", "");
-	
+	// double space
+	find_and_replace(myFrame, "  ", " ")
 	// add section headings
 	section_headings(myFrame);
 	
@@ -26,6 +27,9 @@ function format_text(myFrame) {
 
 	// proper words
 	noBreak(myFrame,"\\u\\l+")
+
+	// elipses
+	noBreak(myFrame,".\.~k?\s\.~k?\s\.~k?\s?[;,!,\.]?")
 
 	app.findGrepPreferences = app.changeGrepPreferences = null
 	app.findGrepPreferences.findWhat = "-"

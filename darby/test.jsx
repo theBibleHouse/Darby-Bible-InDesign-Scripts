@@ -5,5 +5,5 @@ $.writeln(os)
 
 var date = new Date();
 
-dateString = date.getDay() + '-' + date.getMonth() + '-' + date.getFullYear() + '-at-' + date.getHours()+ '-' + date.getMinutes()
+	dateString = parseInt(date.getMonth())+parseInt(1) + '-' + date.getDate() + '-' +  date.getFullYear() + '-at-' + date.getHours()+ ':' + date.getMinutes()
 $.writeln(dateString)
