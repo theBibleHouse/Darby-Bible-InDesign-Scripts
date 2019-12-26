@@ -50,8 +50,10 @@ function section_headings(myFrame){
 				$.writeln("Error: unable to find heading location for "  + book + " " + chapter + ":" + verse + " " + content + "\n" + e)}
 			}
 		}
+		try{
 		me.characters.itemByRange(myFrame.insertionPoints[pointone],me.insertionPoints[pointone+content.length]);
 		me.appliedParagraphStyle = myDocument.paragraphStyles.item("SectionHeading");
 		me.appliedCharacterStyle = myDocument.characterStyles.item("None");
+	}catch(e){$.writeln(e)}
 	}
 }

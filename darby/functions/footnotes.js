@@ -1,8 +1,9 @@
 function new_foot(myFrame){
-
+	// $.writeln(myFrame.name)
 	if(myFrame.name=='frame1'){
 		add_footnotes(myFrame)
 		if(myFrame.nextTextFrame.name=="frame2"){
+			// $.writeln("new_foot on frame 2")
 			add_footnotes(myFrame.nextTextFrame)
 		}
 	}
@@ -41,18 +42,22 @@ function verse_num_on_page(myFrame,item,indexOffset){
 
 	// for verse numbers
 	var myGrep = "[^\\d]\\K"+item.contents+"(?=[^\\d])";
+	// $.writeln(myGrep)
 	app.findGrepPreferences = null
 	app.findGrepPreferences.findWhat = myGrep;
 
 	var foundItem = myFrame.findGrep()
+	// $.writeln(foundItem.length)
 	if (foundItem.length > 0 && foundItem[foundItem.length-1].insertionPoints[0].index >= item.insertionPoints[0].index + indexOffset-1 && foundItem[foundItem.length-1].insertionPoints[0].index <= myFrame.insertionPoints[-1].index ){				
 		return true;
 	}
 	// for chapter #'s
-	var myGrep = "^\\K"+item.contents+"(?=[^\\d])";
+	var myGrep = "\\<\\K"+item.contents+"(?=[^\\d])";
+	// $.writeln(myGrep)
 	app.findGrepPreferences.findWhat = myGrep;
 
 	var foundItem = myFrame.findGrep()
+	// $.writeln(foundItem.length)
 	if (foundItem.length > 0 && foundItem[foundItem.length-1].insertionPoints[0].index >= item.insertionPoints[0].index + indexOffset-1 && foundItem[foundItem.length-1].insertionPoints[0].index <= myFrame.insertionPoints[-1].index ){				
 		return true;
 	}
@@ -181,14 +186,13 @@ function word_on_page(myFrame,verseNum,wordNum,word,nextVerseNum,indexOffset){
 	}
 //	$.writeln("verse not on frame " + myFrame.name)
 	return false
-		
-	
 			
 		
 }
 var lastNoteChapter = 0
 var lastverse = 0
 var lastnote = ''
+
 function add_footnotes(myFrame){
 
 /*
@@ -212,6 +216,14 @@ function add_footnotes(myFrame){
 	app.findGrepPreferences.findWhat = "\\d+";
 	var numbers = myFrame.findGrep();
 	
+	if(numbers.length > 0){
+		var arr = [];
+		for (var i = 0; i < numbers.length; i++) {
+		    arr.push(numbers[i].contents);
+		}
+		// $.writeln(arr)
+	}
+	
 	// loop through them, one at a time.
 	// check if they are still on the page. don't use grep, just check index/baseline?
 	// if still on the page, then add the note. Don't care if it changed col, etc.
@@ -222,18 +234,23 @@ function add_footnotes(myFrame){
 	myFrame.name == 'frame1' && lastNoteChapter = 0
 	var noteverse = 0
 
-//	$.writeln("doing notes on frame " + myFrame.name)
+	// $.writeln("doing notes on frame " + myFrame.name)
 	for(var me=0; me < numbers.length;me++){
 		var myParagraphStyle = numbers[me].appliedParagraphStyle.name
 		var myNumber = numbers[me]
-//		$.writeln(myNumber.contents)
+
+		// $.writeln(myNumber.contents)
 		var myNextNumber = me+1 < numbers.length ? numbers[me+1].contents : false
 
 		// check if verse is still on page. if not, skip out
 		var verseOnPage = timeit(verse_num_on_page,[myFrame,myNumber,indexOffset])
-//		$.writeln('verse on page: ' + verseOnPage)
+		// $.writeln('verse on page: ' + verseOnPage)
 		if (verseOnPage == false){
-			//$.writeln(myNumber.contents.toString() + ' not on page founds');
+			// $.writeln("verse on page is false")
+			// $.writeln(myFrame.name)
+			// $.writeln(myNumber.contents.toString() + ' not on page founds');
+			
+			// if(myNumber.contents == 5 &&notechapter == 10){asdf;}
 			break;
 		}
 		
@@ -246,14 +263,15 @@ function add_footnotes(myFrame){
 		} else if(myNumber.appliedCharacterStyle == myDocument.characterStyles.item("VerseNum")){ 
 			noteverse = myNumber.contents
 		}
-
+		// $.writeln(notechapter,noteverse)
 		// get note from array
 		var thisnote = timeit(get_foot_array_val,[note,notechapter,noteverse]) 
-		//$.writeln('thisnote: ' + notechapter,noteverse,thisnote)
+		// $.writeln('thisnote: ' + notechapter,noteverse,thisnote)
+		
 		if(thisnote){
 
-			 //$.writeln(noteverse)
-			 //$.writeln(thisnote)
+			  // $.writeln(noteverse)
+			  // $.writeln(thisnote)
 		
 			var footframe = timeit(add_foot_frame,[myFrame])
 			var tempIndexOffset = 0
@@ -269,26 +287,27 @@ function add_footnotes(myFrame){
 				// verify that the word is still on the page.
 				
 				var wordOnPage = myFindWordNum < 0 ? true : timeit(word_on_page,[myFrame,myNumber,myFindWordNum,myFindWord[0],myNextNumber,indexOffset])
-//				$.writeln('269 first word on page check: ' + wordOnPage)
+
+				// $.writeln('273 first word on page check: ' + wordOnPage)
 				// if there was a word found that was after the verse #, then it is then we assume safe? 
 				// possibly I should be checking for the word # as well in case a word is repeated?
 				// if the word was not found after the verse number, then...
+				
 				if (wordOnPage === false){
 
 					// the word was not found on the page.. it must be on the next page!
 					// if its found we need to add it to the next page.
-					//$.writeln('checking next page for potentional note location')
+					// $.writeln('checking next page for potentional note location')
 					// if this page overflows and there is no next page then add it.
 					
 					if(myFrame.overflows){
-//						$.writeln('frame overflowed')
 						timeit(create_page,[myFrame.parentPage]);	
 					}
-					
 
 					var wordOnNextPage = timeit(word_on_page,[myFrame.nextTextFrame,myNumber,myFindWordNum,myFindWord[0],myNextNumber,indexOffset])
-//					$.writeln('286 first word on next page check: ' + wordOnNextPage)
+//					$.writeln('290 first word on next page check: ' + wordOnNextPage)
 					if (wordOnNextPage === true){
+		//				$.writeln("on next page")
 						if(myFrame.name === 'frame2'){footframe = timeit(add_foot_frame,[myFrame.nextTextFrame])}
 					} else {
 						$.writeln("293 note word location not found for " + notechapter.toString() + ":" + noteverse.toString() + " note word: " + myFindWord[0].toString());
@@ -298,18 +317,18 @@ function add_footnotes(myFrame){
 
 				// get reference only if verse changed
 				
-				var alreadyExists = ''
+				var alreadyExists = '';
 				
 				// em space 8195
 				// en space 8194
 				// thin space 8201
 				
 				// check if note already exists
+				// $.writeln(footframe.contents.length)
 				if(footframe.contents.length > 0){
 					app.findTextPreferences = null
-					app.findTextPreferences.findWhat = currentNote[0].replace('<i>','').replace('</i>','')
+					app.findTextPreferences.findWhat = currentNote[0].replace(/<i>/g,'').replace(/<\/i>/g,'')
 					var alreadyExists = footframe.findText()
-					
 					if(alreadyExists.length > 0){
 						// get marker of existing note
 						markerIndex = footframe.parentStory.insertionPoints.itemByRange(alreadyExists[0].insertionPoints[0].index-2,alreadyExists[0].insertionPoints[0].index-1).insertionPoints[0].index
@@ -329,7 +348,6 @@ function add_footnotes(myFrame){
 							// if the foot note is already several long (ex: 1:17k asdfa l asdfaf), then we want to re-add the first 
 							// full reference.
 							var isNumberCheck = footframe.parentStory.insertionPoints.itemByRange(alreadyExists[0].insertionPoints[0].index-4,alreadyExists[0].insertionPoints[0].index-3).contents
-
 							if(!isNaN(isNumberCheck.toString().replace(String.fromCharCode(8194),'asdf'))){
 								
 								var newRef = notechapter === myLocalLastChapter ? thisnote[x].slice(2,3) : thisnote[x].slice(1,2) + ":" + thisnote[x].slice(2,3)
@@ -338,13 +356,14 @@ function add_footnotes(myFrame){
 
 								var lastRef = getLastFootRef(footframe,alreadyExists[0].insertionPoints[0].index-3)
 								var newRef = notechapter === myLocalLastChapter ? thisnote[x].slice(2,3) : thisnote[x].slice(1,2) + ":" + thisnote[x].slice(2,3)
-								footframe.parentStory.insertionPoints.itemByRange(alreadyExists[0].insertionPoints[0].index-3,alreadyExists[0].insertionPoints[0].index-3).contents = lastRef + ", " + newRef+ String.fromCharCode(8201)
+								footframe.parentStory.insertionPoints.itemByRange(alreadyExists[0].insertionPoints[0].index-2,alreadyExists[0].insertionPoints[0].index-2).contents = lastRef + ", " + newRef+ String.fromCharCode(8201)
 							}
 
 						}
 						lastverse = noteverse
 						//asfdasdfasfd;
 					} else {
+
 						// if the note does not already exist.
 						noteverse !== lastverse && footframe.contents += thisnote[x].slice(1,2) + ":" + thisnote[x].slice(2,3) + String.fromCharCode(8201)
 						marker = alpha_increment()
@@ -353,9 +372,10 @@ function add_footnotes(myFrame){
 					}
 
 				} else {
+					// $.writeln("ELSE")
 					// this is for first item added to frame.
-					noteverse !== lastverse && footframe.contents += thisnote[x].slice(1,2) + ":" + thisnote[x].slice(2,3) + String.fromCharCode(8201)
-					noteverse == lastverse && footframe.contents += String.fromCharCode(8203, 8194, 8203)
+					footframe.contents += thisnote[x].slice(1,2) + ":" + thisnote[x].slice(2,3) + String.fromCharCode(8201)
+					//noteverse == lastverse && footframe.contents += String.fromCharCode(8203, 8194, 8203)
 					marker = alpha_increment()
 					footframe.contents += marker + currentNote + String.fromCharCode(8203, 8194, 8203)
 					lastverse = noteverse
@@ -376,10 +396,12 @@ function add_footnotes(myFrame){
 					// if not a chapter # then we need to drop off one from find work # because the verse # is stuck againts
 					// the first word... so there is no word boundry
 					if(numbers[me].appliedCharacterStyle == myDocument.characterStyles.item("ChapterNum")){
-						myGrep = "^\\d+\\s*(\\b\\w+?(-\\b\\w+?)?\\b[^`]+?){"+myFindWordNum.toString() +"}(?=" + myFindWord + ")";
+						myGrep = "^\\d+\\s*(\\b\\w+?(-\\b\\w+?)?\\b[^`]+?){"+myFindWordNum.toString() +"}\\s(?=.?" + myFindWord + ")";
+					//	$.writeln(myGrep)
 					} else {
 						myFindWordNum--
-						myGrep = "\\d+.+?(\\b\\w+?(-\\b\\w+?)?\\b[^`]+?){"+myFindWordNum.toString() +"}(?=" + myFindWord + ")";
+						myGrep = "\\d+.+?(\\b\\w+?(-\\b\\w+?)?\\b[^`]+?){"+myFindWordNum.toString() +"}\\s(?=.?" + myFindWord + ")";
+					//	$.writeln(myGrep)
 					}
 				  	//$.writeln(myGrep)
 				  	app.findGrepPreferences.findWhat = myGrep
@@ -397,7 +419,7 @@ function add_footnotes(myFrame){
 
 			 	} else {
 
-			 		myGrep = "\\d+[^`]+(?=" + myFindWord + ")"
+			 		myGrep = "\\d+[^`]+\\s(?=.?" + myFindWord + ")"
 			 		app.findGrepPreferences.findWhat = myGrep
 			 		
 			 		foundNoteLoc =searchText.findGrep();
@@ -422,7 +444,7 @@ function add_footnotes(myFrame){
 					
 					timeit(footnoteSuperscript,[footframe]);
 					// don't want all references bold, just the ones for the note 😀
-					timeit(bold,[footframe, "\\d+:\\d+(,?\\d+)*~s"])
+					timeit(bold,[footframe, "\\d+:\\d+(,?\\s?\\d+)*~s"])
 					timeit(noBreak,[footframe, "\\d+:\\d+(,?\\d+)*\\s\\l\\s[\\l\\u]+"]);
 					timeit(noBreak, [footframe, "\\l\\.\\d+:\\d+"])
 					timeit(noBreak, [footframe, "\\d+:\\d+"])
@@ -443,7 +465,7 @@ function add_footnotes(myFrame){
 				footframe = timeit(add_foot_frame,[myFrame])		
 				timeit(removeLeadingSpace,[footframe])
 				while (q < 10 && (!wordOnPage) && myFrame.name === 'frame2'){
-					
+					// $.writeln("in while")
 					var textToMove = ' '
 				
 					// remove lines until ther verse number is found. if verse number is never found 
@@ -574,6 +596,7 @@ function removeLeadingSpace(myFrame){
 	app.changeGrepPreferences.changeTo = ""
 	myFrame.parentStory.changeGrep()
 }
+
 function getLastFootRef(me,location){
 
 	if (me.contents.length < 1) {return;}

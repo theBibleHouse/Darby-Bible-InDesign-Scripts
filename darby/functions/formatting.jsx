@@ -6,8 +6,10 @@ function format_text(myFrame) {
 	find_and_replace(myFrame, " {2}+", " ");
 	find_and_replace(myFrame, "\\s+~b", "~b");
 	find_and_replace(myFrame, "\\s+$", "");
+	
 	// double space
-	find_and_replace(myFrame, "  ", " ")
+	find_and_replace(myFrame, "  +", " ")
+	
 	// add section headings
 	section_headings(myFrame);
 	
@@ -29,7 +31,7 @@ function format_text(myFrame) {
 	noBreak(myFrame,"\\u\\l+")
 
 	// elipses
-	noBreak(myFrame,".\.~k?\s\.~k?\s\.~k?\s?[;,!,\.]?")
+	noBreak(myFrame,".\\.~k?\\s\\.~k?\\s\\.~k?\\s?[;,!,\\.]?")
 
 	app.findGrepPreferences = app.changeGrepPreferences = null
 	app.findGrepPreferences.findWhat = "-"
@@ -44,7 +46,9 @@ function format_text(myFrame) {
 	// tab after chapter numbers
 	app.findGrepPreferences = app.changeGrepPreferences = null
 	app.findGrepPreferences.findWhat = "\\d\\K~%"
-	app.changeGrepPreferences.changeTo = '\\t'
+	//app.changeGrepPreferences.changeTo = '\\t'
+	app.changeGrepPreferences.changeTo = ''
+
 	myFrame.parentStory.changeGrep()
 
 	// in front of verse numbers
@@ -529,7 +533,7 @@ function footnoteSuperscript(myFrame) {
 
 	// set space between footnote reference and the superscript letter
 	app.findGrepPreferences = app.changeGrepPreferences = null;
-	app.findGrepPreferences.findWhat = "(:\\d+[,?\\d+]*)[~%|~s|~<](\\l)";
+	app.findGrepPreferences.findWhat = "(:\\d+[,?\\s?\\d+]*)[~%|~s|~<](\\l)";
 	app.findGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("Footnote");
 	app.changeGrepPreferences.changeTo = "$1~s$2"; // was 
 	myFrame.parentStory.changeGrep();

@@ -20,9 +20,6 @@ function new_ref(myFrame){
 			timeit(dates_and_cross,[myFrame, me, 1])
 			timeit(move_chapter_num_to_anchored_frames,[me])
 
-			
-			
-
 		} else if(me.appliedCharacterStyle == myDocument.characterStyles.item("VerseNum")){ 
 		//	$.writeln("verse")		
 			my_baseline = Math.round(me.baseline)

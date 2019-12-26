@@ -36,7 +36,7 @@ function timeit(func,args){
     // get seconds 
     var seconds = name + ","+ timeDiff + ",seconds";
     
-    $.writeln(seconds)
+ //   $.writeln(seconds)
     return result
 }
 
