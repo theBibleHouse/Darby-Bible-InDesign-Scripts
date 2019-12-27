@@ -5,8 +5,7 @@ function new_ref(myFrame){
 	while(me){
 	
 		me = timeit(find_number,[myFrame])
-		//$.writeln(me.contents)
-
+		
 		if(me.appliedCharacterStyle == myDocument.characterStyles.item("ChapterNum")){ 
 			//$.writeln("chapter")
 			// if this is the first number on the page then update last chapter for heading
@@ -21,7 +20,7 @@ function new_ref(myFrame){
 			timeit(move_chapter_num_to_anchored_frames,[me])
 
 		} else if(me.appliedCharacterStyle == myDocument.characterStyles.item("VerseNum")){ 
-		//	$.writeln("verse")		
+			//$.writeln("verse")		
 			my_baseline = Math.round(me.baseline)
 			verse = me.contents
 
@@ -68,7 +67,6 @@ function dates_and_cross(myFrame, chapter, verse){
 
 	// get new content from array
 
-
 	var thisdate = verse !== 1 ? timeit(get_array_val,[date,chapter,verse.contents]) : timeit(get_array_val,[date,chapter.contents,verse]);
 	var thiscross = verse !== 1 ? timeit(get_array_val,[cross,chapter,verse.contents]) : timeit(get_array_val,[cross,chapter.contents,verse]);
 				
@@ -79,8 +77,18 @@ function dates_and_cross(myFrame, chapter, verse){
 	// add last date and apply paragraph style. only if date is added.
 	cross_frame.contents.length < 1 && (cross_frame.parentStory.appliedParagraphStyle = myDocument.paragraphStyles.item("init-crossReference-"+myFrame.name));
 
-	cross_frame.contents.length < 1 && (thisdate || lastdate) && (cross_frame.contents += (thisdate || lastdate) + break_char) && (lastdate = thisdate || lastdate) && (thisdate = false);
-	
+
+	if(cross_frame.contents.length < 1 && (thisdate && my_baseline < 18 || lastdate)){
+		
+		// if is for the first verse in the columm then we can use "this date", othersise
+		// we need to add "last date" and "this date"
+		// this is true if baseline is < 18.8
+
+		cross_frame.contents += (thisdate && my_baseline < 18 || lastdate) + break_char;
+		lastdate = (thisdate && my_baseline < 18) || lastdate;
+		thisdate && my_baseline < 18 && thisdate = false;
+	} 
+		
 	if(thisdate || thiscross){
 
 		// get current baseline.

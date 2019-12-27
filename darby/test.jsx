@@ -1,9 +1,6 @@
 
+var doc = app.activeDocument;
 
-os = $.os.toLowerCase().indexOf('mac') >= 0 ? "MAC": "WINDOWS";
-$.writeln(os)
+var sel = app.selection[0]
 
-var date = new Date();
-
-	dateString = parseInt(date.getMonth())+parseInt(1) + '-' + date.getDate() + '-' +  date.getFullYear() + '-at-' + date.getHours()+ ':' + date.getMinutes()
-$.writeln(dateString)
+$.writeln(sel.insertionPoints[0].baseline)
