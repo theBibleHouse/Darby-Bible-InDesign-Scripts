@@ -400,7 +400,7 @@ try {
 			hyphenation: false,
 			alignToBaseline: true,
 			keepLinesTogether: true,
-			keepFirstLines: 1,
+			keepFirstLines: 2,
 			keepLastLines: 2,			
 			leftIndent: meta.gutter,
 			rightIndent: meta.gutter,

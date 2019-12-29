@@ -75,5 +75,7 @@ function document_setup(size) {
 		default:
 			myDocument = app.documents.add(true, app.documentPresets.item("Darby Bible"));
 	}
+	// show hidden chars
+	myDocument.textPreferences.showInvisibles = true;
 	return myDocument
 }

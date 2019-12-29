@@ -1,5 +1,5 @@
 function move_verse_numbers_to_frame(me) {
-	var lastNote
+	
 	var myFrame = me.parentTextFrames[0];
 
 	if (me.contents == 0){
@@ -65,22 +65,10 @@ function move_verse_numbers_to_frame(me) {
 		var lastBaseline = Math.round(lastNote.geometricBounds[0])
 
 		if(newBaseline == lastBaseline){
-			with(lastNote.baselineFrameGridOptions) {
-				useCustomBaselineFrameGrid = true
-				startingOffsetForBaselineFrameGrid = "3.5mm"
-				baselineFrameGridIncrement = "1pt"
-			}
-			with(lastNote.anchoredObjectSettings) {
-				anchorYoffset = "-.9mm"
-			}
-			with(newNote.baselineFrameGridOptions) {
-				useCustomBaselineFrameGrid = true
-				startingOffsetForBaselineFrameGrid = "2mm"
-				baselineFrameGridIncrement = "1pt"
-			}
-			with(newNote.anchoredObjectSettings) {
-				anchorYoffset = "1.2mm"
-			}
+			
+			// use baseline shift on text. using a different obj style did not work.
+			lastNote.parentStory.baselineShift = '3pt';			
+			newNote.parentStory.baselineShift = '-3pt';
 		}		
 	}
 	lastNote = newNote

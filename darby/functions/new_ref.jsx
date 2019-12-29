@@ -1,7 +1,7 @@
 
 function new_ref(myFrame){
 	var me = true, i = 0;
-	
+	var lastNote
 	while(me){
 	
 		me = timeit(find_number,[myFrame])

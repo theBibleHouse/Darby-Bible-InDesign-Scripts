@@ -1,6 +1,22 @@
 
-var doc = app.activeDocument;
+var myDocument = app.activeDocument;
 
-var sel = app.selection[0]
+var tfPrefs = {
+        autoSizingType: AutoSizingTypeEnum.HEIGHT_ONLY,
+        autoSizingReferencePoint: AutoSizingReferenceEnum.TOP_CENTER_POINT,
+    }
 
-$.writeln(sel.insertionPoints[0].baseline)
+
+var myBaseObjectStyle = myDocument.objectStyles.add({
+    name:"My Base Object Style", 
+    basedOn: "[None]",
+    enableTextFrameAutoSizingOptions: true,
+    textFramePreferences: tfPrefs,
+})
+
+var myNewObjectStyle = myDocument.objectStyles.add({
+    name:"My Object Style", 
+    basedOn: myBaseObjectStyle,
+    textFramePreferences: tfPrefs,
+    //appliedParagraphStyle: "PStyle",
+})
