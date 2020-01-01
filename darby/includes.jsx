@@ -8,7 +8,6 @@
 #include "functions/formatting.jsx"
 #include "functions/page_heading.jsx"
 #include "functions/section_heading.jsx"
-#include "functions/reference_material.jsx"
 #include "functions/new_ref.jsx"
 #include "functions/chapter_numbers.jsx"
 #include "functions/verse_numbers.jsx"
