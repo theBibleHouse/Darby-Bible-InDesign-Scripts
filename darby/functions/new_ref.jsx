@@ -17,6 +17,7 @@ function new_ref(myFrame){
 			var nextChar = me.parentStory.insertionPoints[me.insertionPoints[-1].index + 1].characters[0];
 			timeit(dates_and_cross,[myFrame, me, 1]);
 			timeit(move_chapter_num_to_anchored_frames,[me]);
+			metricalChapterNumFix(myFrame);
 
 		} else if(me.appliedCharacterStyle == myDocument.characterStyles.item("VerseNum")){
 		//	$.writeln("verse")

@@ -376,63 +376,49 @@ function apply_verse_number_style(myFrame) {
 }
 
 function twoColMetricalFix(myFrame){
-	var g = 0;
+
 	myDocument.recompose();
 	for (var x=0; x< myFrame.lines.length;x++){
 		var line = myFrame.lines[x];
-		if((line.characters[-1].contents === ' ' || line.characters[-1].contents === SpecialCharacters.DISCRETIONARY_LINE_BREAK) && (line.characters[-1].appliedParagraphStyle.name === 'metricalVerseTwoColumn' || line.characters[-1].appliedParagraphStyle.name === 'mVerse1')){
-		//	$.writeln(line.characters[-1].appliedParagraphStyle.name)
-		// if the second line in a mverse1 then we only need 2 tabs, not 3
-			line.characters[-1].appliedParagraphStyle.name === 'mVerse1' && g++;
 
-			if(line.characters[-1].appliedParagraphStyle.name === 'mVerse1' && g==1)
-			{
-				 line.characters[-1].contents = '\n\t\t';
-			} else {
-				// get number of tabs in front of line and add 1.
-				var lastTabs = line.contents.match(/^\t+/);
-				line.characters[-1].contents = '\n' + lastTabs + '\t';
-				g = 0;
-			}
-		//	$.writeln(line.contents)
+		if((line.characters[-1].contents === ' ' || line.characters[-1].contents === SpecialCharacters.DISCRETIONARY_LINE_BREAK) && (line.characters[-1].appliedParagraphStyle.name === 'metricalVerseTwoColumn' || line.characters[-1].appliedParagraphStyle.name === 'mVerse1' || line.characters[-1].appliedParagraphStyle.name === 'mVerse2')){
+			// get number of tabs in front of line and add 1.
+			var lastTabs = line.contents.match(/^\t+\d*\t*/).toString().replace(/\d+/, "");
+
+			line.characters[-1].contents = '\n' + lastTabs + '\t';
 		}
 	}
-//	asdf;
 }
 
-
-function metricalChapterNumFix(stuff){
+function metricalChapterNumFix(myFrame){
 
 	// 1. remove all manual line breaks with three tabs following
 	// 2. recompute
 	// 3. add back all manual line breaks
 
- 	var myParagraph = stuff.paragraphs[0];
  	app.findGrepPreferences = app.changeGrepPreferences = null;
 
- 	app.findGrepPreferences.findWhat = "\\n\\t\\t\\t";
- 	app.changeGrepPreferences.changeTo = '';
- 	myParagraph.changeGrep();
+ 	app.findGrepPreferences.findWhat = "\\n\\t\\t\\t+";
+ 	app.changeGrepPreferences.changeTo = "\\s";
+
+ 	app.findGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("mVerse1");
+ 	myFrame.changeGrep();
+ 	app.findGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("mVerse2");
+ 	myFrame.changeGrep();
+ 	//app.findGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("mVerse3");
+ 	//myFrame.changeGrep();
 
 	myDocument.recompose();
-	for (var x=0; x< stuff.paragraphs[0].lines.length;x++){
-		var line = stuff.paragraphs[0].lines[x];
-		if((line.characters[-1].contents === ' ' || line.characters[-1].contents === SpecialCharacters.DISCRETIONARY_LINE_BREAK) && (line.characters[-1].appliedParagraphStyle.name === 'metricalVerseTwoColumn' || line.characters[-1].appliedParagraphStyle.name === 'mVerse1')){
-		//	$.writeln(line.characters[-1].appliedParagraphStyle.name)
-		// if it is a metrical v1 and line 2 then we only need 2 tabs
-
-		if(line.characters[-1].appliedParagraphStyle.name === 'mVerse1' && x == 1){
-			line.characters[-1].contents = '\n\t\t';
-		}
-		else {
-			var lastTabs = line.contents.match(/^\t+/);
+	for (var x=0; x< myFrame.lines.length;x++){
+		var line = myFrame.lines[x];
+		if((line.characters[-1].contents === ' ' || line.characters[-1].contents === SpecialCharacters.DISCRETIONARY_LINE_BREAK) && (line.characters[-1].appliedParagraphStyle.name === 'mVerse1' || line.characters[-1].appliedParagraphStyle.name === 'mVerse2')){
+			// get number of tabs in front of line and add 1.
+			var lastTabs = line.contents.match(/^\t+\d*\t*/).toString().replace(/\d+/, "");
 			line.characters[-1].contents = '\n' + lastTabs + '\t';
 		}
-		//	$.writeln(line.contents)
-		}
 	}
-
 }
+
 
 function apply_chapter_number_styles(myFrame) { // search text, paragraph style
 	app.findGrepPreferences = app.changeGrepPreferences = null;
