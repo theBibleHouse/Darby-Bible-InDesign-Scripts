@@ -274,9 +274,9 @@ function apply_verse_number_style(myFrame) {
 
 	app.findGrepPreferences = app.changeGrepPreferences = null;
 	app.findGrepPreferences.position = Position.SUPERSCRIPT;
-	app.findGrepPreferences.leftIndent = "7.1mm";
+	app.findGrepPreferences.leftIndent > "7mm";
 	app.findGrepPreferences.findWhat = "(\\d+)\\s";
-	app.changeGrepPreferences.appliedCharacterStyle = myDocument.characterStyles.item("VerseNumM");
+	app.changeGrepPreferences.appliedCharacterStyle = myDocument.characterStyles.item("VerseNum");
 	app.changeGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("quoteVerse");
 	app.changeGrepPreferences.changeTo = ("$1").concat(String.fromCharCode(8198));
 	myFrame.parentStory.changeGrep();

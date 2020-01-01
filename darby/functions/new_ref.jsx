@@ -1,9 +1,11 @@
 
 function new_ref(myFrame){
+	$.writeln("new ref")
 	var me = true, i = 0;
 	var lastNote
 	while(me){
-	
+		$.writeln(me)
+		$.writeln(me.contents)
 		me = timeit(find_number,[myFrame])
 		
 		if(me.appliedCharacterStyle == myDocument.characterStyles.item("ChapterNum")){ 
@@ -20,7 +22,7 @@ function new_ref(myFrame){
 			timeit(move_chapter_num_to_anchored_frames,[me])
 
 		} else if(me.appliedCharacterStyle == myDocument.characterStyles.item("VerseNum")){ 
-			//$.writeln("verse")		
+			$.writeln("verse")		
 			my_baseline = Math.round(me.baseline)
 			verse = me.contents
 
@@ -28,6 +30,7 @@ function new_ref(myFrame){
 			timeit(move_verse_numbers_to_frame,[me])
 		
 		} else if (me.contents == 0){
+			$.writeln("other")
 			// section markers
 			timeit(move_verse_numbers_to_frame,[me]);
 			//asdfasdfsad;

@@ -1,22 +1,12 @@
 
 var myDocument = app.activeDocument;
+var myFrame = myDocument.selection[0]
 
-var tfPrefs = {
-        autoSizingType: AutoSizingTypeEnum.HEIGHT_ONLY,
-        autoSizingReferencePoint: AutoSizingReferenceEnum.TOP_CENTER_POINT,
-    }
+app.findGrepPreferences = app.changeGrepPreferences = null;
+app.findGrepPreferences.position = Position.SUPERSCRIPT;
+app.findGrepPreferences.leftIndent > "7mm";
+app.findGrepPreferences.findWhat = "(\\d+)\\s";
 
+me = myFrame.parentStory.findGrep()
 
-var myBaseObjectStyle = myDocument.objectStyles.add({
-    name:"My Base Object Style", 
-    basedOn: "[None]",
-    enableTextFrameAutoSizingOptions: true,
-    textFramePreferences: tfPrefs,
-})
-
-var myNewObjectStyle = myDocument.objectStyles.add({
-    name:"My Object Style", 
-    basedOn: myBaseObjectStyle,
-    textFramePreferences: tfPrefs,
-    //appliedParagraphStyle: "PStyle",
-})
+$.writeln(me.length)
