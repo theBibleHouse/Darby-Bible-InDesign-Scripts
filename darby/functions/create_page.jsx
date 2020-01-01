@@ -132,7 +132,6 @@ function create_page(thisPage){
 
 		parentStory.characters.item(0).appliedParagraphStyle = myDocument.paragraphStyles.item("Page Num");
 		if (size == "large") {
-			parentStory.characters.item(0).appliedParagraphStyle = myDocument.paragraphStyles.item("Page Num Large");
 			page_number.appliedObjectStyle = myDocument.objectStyles.item("Page Number")
 		}
 	}

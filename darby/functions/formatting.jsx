@@ -13,7 +13,6 @@ function format_text(myFrame) {
 	// add section headings
 	section_headings(myFrame);
 	
-	//insert_notes_and_references(myFrame);
 	special_breaks(myFrame);
 	italics(myFrame);
 	// heading
@@ -274,7 +273,7 @@ function apply_verse_number_style(myFrame) {
 
 	app.findGrepPreferences = app.changeGrepPreferences = null;
 	app.findGrepPreferences.position = Position.SUPERSCRIPT;
-	app.findGrepPreferences.leftIndent > "7mm";
+	app.findGrepPreferences.leftIndent = "7mm";
 	app.findGrepPreferences.findWhat = "(\\d+)\\s";
 	app.changeGrepPreferences.appliedCharacterStyle = myDocument.characterStyles.item("VerseNum");
 	app.changeGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("quoteVerse");
@@ -284,7 +283,6 @@ function apply_verse_number_style(myFrame) {
 
 	app.findGrepPreferences = app.changeGrepPreferences = null;
 	app.findGrepPreferences.position = Position.SUPERSCRIPT;
-	//app.findGrepPreferences.findWhat = type === 'scofield' ? "(\\d+)%" : "(//d+)\\s";
 	app.findGrepPreferences.findWhat = "(\\d+)\\s";
 	app.findGrepPreferences.appliedParagraphStyle !== myDocument.paragraphStyles.item("quoteVerse");
 	found = myFrame.parentStory.findGrep()
@@ -307,6 +305,18 @@ function apply_verse_number_style(myFrame) {
 	}
 	app.changeGrepPreferences.changeTo = ("$1");
 	myFrame.parentStory.changeGrep();
+
+
+	// check for any paragraph with "normal" style and apply the same style as the previous text?
+	// in metrical books (obadiah for ex), v1 is broken in half
+	try{
+		app.findGrepPreferences = app.changeGrepPreferences = null
+		app.findGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("Normal");
+		app.changeGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("Verse");
+		myFrame.parentStory.changeGrep()
+	} catch(e){
+		//$.writeln(e)
+	}
 
 	// cross symbol
 	app.findGrepPreferences = app.changeGrepPreferences = null;
@@ -362,12 +372,12 @@ function apply_verse_number_style(myFrame) {
 	app.findGrepPreferences = app.changeGrepPreferences = null;
 	app.findGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("metricalVerseTwoColumn");
 	myFinds = myFrame.parentStory.findGrep();
-
 	for(g=0; g<myFinds.length; g++)
 	{
 		q = myFinds[g].characters[-1]
+
 		a = myFrame.parentStory.characters[q.index + 1].appliedParagraphStyle.name
-		if(a == "Verse"){
+		if(a == "Verse" || a == "Normal"){
 			myParagraph = myFrame.parentStory.characters[q.index + 1].paragraphs[0]
 			myParagraph.spaceBefore = "2mm";
 		}
@@ -383,13 +393,16 @@ function twoColMetricalFix(myFrame){
 		if((line.characters[-1].contents === ' ' || line.characters[-1].contents === SpecialCharacters.DISCRETIONARY_LINE_BREAK) && (line.characters[-1].appliedParagraphStyle.name === 'metricalVerseTwoColumn' || line.characters[-1].appliedParagraphStyle.name === 'mVerse1')){
 		//	$.writeln(line.characters[-1].appliedParagraphStyle.name)
 		// if the second line in a mverse1 then we only need 2 tabs, not 3
-		line.characters[-1].appliedParagraphStyle.name === 'mVerse1' && g++
+		line.characters[-1].appliedParagraphStyle.name === 'mVerse1' && g++;
 
-		if(line.characters[-1].appliedParagraphStyle.name === 'mVerse1' && g==1){
-			 line.characters[-1].contents = '\n\t\t'
-		}else{ 
-			line.characters[-1].contents = '\n\t\t\t'
-			g = 0
+		if(line.characters[-1].appliedParagraphStyle.name === 'mVerse1' && g==1)
+		{
+			 line.characters[-1].contents = '\n\t\t';
+		} else {
+			// get number of tabs in front of line and add 1.
+			var lastTabs = line.contents.match(/^\t+/);
+			line.characters[-1].contents = '\n' + lastTabs + '\t';
+			g = 0;
 		}
 			
 		//	$.writeln(line.contents)
@@ -498,16 +511,7 @@ function apply_chapter_number_styles(myFrame) { // search text, paragraph style
 	myFrame.parentStory.changeGrep();
 	*/
 
-	// check for any paragraph with "normal" style and apply the same style as the previous text?
-	// in metrical books (obadiah for ex), v1 is broken in half
-	try{
-		app.findGrepPreferences = app.changeGrepPreferences = null
-		app.findGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("Normal");
-		app.changeGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("Verse");
-		myFrame.parentStory.changeGrep()
-	} catch(e){
-		//$.writeln(e)
-	}
+	
 	
 }
 

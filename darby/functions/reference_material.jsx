@@ -1,4 +1,4 @@
-
+/*
 function finda(myFrame) {
 
 	app.findGrepPreferences = app.changeGrepPreferences = null;
@@ -198,7 +198,7 @@ function referenceMaterial(myFrame) {
 		}
 		myFrame.parentStory.recompose()
 
-		/*****	put verse numbers in the margin *****/
+//		/*****	put verse numbers in the margin 
 //		if(z>=1){break}
 		newFrameBaseline = 0
 		var lastNote
@@ -287,13 +287,7 @@ function referenceMaterial(myFrame) {
 	}
 	crossReferenceLocation(myFrame, myCrossFrame)
 
-	/*if (typeof myCrossFrame !== 'undefined') {
-		if (size == "large" || size == "small") {
-			remove_verse_numbers_from_cross_references(myCrossFrame)
-		} else {
-			dateFormatFix(myCrossFrame)
-		}
-	}*/
+	
 }
 
 
@@ -423,4 +417,4 @@ function crossReferenceLocation(myFrame, myCrossFrame) {
 		} catch (e) {break}
 	}
 }
-}
+}*/

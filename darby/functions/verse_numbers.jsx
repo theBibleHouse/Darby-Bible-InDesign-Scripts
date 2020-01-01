@@ -1,6 +1,5 @@
 function move_verse_numbers_to_frame(me) {
-	$.writeln(me)
-	$.writeln(me.contents)
+
 	var myFrame = me.parentTextFrames[0];
 
 	if (me.contents == 0){
