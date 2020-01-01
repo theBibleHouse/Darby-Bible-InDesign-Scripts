@@ -1,6 +1,6 @@
 function create_object_styles() {
 	var myObjectStyle;
-	
+
 	myObjectStyle = myDocument.objectStyles.add({
         name: "VerseMarker-frame1",
         enableParagraphStyle: true,
@@ -8,7 +8,7 @@ function create_object_styles() {
         enabledStroke: true,
         enableTextWrapAndOthers: true,
         strokeWeight: 0,
-        enableTextFrameAutoSizingOptions: true,  
+        enableTextFrameAutoSizingOptions: true,
         enableTextFrameGeneralOptions: true,
         enableFrameFittingOptions: true,
         enableAnchoredObjectOptions: true,
@@ -21,21 +21,21 @@ function create_object_styles() {
             horizontalReferencePoint : AnchoredRelativeTo.TEXT_FRAME,
             horizontalAlignment : HorizontalAlignment.leftAlign,
             verticalReferencePoint : VerticallyRelativeTo.LINE_BASELINE,
-            anchorXoffset : -meta.gutter+1.6, 
+            anchorXoffset : -meta.gutter + 1.6,
             anchorYoffset : 0,
             pinPosition : true,
         },
-   
+
         textFramePreferences : {
 	        autoSizingType: AutoSizingTypeEnum.HEIGHT_AND_WIDTH,
 	        autoSizingReferencePoint: AutoSizingReferenceEnum.TOP_LEFT_POINT
 	    },
-	
-    	frameFittingOptions : {
+
+     	frameFittingOptions : {
         	autoFit: true,
-        	FitOptions: FitOptions.frameToContent       
+        	FitOptions: FitOptions.frameToContent
     	}
-    }
+    };
 
     myObjectStyle = myObjectStyle.duplicate();
 
@@ -45,8 +45,8 @@ function create_object_styles() {
             anchorPoint : AnchorPoint.BOTTOM_LEFT_ANCHOR,
             horizontalAlignment : HorizontalAlignment.rightAlign,
         },
-    }
-	
+    };
+
 	myObjectStyle = myDocument.objectStyles.add();
 	myObjectStyle.properties = {
 		name: "Page Number",
@@ -59,15 +59,15 @@ function create_object_styles() {
 		enableTextFrameAutoSizingOptions: true,
 		enableTextFrameGeneralOptions: true,
 		enableFrameFittingOptions: true
-	}
+	};
 
 	myObjectStyle.properties = {
 		textFramePreferences: {
 			autoSizingReferencePoint: AutoSizingReferenceEnum.BOTTOM_CENTER_POINT,
 			autoSizingType: AutoSizingTypeEnum.HEIGHT_ONLY
 		}
-	}
-	
+	};
+
 	myObjectStyle = myDocument.objectStyles.add();
 	myObjectStyle.properties = {
 		name: "Page Heading",
@@ -80,14 +80,14 @@ function create_object_styles() {
 		enableTextFrameAutoSizingOptions: true,
 		enableTextFrameGeneralOptions: true,
 		enableFrameFittingOptions: true
-	}
+	};
 
 	myObjectStyle.properties = {
 		textFramePreferences: {
 			autoSizingReferencePoint: AutoSizingReferenceEnum.TOP_CENTER_POINT,
 			autoSizingType: AutoSizingTypeEnum.HEIGHT_ONLY
 		}
-	}
+	};
 
 	myObjectStyle = myDocument.objectStyles.add();
 	myObjectStyle.properties = {
@@ -98,7 +98,7 @@ function create_object_styles() {
 		enableTextWrapAndOthers: true,
 		strokeWeight: 0,
 		enableTextFrameGeneralOptions: true,
-	}
+	};
 
 	myObjectStyle = myDocument.objectStyles.add();
 	myObjectStyle.properties = {
@@ -112,7 +112,7 @@ function create_object_styles() {
 		enableTextFrameAutoSizingOptions: true,
 		enableTextFrameGeneralOptions: true,
 		enableFrameFittingOptions: true,
-	}
+	};
 
 	myObjectStyle.properties = {
 		anchoredObjectSettings: {
@@ -125,22 +125,22 @@ function create_object_styles() {
 			anchorYoffset: '0mm',
 			pinPosition: true,
 		},
-	
+
 		frameFittingOptions : {
 			autoFit: true,
 			FitOptions: FitOptions.frameToContent
 		},
-	
+
 		textWrapPreferences: {
 			textWrapMode: TextWrapModes.BOUNDING_BOX_TEXT_WRAP,
 		}
-	}
+	};
 
 	myObjectStyle.properties = {
 		textWrapPreferences: {
 			textWrapOffset: [0, 0, '-1mm', '1.6mm']
 		},
-	}
+	};
 
 	myObjectStyle = myDocument.objectStyles.add();
 	myObjectStyle.properties = {
@@ -154,7 +154,7 @@ function create_object_styles() {
 		enableTextFrameAutoSizingOptions: true,
 		enableTextFrameGeneralOptions: true,
 		enableFrameFittingOptions: true
-	}
+	};
 
 	myObjectStyle.properties = {
 		anchoredObjectSettings: {
@@ -167,7 +167,7 @@ function create_object_styles() {
 			anchorYoffset: '0mm',
 			pinPosition: true,
 		},
-	
+
 		FrameFittingOption: {
 			autoFit: true,
 			FitOptions: FitOptions.frameToContent
@@ -176,14 +176,13 @@ function create_object_styles() {
 		textWrapPreferences: {
 			textWrapMode: TextWrapModes.BOUNDING_BOX_TEXT_WRAP,
 		}
-	}
+	};
 
 	myObjectStyle.properties = {
 		textWrapPreferences: {
 			textWrapOffset: [0, 0, '-1mm', '1.6mm']
 		},
-	}
-
+	};
 
 	myObjectStyle = myDocument.objectStyles.add();
 	myObjectStyle.properties = {
@@ -198,7 +197,7 @@ function create_object_styles() {
 		enableTextWrapAndOthers: true,
 		enabledStroke: true,
 		strokeWeight: 0,
-	}
+	};
 
 	myObjectStyle.properties = {
 		textFramePreferences: {
@@ -210,7 +209,7 @@ function create_object_styles() {
 		textWrapPreferences: {
 			textWrapMode: TextWrapModes.JUMP_OBJECT_TEXT_WRAP,
 		},
-	}
+	};
 
 	myObjectStyle.properties = {
 		textWrapPreferences: {
@@ -219,15 +218,14 @@ function create_object_styles() {
 		textFramePreferences: {
 			insetSpacing: [0, 0, '2mm', 0],
 		},
-	}
+	};
 
-		
 	if (size == "small"){
 		myObjectStyle.properties = {
 			textWrapPreferences: {
-				textWrapOffset: [0, 0, "1.5mm", 0]	
+				textWrapOffset: [0, 0, "1.5mm", 0]
 			}
-		}
+		};
 	}
 
 	myObjectStyle = myDocument.objectStyles.add();
@@ -244,7 +242,7 @@ function create_object_styles() {
 		enableTextWrapAndOthers: true,
 		enabledStroke: true,
 		strokeWeight: 0,
-	}
+	};
 
 	myObjectStyle.properties = {
 		textFramePreferences: {
@@ -266,7 +264,7 @@ function create_object_styles() {
 			anchorYoffset: '0mm',
 			pinPosition: true,
 		}
-	}
+	};
 
 	myObjectStyle = myDocument.objectStyles.add();
 	myObjectStyle.properties = {
@@ -282,7 +280,7 @@ function create_object_styles() {
 		enableTextWrapAndOthers: true,
 		enabledStroke: true,
 		strokeWeight: 0,
-	}
+	};
 
 	myObjectStyle.properties = {
 		textFramePreferences: {
@@ -293,11 +291,11 @@ function create_object_styles() {
 		textWrapPreferences: {
 			textWrapMode: TextWrapModes.BOUNDING_BOX_TEXT_WRAP,
 		},
-	}
+	};
 
 	myObjectStyle.properties = {
 		textFramePreferences: {
 			insetSpacing : [.65*myDocument.gridPreferences.baselineDivision.toFixed(2), meta.page_width / 2 - meta.column_width / 2 - meta.left_margin-meta.gutter/2, 0, meta.page_width / 2 - meta.column_width / 2 - meta.left_margin-meta.gutter/2],
 		}
-	}
+	};
 }

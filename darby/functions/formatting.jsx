@@ -1,18 +1,18 @@
 function format_text(myFrame) {
 
-	currentPage = myFrame.parentPage
-	
+	currentPage = myFrame.parentPage;
+
 	find_and_replace(myFrame, "~b{2}+", "~b");
 	find_and_replace(myFrame, " {2}+", " ");
 	find_and_replace(myFrame, "\\s+~b", "~b");
 	find_and_replace(myFrame, "\\s+$", "");
-	
+
 	// double space
-	find_and_replace(myFrame, "  +", " ")
-	
+	find_and_replace(myFrame, "  +", " ");
+
 	// add section headings
 	section_headings(myFrame);
-	
+
 	special_breaks(myFrame);
 	italics(myFrame);
 	// heading
@@ -22,20 +22,20 @@ function format_text(myFrame) {
 
 		// don't hyphenate words with hyphen
 	// words before hyphen
-	noBreak(myFrame,"-\\K.+?\\w\\b")
+	noBreak(myFrame,"-\\K.+?\\w\\b");
 	// words after hyphen
-	noBreak(myFrame,"\\b\\w+?(?=-)")
+	noBreak(myFrame,"\\b\\w+?(?=-)");
 
 	// proper words
-	noBreak(myFrame,"\\u\\l+")
+	noBreak(myFrame,"\\u\\l+");
 
 	// elipses
-	noBreak(myFrame,".\\.~k?\\s\\.~k?\\s\\.~k?\\s?[;,!,\\.]?")
+	noBreak(myFrame,".\\.~k?\\s\\.~k?\\s\\.~k?\\s?[;,!,\\.]?");
 
-	app.findGrepPreferences = app.changeGrepPreferences = null
-	app.findGrepPreferences.findWhat = "-"
-	app.changeGrepPreferences.changeTo = "-~k"
-	myFrame.parentStory.changeGrep()
+	app.findGrepPreferences = app.changeGrepPreferences = null;
+	app.findGrepPreferences.findWhat = "-";
+	app.changeGrepPreferences.changeTo = "-~k";
+	myFrame.parentStory.changeGrep();
 
 //	page_headings(myFrame);
 //	referenceSuperscript(myFrame);
@@ -43,17 +43,17 @@ function format_text(myFrame) {
 	noBreakAll(myFrame, "(\\H+?\\h?){2}$");
 
 	// tab after chapter numbers
-	app.findGrepPreferences = app.changeGrepPreferences = null
-	app.findGrepPreferences.findWhat = "\\d\\K~%"
+	app.findGrepPreferences = app.changeGrepPreferences = null;
+	app.findGrepPreferences.findWhat = "\\d\\K~%";
 	//app.changeGrepPreferences.changeTo = '\\t'
-	app.changeGrepPreferences.changeTo = ''
+	app.changeGrepPreferences.changeTo = '';
 
-	myFrame.parentStory.changeGrep()
+	myFrame.parentStory.changeGrep();
 
 	// in front of verse numbers
 	app.findGrepPreferences.findWhat = "~>";
-	app.changeGrepPreferences.changeTo = "\\s"
-	myFrame.parentStory.changeGrep()
+	app.changeGrepPreferences.changeTo = "\\s";
+	myFrame.parentStory.changeGrep();
 
 }
 
@@ -62,17 +62,17 @@ function special_breaks(myFrame){
 		app.changeGrepPreferences = app.findGrepPreferences = null;
 		app.findGrepPreferences.findWhat = "([;|-|\\*|,|~~|\\)|\\]|\\.|\\:|~_]+)";
 		app.changeGrepPreferences.changeTo = "$0~k";
-		myFrame.parentStory.changeGrep()
+		myFrame.parentStory.changeGrep();
 	} catch (e) {}
 }
 
 
 function find_first_baseline(myFrame) {
 	app.findGrepPreferences = app.changeGrepPreferences = null;
-	app.findGrepPreferences.findWhat = "\\<.+?\\>" //"[\\u|\\l]";
-	foundText = myFrame.findGrep()
-	foundTextBaseline = foundText[0].baseline
-	return foundTextBaseline
+	app.findGrepPreferences.findWhat = "\\<.+?\\>";
+	foundText = myFrame.findGrep();
+	foundTextBaseline = foundText[0].baseline;
+	return foundTextBaseline;
 }
 
 function find_and_replace(myFrame, find, replace) { // search text, paragraph style
@@ -125,28 +125,28 @@ function apply_book_name_style(myPage, myFrame) {
 	app.findGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("bookName");
 	//app.findGrepPreferences.findWhat = "^[^/]+?(?=~bChapter 1)"
 	myFinds = myFrame.parentStory.findGrep();
-	bookFrame = addBookTextFrame(myPage)
+	bookFrame = addBookTextFrame(myPage);
 
 	myFinds[0].parentStory.insertionPoints.itemByRange(myFinds[0].texts[0].insertionPoints[0].index, myFinds[0].texts[0].insertionPoints[-1].index).texts[0].move(LocationOptions.atBeginning, bookFrame.insertionPoints[0]);
 
 	// insert intro
-	start_index = bookFrame.parentStory.insertionPoints[-1].index
+	start_index = bookFrame.parentStory.insertionPoints[-1].index;
 	// insert space to clear styles
-	bookFrame.insertionPoints[-1].contents = ' '
+	bookFrame.insertionPoints[-1].contents = ' ';
 
 	// apply style
 	bookFrame.insertionPoints.itemByRange(start_index,bookFrame.parentStory.insertionPoints[-1].index).appliedParagraphStyle = myDocument.paragraphStyles.item("intro");
 	bookFrame.insertionPoints.itemByRange(start_index,bookFrame.parentStory.insertionPoints[-1].index).appliedCharacterStyle = myDocument.characterStyles.item("None");
 
 	// insert intro
-	bookFrame.insertionPoints[-1].contents = get_intro()
+	bookFrame.insertionPoints[-1].contents = get_intro();
 
 	// center
-	find_and_replace(bookFrame,"(</center>)",'$1~b')
+	find_and_replace(bookFrame,"(</center>)",'$1~b');
 	find_and_replace_w_p_style(bookFrame, "<center>([\\H|\\h]+?)</center>", "$1", 'intro-center');
-	find_and_replace(bookFrame,'"','"')
+	find_and_replace(bookFrame,'"','"');
 	//find_and_replace(bookFrame,':','.')
-	
+
 	// remove trailing period on verse reference
 	app.findGrepPreferences = app.changeGrepPreferences = null;
 	app.findGrepPreferences.findWhat = "(\\)\\.)";
@@ -172,15 +172,14 @@ function apply_book_name_style(myPage, myFrame) {
 	bookFrame.insertionPoints.itemByRange(start_index,bookFrame.parentStory.insertionPoints[-1].index).changeGrep();
 
 	// -- to em dash
-	find_and_replace(bookFrame,'--','~_')
+	find_and_replace(bookFrame,'--','~_');
 
 	// keep last 2 words together
 	noBreak(bookFrame, "(\\H+?\\h?){2}$");
 
-	find_and_replace(bookFrame,"^ ","")
-	find_and_replace(bookFrame,"…","...")
+	find_and_replace(bookFrame,"^ ","");
+	find_and_replace(bookFrame,"…","...");
 
-	
 	app.findGrepPreferences = app.changeGrepPreferences = null;
 	app.findGrepPreferences.findWhat = "~b$";
 	app.findGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item('intro');
@@ -188,29 +187,29 @@ function apply_book_name_style(myPage, myFrame) {
 	bookFrame.changeGrep();
 
 	// apply italics
-	find_and_replace_w_c_style(bookFrame,"\\*(.+?)\\*","$1",'Italics')
+	find_and_replace_w_c_style(bookFrame,"\\*(.+?)\\*","$1",'Italics');
 
 	// format references to keep the chapter with book name.
 	app.findGrepPreferences = app.changeGrepPreferences = null;
-	app.findGrepPreferences.findWhat = "\\l\\.*\\s\\d"
+	app.findGrepPreferences.findWhat = "\\l\\.*\\s\\d";
 	app.changeGrepPreferences.noBreak = true;
-	bookFrame.parentStory.changeGrep()
+	bookFrame.parentStory.changeGrep();
 
 	// keep ch:v together
-	app.findGrepPreferences.findWhat = "\\d+:\\d+"
+	app.findGrepPreferences.findWhat = "\\d+:\\d+";
 	app.changeGrepPreferences.noBreak = true;
-	bookFrame.parentStory.changeGrep()
+	bookFrame.parentStory.changeGrep();
 
 
 	// check book frame size. Change bottom outset to hit the next baseline
-	
-	var newOffset = Math.ceil(bookFrame.geometricBounds[2]  / myDocument.gridPreferences.baselineDivision) *  myDocument.gridPreferences.baselineDivision
-	newOffset = newOffset - bookFrame.geometricBounds[2] + bookFrame.properties.textWrapPreferences.textWrapOffset[2]  - .27*myDocument.gridPreferences.baselineDivision
-	bookFrame.properties.textWrapPreferences.textWrapOffset = [0,0,newOffset,0]
+
+	var newOffset = Math.ceil(bookFrame.geometricBounds[2]  / myDocument.gridPreferences.baselineDivision) *  myDocument.gridPreferences.baselineDivision;
+	newOffset = newOffset - bookFrame.geometricBounds[2] + bookFrame.properties.textWrapPreferences.textWrapOffset[2]  - .27*myDocument.gridPreferences.baselineDivision;
+	bookFrame.properties.textWrapPreferences.textWrapOffset = [0,0,newOffset,0];
 
 }
 
-function apply_verse_number_style(myFrame) { 
+function apply_verse_number_style(myFrame) {
 	// search text, paragraph style
 	// rounds indentation to a whole number, when importing from word sometimes it is not a round number
 	// for now I shut off, but might need it back
@@ -285,15 +284,15 @@ function apply_verse_number_style(myFrame) {
 	app.findGrepPreferences.position = Position.SUPERSCRIPT;
 	app.findGrepPreferences.findWhat = "(\\d+)\\s";
 	app.findGrepPreferences.appliedParagraphStyle !== myDocument.paragraphStyles.item("quoteVerse");
-	found = myFrame.parentStory.findGrep()
+	found = myFrame.parentStory.findGrep();
 
 	app.changeGrepPreferences.appliedCharacterStyle = myDocument.characterStyles.item("VerseNum");
 	app.changeGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("Verse");
 	//app.changeGrepPreferences.changeTo = ("$1").concat(String.fromCharCode(8198));
-	app.changeGrepPreferences.changeTo = ("$1")
+	app.changeGrepPreferences.changeTo = ("$1");
 	myFrame.parentStory.changeGrep();
 
-	// sneak in some stuff for metrical :) 
+	// sneak in some stuff for metrical :)
 
 	app.findGrepPreferences = app.changeGrepPreferences = null;
 	app.findGrepPreferences.findWhat = "(?<=~b\\t\\t)(.)";
@@ -310,10 +309,10 @@ function apply_verse_number_style(myFrame) {
 	// check for any paragraph with "normal" style and apply the same style as the previous text?
 	// in metrical books (obadiah for ex), v1 is broken in half
 	try{
-		app.findGrepPreferences = app.changeGrepPreferences = null
+		app.findGrepPreferences = app.changeGrepPreferences = null;
 		app.findGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("Normal");
 		app.changeGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("Verse");
-		myFrame.parentStory.changeGrep()
+		myFrame.parentStory.changeGrep();
 	} catch(e){
 		//$.writeln(e)
 	}
@@ -327,39 +326,31 @@ function apply_verse_number_style(myFrame) {
 	// if there is a heading before the metrical verse then we should change leading on verse to 0
 	// but only if the prior verse is metrical.
 	app.findGrepPreferences = app.changeGrepPreferences = null;
-	app.findGrepPreferences.findWhat = "~b\\K.+?~b\\t\\d+"	
-	var myFinds = myFrame.parentStory.findGrep()
+	app.findGrepPreferences.findWhat = "~b\\K.+?~b\\t\\d+";
+	var myFinds = myFrame.parentStory.findGrep();
 
 	if(myFinds.length > 0){
 
 		for(var t = 0; t< myFinds.length; t++){
-
 			if(myFinds[t].insertionPoints[-1].appliedParagraphStyle.name == 'metricalVerseTwoColumn'){
-
-					myFinds[t].insertionPoints[-1].paragraphs[0].spaceBefore = 0
-
+				myFinds[t].insertionPoints[-1].paragraphs[0].spaceBefore = 0;
 			}
 		}
-
 	}
 
 	// find last line of metrical followed by a verse, then add leading
 	app.findGrepPreferences = app.changeGrepPreferences = null;
-	app.findGrepPreferences.findWhat = "\\t{2}.+?$~b\\t\\d+"
-	var myFinds = myFrame.parentStory.findGrep()
+	app.findGrepPreferences.findWhat = "\\t{2}.+?$~b\\t\\d+";
+	myFinds = myFrame.parentStory.findGrep();
 
 	if(myFinds.length > 0){
 
-		for(var t = 0; t< myFinds.length; t++){
+		for(var l = 0; l < myFinds.length; l++){
 
-			if(myFinds[t].insertionPoints[0].appliedParagraphStyle.name == 'metricalVerseTwoColumn' 
-				&& myFinds[t].insertionPoints[-1].appliedParagraphStyle.name == 'Verse' ){
-
-					myFinds[t].insertionPoints[-1].paragraphs[0].spaceBefore = 1
-
+			if(myFinds[l].insertionPoints[0].appliedParagraphStyle.name == 'metricalVerseTwoColumn' && myFinds[l].insertionPoints[-1].appliedParagraphStyle.name == 'Verse' ){
+				myFinds[l].insertionPoints[-1].paragraphs[0].spaceBefore = 1;
 			}
 		}
-
 	}
 
 	// for lines in story
@@ -374,41 +365,73 @@ function apply_verse_number_style(myFrame) {
 	myFinds = myFrame.parentStory.findGrep();
 	for(g=0; g<myFinds.length; g++)
 	{
-		q = myFinds[g].characters[-1]
+		q = myFinds[g].characters[-1];
 
-		a = myFrame.parentStory.characters[q.index + 1].appliedParagraphStyle.name
+		a = myFrame.parentStory.characters[q.index + 1].appliedParagraphStyle.name;
 		if(a == "Verse" || a == "Normal"){
-			myParagraph = myFrame.parentStory.characters[q.index + 1].paragraphs[0]
+			myParagraph = myFrame.parentStory.characters[q.index + 1].paragraphs[0];
 			myParagraph.spaceBefore = "2mm";
 		}
 	}
-
 }
 
 function twoColMetricalFix(myFrame){
 	var g = 0;
-	myDocument.recompose(); 
+	myDocument.recompose();
 	for (var x=0; x< myFrame.lines.length;x++){
-		var line = myFrame.lines[x]
+		var line = myFrame.lines[x];
 		if((line.characters[-1].contents === ' ' || line.characters[-1].contents === SpecialCharacters.DISCRETIONARY_LINE_BREAK) && (line.characters[-1].appliedParagraphStyle.name === 'metricalVerseTwoColumn' || line.characters[-1].appliedParagraphStyle.name === 'mVerse1')){
 		//	$.writeln(line.characters[-1].appliedParagraphStyle.name)
 		// if the second line in a mverse1 then we only need 2 tabs, not 3
-		line.characters[-1].appliedParagraphStyle.name === 'mVerse1' && g++;
+			line.characters[-1].appliedParagraphStyle.name === 'mVerse1' && g++;
 
-		if(line.characters[-1].appliedParagraphStyle.name === 'mVerse1' && g==1)
-		{
-			 line.characters[-1].contents = '\n\t\t';
-		} else {
-			// get number of tabs in front of line and add 1.
-			var lastTabs = line.contents.match(/^\t+/);
-			line.characters[-1].contents = '\n' + lastTabs + '\t';
-			g = 0;
-		}
-			
+			if(line.characters[-1].appliedParagraphStyle.name === 'mVerse1' && g==1)
+			{
+				 line.characters[-1].contents = '\n\t\t';
+			} else {
+				// get number of tabs in front of line and add 1.
+				var lastTabs = line.contents.match(/^\t+/);
+				line.characters[-1].contents = '\n' + lastTabs + '\t';
+				g = 0;
+			}
 		//	$.writeln(line.contents)
 		}
 	}
 //	asdf;
+}
+
+
+function metricalChapterNumFix(stuff){
+
+	// 1. remove all manual line breaks with three tabs following
+	// 2. recompute
+	// 3. add back all manual line breaks
+
+ 	var myParagraph = stuff.paragraphs[0];
+ 	app.findGrepPreferences = app.changeGrepPreferences = null;
+
+ 	app.findGrepPreferences.findWhat = "\\n\\t\\t\\t";
+ 	app.changeGrepPreferences.changeTo = '';
+ 	myParagraph.changeGrep();
+
+	myDocument.recompose();
+	for (var x=0; x< stuff.paragraphs[0].lines.length;x++){
+		var line = stuff.paragraphs[0].lines[x];
+		if((line.characters[-1].contents === ' ' || line.characters[-1].contents === SpecialCharacters.DISCRETIONARY_LINE_BREAK) && (line.characters[-1].appliedParagraphStyle.name === 'metricalVerseTwoColumn' || line.characters[-1].appliedParagraphStyle.name === 'mVerse1')){
+		//	$.writeln(line.characters[-1].appliedParagraphStyle.name)
+		// if it is a metrical v1 and line 2 then we only need 2 tabs
+
+		if(line.characters[-1].appliedParagraphStyle.name === 'mVerse1' && x == 1){
+			line.characters[-1].contents = '\n\t\t';
+		}
+		else {
+			var lastTabs = line.contents.match(/^\t+/);
+			line.characters[-1].contents = '\n' + lastTabs + '\t';
+		}
+		//	$.writeln(line.contents)
+		}
+	}
+
 }
 
 function apply_chapter_number_styles(myFrame) { // search text, paragraph style
@@ -510,9 +533,6 @@ function apply_chapter_number_styles(myFrame) { // search text, paragraph style
 	app.changeGrepPreferences.changeTo = ("$1");
 	myFrame.parentStory.changeGrep();
 	*/
-
-	
-	
 }
 
 
@@ -527,7 +547,7 @@ function dateFormatFix(myFrame) {
 
 	app.findGrepPreferences = app.changeGrepPreferences = null;
 	app.findGrepPreferences.findWhat = "^\\d+\\s(\\d+\\s)";
-	app.changeGrepPreferences.appliedCharacterStyle = myDocument.characterStyles.item("None")
+	app.changeGrepPreferences.appliedCharacterStyle = myDocument.characterStyles.item("None");
 	app.changeGrepPreferences.changeTo = "$1";
 	myFrame.changeGrep();
 
@@ -575,18 +595,18 @@ function footnoteSuperscript(myFrame) {
 	app.findGrepPreferences.findWhat = "<i>(.+?)</i>";
 	app.findGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("Footnote");
 	app.changeGrepPreferences.appliedCharacterStyle = myDocument.characterStyles.item("Italics");
-	app.changeGrepPreferences.changeTo = "$1"
+	app.changeGrepPreferences.changeTo = "$1";
 	myFrame.parentStory.changeGrep();
 
 
 	// 7 followed by , or . need kerning
-	
-	app.findGrepPreferences.findWhat = "7(?=[,|\\.])"
-	var myFinds = myFrame.parentStory.findGrep()
+
+	app.findGrepPreferences.findWhat = "7(?=[,|\\.])";
+	var myFinds = myFrame.parentStory.findGrep();
 
 	for (var x=0;x< myFinds.length;x++){
 	    //$.writeln(myFinds[x].contents)
-	    myFinds[x].insertionPoints[-1].kerningValue = -150
+	    myFinds[x].insertionPoints[-1].kerningValue = -150;
 	}
 	// //try {
 	// 		// convert {{}} in footnotes to italics
@@ -612,7 +632,7 @@ function bold(myFrame, grep) {
 	app.findGrepPreferences.findWhat = grep;
 	app.changeGrepPreferences.appliedCharacterStyle = myDocument.characterStyles.item("bold");
 	try {
-		myFrame.changeGrep()
+		myFrame.changeGrep();
 	} catch (e) {}
 }
 
@@ -623,7 +643,7 @@ function page_headings(myFrame) {
 	app.changeGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("Verse");
 	app.changeGrepPreferences.changeTo = "~b$1";
 	try {
-		myFrame.parentStory.changeGrep()
+		myFrame.parentStory.changeGrep();
 	} catch (e) {}
 }
 
@@ -637,44 +657,42 @@ function format_cross_reference_verse_numbers( myFrame ) {
 	// non break hyphen on verse ranges only on location
 	app.findGrepPreferences.findWhat = "^\\d+\\K-(?=\\d)";
 	app.changeGrepPreferences.changeTo = "~~";
-	myFrame.parentStory.changeGrep()
+	myFrame.parentStory.changeGrep();
 
 	// allow line break on comma and semi colon.. only if there are more than 3 chars between
 	// using 6th space, not normal space as there is some odd compression of std spaces going on.
 	app.findGrepPreferences.findWhat = "(;)(?=[^~k][^;]{2})";
 	app.changeGrepPreferences.changeTo = "$1~%~k";
-	myFrame.parentStory.changeGrep()
+	myFrame.parentStory.changeGrep();
 	// for comma, idc what chars are after
 	app.findGrepPreferences.findWhat = "(,)";
 	app.changeGrepPreferences.changeTo = "$1~k";
-	myFrame.parentStory.changeGrep()
+	myFrame.parentStory.changeGrep();
 
 	// for comma and hyphen, idk what chars are after, as long as there are 3
 	app.findGrepPreferences.findWhat = "(-)(?=[^~k][^;]{3})";
 	app.changeGrepPreferences.changeTo = "$1~k";
-	myFrame.parentStory.changeGrep()
-	
-
+	myFrame.parentStory.changeGrep();
 }
 
 function metrical_fix(myframe) {
 
 
 	app.findGrepPreferences = app.changeGrepPreferences = null;
-	app.findGrepPreferences.findWhat = "\\>\\t+"
-	app.findGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("metricalVerseTwoColumn")
-	app.changeGrepPreferences.changeTo = "\\s"
-	myframe.parentStory.changeGrep()
+	app.findGrepPreferences.findWhat = "\\>\\t+";
+	app.findGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("metricalVerseTwoColumn");
+	app.changeGrepPreferences.changeTo = "\\s";
+	myframe.parentStory.changeGrep();
 
 	app.findGrepPreferences = app.changeGrepPreferences = null;
-	app.findGrepPreferences.findWhat = "^\\s+"
-	app.findGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("metricalVerseTwoColumn")
-	myframe.parentStory.changeGrep()
+	app.findGrepPreferences.findWhat = "^\\s+";
+	app.findGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("metricalVerseTwoColumn");
+	myframe.parentStory.changeGrep();
 
 	app.findGrepPreferences = app.changeGrepPreferences = null;
-	app.findGrepPreferences.findWhat = "\\t+"
-	app.findGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("metricalVerseTwoColumn")
-	myframe.parentStory.changeGrep()
+	app.findGrepPreferences.findWhat = "\\t+";
+	app.findGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("metricalVerseTwoColumn");
+	myframe.parentStory.changeGrep();
 
 
 /*
@@ -699,7 +717,7 @@ function metrical_fix(myframe) {
 function noBreakAll(myFrame, grep) {
 	app.findGrepPreferences = app.changeGrepPreferences = null;
 	app.findGrepPreferences.findWhat = grep;
-	app.findGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("Verse")
+	app.findGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("Verse");
 	app.changeGrepPreferences.noBreak = true;
 	myFrame.parentStory.changeGrep();
 }
@@ -708,25 +726,22 @@ function noBreak(myFrame, grep) {
 	app.findGrepPreferences = app.changeGrepPreferences = null;
 	app.findGrepPreferences.findWhat = grep;
 	app.changeGrepPreferences.noBreak = true;
-	
-	try{myFrame.parentStory.changeGrep();}catch(e){$.writeln(e)}
+
+	try{myFrame.parentStory.changeGrep();}catch(e){$.writeln(e);}
 }
 
 function change_style_on_headings_in_col_2(myFrame) {
 	app.changeGrepPreferences = app.findGrepPreferences = null;
-	app.findGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("SectionHeading")
+	app.findGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("SectionHeading");
 	app.findGrepPreferences.findWhat = "^.+$";
-	app.changeGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("SectionHeadingRight")
+	app.changeGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("SectionHeadingRight");
 	try {
-		myFrame.changeGrep()	
+		myFrame.changeGrep();
 	} catch (e) {}
 }
 
-
-
 function release_anchored_objects() { // bug in ID
-	var a = app.activeDocument.allPageItems,
-		t;
+	var a = app.activeDocument.allPageItems,t;
 
 	while (t = a.pop()) {
 		t.isValid &&

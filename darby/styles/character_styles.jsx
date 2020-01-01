@@ -1,5 +1,5 @@
 function create_character_styles(){
-	
+
 	var verseNumSize = 7;
 	var chapterNumSize = "8.75pt";
 	var bookNameSize = 26.7;
@@ -7,7 +7,7 @@ function create_character_styles(){
 	if (size === 'small')
 	{
 		verseNumSize = 6.65;
-	};
+	}
 
 	var boldFont =  "Lexicon No1 C Tab";
 
@@ -24,7 +24,7 @@ function create_character_styles(){
 		pointSize: verseNumSize,
 		position: Position.NORMAL
 	});
-	
+
 	myDocument.characterStyles.add({
 		name: "VerseNumM",
 		appliedFont: boldFont,
@@ -32,7 +32,7 @@ function create_character_styles(){
 		pointSize: verseNumSize,
 		position: Position.NORMAL
 	});
-		
+
 	myDocument.characterStyles.add({
 		name: "ChapterNum",
 		appliedFont: boldFont,
@@ -45,7 +45,7 @@ function create_character_styles(){
 		name: "Section Marker",
 		appliedFont: "Bible Stars"
 	});
-	
+
 	myDocument.characterStyles.add({
 		name: "bookName",
 		appliedFont: boldFont,
@@ -58,13 +58,12 @@ function create_character_styles(){
 		name: "bold",
 		appliedFont: boldFont,
 	});
-	
+
 	myDocument.characterStyles.add({
 		name:"None",
 		basedOn: app.activeDocument.characterStyles[0]
 	});
-		
-	
+
 	myDocument.characterStyles.add({
 		name: "SuperScript",
 		position: Position.SUPERSCRIPT,

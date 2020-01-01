@@ -2,31 +2,30 @@
 function new_ref(myFrame){
 
 	var me = true, i = 0;
-	var lastNote
+	var lastNote;
 	while(me){
-		me = timeit(find_number,[myFrame])
-		
-		if(me.appliedCharacterStyle == myDocument.characterStyles.item("ChapterNum")){ 
+		me = timeit(find_number,[myFrame]);
+
+		if(me.appliedCharacterStyle == myDocument.characterStyles.item("ChapterNum")){
 			//$.writeln("chapter")
 			// if this is the first number on the page then update last chapter for heading
-			my_baseline = Math.round(me.baseline - myDocument.gridPreferences.baselineDivision/3*2)
-				
-			i === 0 && lastChapter = chapter
+			my_baseline = Math.round(me.baseline - myDocument.gridPreferences.baselineDivision/3*2);
+			i === 0 && lastChapter = chapter;
 
-			chapter = me.contents
-			verse = 1
-			var nextChar = me.parentStory.insertionPoints[me.insertionPoints[-1].index + 1].characters[0]
-			timeit(dates_and_cross,[myFrame, me, 1])
-			timeit(move_chapter_num_to_anchored_frames,[me])
+			chapter = me.contents;
+			verse = 1;
+			var nextChar = me.parentStory.insertionPoints[me.insertionPoints[-1].index + 1].characters[0];
+			timeit(dates_and_cross,[myFrame, me, 1]);
+			timeit(move_chapter_num_to_anchored_frames,[me]);
 
-		} else if(me.appliedCharacterStyle == myDocument.characterStyles.item("VerseNum")){ 
-		//	$.writeln("verse")		
-			my_baseline = Math.round(me.baseline)
-			verse = me.contents
+		} else if(me.appliedCharacterStyle == myDocument.characterStyles.item("VerseNum")){
+		//	$.writeln("verse")
+			my_baseline = Math.round(me.baseline);
+			verse = me.contents;
 
-			timeit(dates_and_cross,[myFrame, chapter, me])
-			timeit(move_verse_numbers_to_frame,[me])
-		
+			timeit(dates_and_cross,[myFrame, chapter, me]);
+			timeit(move_verse_numbers_to_frame,[me]);
+
 		} else if (me.contents == 0){
 		//	$.writeln("other")
 			// section markers
@@ -35,10 +34,10 @@ function new_ref(myFrame){
 
 		} else {
 			// if there are not verses on the page, still want to add header date as well.
-			timeit(dates_and_cross,[myFrame, chapter, 99999])
+			timeit(dates_and_cross,[myFrame, chapter, 99999]);
 		}
 
-		if(i==50){ break }else{i++}
+		if(i==50){ break;}else{i++;}
 	}
 }
 
@@ -51,8 +50,8 @@ function find_number(myFrame){
 
 	try{
 		var me = myFrame.findGrep();
-		return me.length < 1 ? false : me[0]
-	} catch(e){ return false }
+		return me.length < 1 ? false : me[0];
+	} catch(e){ return false; }
 }
 
 function get_array_val(array,chapter,verse){
@@ -61,7 +60,7 @@ function get_array_val(array,chapter,verse){
 		if(array[c][1]==chapter && array[c][2]==verse){return array.splice(c)[0][3];}
 		}
 
-	return false
+	return false;
 }
 
 function dates_and_cross(myFrame, chapter, verse){
@@ -70,7 +69,6 @@ function dates_and_cross(myFrame, chapter, verse){
 
 	var thisdate = verse !== 1 ? timeit(get_array_val,[date,chapter,verse.contents]) : timeit(get_array_val,[date,chapter.contents,verse]);
 	var thiscross = verse !== 1 ? timeit(get_array_val,[cross,chapter,verse.contents]) : timeit(get_array_val,[cross,chapter.contents,verse]);
-				
 	var break_char = String.fromCharCode(13);
 	var cross_frame = myFrame.parentPage.textFrames.itemByName('ref-'+myFrame.name);
 	var cross_start = cross_frame.insertionPoints[-1];
@@ -80,7 +78,7 @@ function dates_and_cross(myFrame, chapter, verse){
 
 
 	if(cross_frame.contents.length < 1 && (thisdate && my_baseline < 18 || lastdate)){
-		
+
 		// if is for the first verse in the columm then we can use "this date", othersise
 		// we need to add "last date" and "this date"
 		// this is true if baseline is < 18.8
@@ -88,59 +86,58 @@ function dates_and_cross(myFrame, chapter, verse){
 		cross_frame.contents += (thisdate && my_baseline < 18 || lastdate) + break_char;
 		lastdate = (thisdate && my_baseline < 18) || lastdate;
 		thisdate && my_baseline < 18 && thisdate = false;
-	} 
-		
+	}
+
 	if(thisdate || thiscross){
 
 		// get current baseline.
-		
-		var x = (my_baseline - Math.round(cross_frame.insertionPoints[-1].baseline))
-		var l = cross_frame.parentStory.appliedParagraphStyle.properties.leading*0.352778
-	
+
+		var x = (my_baseline - Math.round(cross_frame.insertionPoints[-1].baseline));
+		var l = cross_frame.parentStory.appliedParagraphStyle.properties.leading*0.352778;
 		// add break char until enough are added to get to verse # that belongs to the cross ref.
 		x > 0 && cross_frame.contents += Array(Math.round(x/l + 1)).join(break_char);
 
 		// add date if exists and update last date
-		
+
 		thisdate && (lastdate = thisdate) && (cross_frame.contents += thisdate + break_char);
-		
+
 		// add cross reference
 		thiscross && cross_frame.contents += thiscross + break_char;
 		// apply temporary paragraph style before formatting
 		cross_frame.characters.itemByRange(cross_start, cross_frame.insertionPoints[-1]).appliedParagraphStyle = myDocument.paragraphStyles.item("init-crossReference-"+myFrame.name);
 		cross_frame.paragraphs[-1].appliedParagraphStyle= myDocument.paragraphStyles.item("init-crossReference-"+myFrame.name);
-		
+
 		// format newly added references
 		timeit(format_cross_reference_verse_numbers,[cross_frame]);
-		
+
 		// reset paragraph style
 	    cross_frame.parentStory.appliedParagraphStyle = myDocument.paragraphStyles.item("crossReference-"+myFrame.name);
-		
+
 
 		app.findGrepPreferences = app.changeGrepPreferences = null;
 
 		// keep ch:v together
-		app.findGrepPreferences.findWhat = "\\d+:\\d+"
+		app.findGrepPreferences.findWhat = "\\d+:\\d+";
 		app.changeGrepPreferences.noBreak = true;
-		cross_frame.parentStory.changeGrep()
+		cross_frame.parentStory.changeGrep();
 
 
 		// keep name ch together
-		app.findGrepPreferences.findWhat = "\\l\\.*\\s\\d"
+		app.findGrepPreferences.findWhat = "\\l\\.*\\s\\d";
 		app.changeGrepPreferences.noBreak = true;
-		cross_frame.parentStory.changeGrep()
+		cross_frame.parentStory.changeGrep();
 
-		
+
 		// replace space with sixth space
 		app.findGrepPreferences = app.changeGrepPreferences = null;
 		app.findGrepPreferences.findWhat = " ";
 		app.changeGrepPreferences.changeTo = "~%";
-		cross_frame.parentStory.changeGrep()
+		cross_frame.parentStory.changeGrep();
 
 		// discretionary break before (
 		app.findGrepPreferences.findWhat = "~%[^~k]?(?=\\()";
 		app.changeGrepPreferences.changeTo = "~%~k";
-		cross_frame.parentStory.changeGrep()
+		cross_frame.parentStory.changeGrep();
 
 
 		// remove ; from line endings
@@ -171,44 +168,42 @@ function dates_and_cross(myFrame, chapter, verse){
 		}
 
 		// remove breaks if references go off the end of the page.
-
+		var while_cross_frame_overflows = 0;
 		if(cross_frame.overflows){
-			var while_cross_frame_overflows = 0
 			app.findGrepPreferences = app.changeGrepPreferences = null;
 			 while(cross_frame.overflows && while_cross_frame_overflows < 100 && cross_frame.contents.length > 0){
-			 	while_cross_frame_overflows ++
-			
+			 	while_cross_frame_overflows ++;
+
 			 	app.findGrepPreferences.findWhat = "~b~b";
 			 	found = cross_frame.findGrep();
 			 	found.length < 1 ? while_cross_frame_overflows=100 : found[found.length-1].insertionPoints[0].parentStory.characters[(found[found.length-1].insertionPoints[0].index)].remove();
-			}	
+			}
 		}
 
 		// finally, check if the last ref is below the last text in main text frame (haning down close to notes)
 		// if it is, then we need to back out any spaces we can.
 
-		var textFrameBaseline = myFrame.characters[-1].baseline
-		var refFrameBaseline = cross_frame.characters[-1].baseline
+		var textFrameBaseline = myFrame.characters[-1].baseline;
+		var refFrameBaseline = cross_frame.characters[-1].baseline;
 
-		while_cross_frame_overflows = 0
+		while_cross_frame_overflows = 0;
 		 while(refFrameBaseline > textFrameBaseline && while_cross_frame_overflows < 100 && cross_frame.contents.length > 0){
-		 	while_cross_frame_overflows ++
-		
+		 	while_cross_frame_overflows ++;
+
 		 	app.findGrepPreferences.findWhat = "~b~b";
 		 	found = cross_frame.findGrep();
 		 	found.length < 1 ? while_cross_frame_overflows=100 : found[found.length-1].insertionPoints[0].parentStory.characters[(found[found.length-1].insertionPoints[0].index)].remove();
-			refFrameBaseline = cross_frame.characters[-1].baseline			 	
+			refFrameBaseline = cross_frame.characters[-1].baseline;
 		}
 
 		// 7 followed by , need kerning
 		app.findGrepPreferences = app.changeGrepPreferences = null;
-		app.findGrepPreferences.findWhat = "7(?=[,|\\.])"
-		var myFinds = cross_frame.parentStory.findGrep()
+		app.findGrepPreferences.findWhat = "7(?=[,|\\.])";
+		var myFinds = cross_frame.parentStory.findGrep();
 
-		for (var x=0;x< myFinds.length;x++){
+		for (var g=0;g< myFinds.length;g++){
 		   // $.writeln(myFinds[x].contents)
-		    myFinds[x].insertionPoints[-1].kerningValue = -150
-		}	
-		
+		    myFinds[g].insertionPoints[-1].kerningValue = -150;
+		}
 	}
 }

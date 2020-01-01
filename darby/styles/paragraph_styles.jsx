@@ -3,19 +3,20 @@ function create_paragraph_styles(){
 	var myParagraphStyle;
 	var leftIndentVal = meta.gutter;
 	var rightIndentVal = 0;
-	
+
 	if(size == 'large'){
 		rightIndentVal = meta.gutter;
-	};
+	}
 
 	var baseFont = "Lexicon No1 A Tab";
 	var boldFont = "Lexicon No1 C Tab";
 	var baseFontSize = 8.75;
 	var pageNumSize = 7;
 	if(size == 'small')
-	{	
-		var pageNumSize = 6.75;
+	{
+		pageNumSize = 6.75;
 	}
+
 	var baseLeading = 8;
 
 	myDocument.paragraphStyles.add({
@@ -24,8 +25,8 @@ function create_paragraph_styles(){
 		fontStyle: "Normal",
 		pointSize: baseFontSize,
 		leading: baseLeading,
-	})
-	
+	});
+
 	myDocument.paragraphStyles.add({
 		name: "Page Num",
 		appliedFont: baseFont,
@@ -34,16 +35,16 @@ function create_paragraph_styles(){
 		leading: baseLeading,
 		noBreak: true,
 		justification: Justification.AWAY_FROM_BINDING_SIDE,
-	})
+	});
 
 	if(size == 'large')
 	{
 		myParagraphStyle = myDocument.paragraphStyles.item("Page Num");
 		myParagraphStyle.properties = {
-			justification: Justification.CENTER_ALIGN,		
-		}
+			justification: Justification.CENTER_ALIGN,
+		};
 	}
-		
+
 	myDocument.paragraphStyles.add({
 		name: "Heading Large",
 		appliedFont: baseFont,
@@ -54,7 +55,7 @@ function create_paragraph_styles(){
 		tracking:50,
 		justification: Justification.CENTER_ALIGN,
 		capitalization:Capitalization.ALL_CAPS,
-	})
+	});
 
 	myParagraphStyle = myDocument.paragraphStyles.add({
 		name: "Heading Small",
@@ -66,8 +67,8 @@ function create_paragraph_styles(){
 		noBreak: true,
 		tracking:90,
 		justification: Justification.AWAY_FROM_BINDING_SIDE,
-	})
-		
+	});
+
 	myDocument.paragraphStyles.add({
 		name: "SectionHeading",
 		appliedFont: boldFont,
@@ -84,8 +85,8 @@ function create_paragraph_styles(){
 		keepAllLinesTogether: true,
 		hyphenation: false,
 		keepWithNext: 1,
-	})
-	
+	});
+
 	myDocument.paragraphStyles.add({
 		name: "SectionHeadingRight",
 		basedOn: myDocument.paragraphStyles.item("SectionHeading"),
@@ -94,8 +95,8 @@ function create_paragraph_styles(){
 		justification: Justification.LEFT_ALIGN,
 		keepLinesTogether: true,
 		keepAllLinesTogether: true,
-		keepWithNext: 1	
-	})
+		keepWithNext: 1
+	});
 
 	myDocument.paragraphStyles.add({
 		name: "Section Marker",
@@ -108,7 +109,7 @@ function create_paragraph_styles(){
 		keepLinesTogether: true,
 		keepAllLinesTogether: true,
 		hyphenation: false,
-	})
+	});
 
 	myDocument.paragraphStyles.add({
 		name: "VerseNum",
@@ -119,7 +120,7 @@ function create_paragraph_styles(){
 		pointSize : 7,
 		baselineShift: "0pt",
 		position: Position.NORMAL
-	})
+	});
 
 	myDocument.paragraphStyles.add({
 		name: "runningHead",
@@ -128,7 +129,7 @@ function create_paragraph_styles(){
 		pointSize: baseFontSize,
 		leading: baseLeading,
 		noBreak: true
-	})
+	});
 
 	myDocument.paragraphStyles.add({
 		name: "Footnote",
@@ -139,8 +140,8 @@ function create_paragraph_styles(){
 		alignToBaseline:true,
 		gridAlignFirstLineOnly:true, // aligns first line to grid
 		justification: Justification.LEFT_JUSTIFIED
-	})
-		
+	});
+
 	myDocument.paragraphStyles.add({
 		name: "crossReference-frame1",
 		appliedFont: baseFont,
@@ -148,20 +149,20 @@ function create_paragraph_styles(){
 		pointSize: 7,
 		leading: baseLeading,
 		justification: Justification.AWAY_FROM_BINDING_SIDE,
-		hyphenation: false,	
-	})
+		hyphenation: false,
+	});
 
 	if(size == "large") {
 		myParagraphStyle = myDocument.paragraphStyles.item("crossReference-frame1");
 		myParagraphStyle.properties = {
-			justification: Justification.LEFT_ALIGN,				
-		}
+			justification: Justification.LEFT_ALIGN,
+		};
 	}
 
 	myDocument.paragraphStyles.add({
 		name: "init-crossReference-frame1",
 		basedOn: myDocument.paragraphStyles.item("crossReference-frame1"),
-	})
+	});
 
 	myDocument.paragraphStyles.add({
 		name: "crossReference-frame2",
@@ -171,12 +172,12 @@ function create_paragraph_styles(){
 		leading: baseLeading,
 		justification: Justification.RIGHT_ALIGN,
 		hyphenation: false,
-	})
+	});
 
 	myDocument.paragraphStyles.add({
 		name: "init-crossReference-frame2",
 		basedOn: myDocument.paragraphStyles.item("crossReference-frame2"),
-	})
+	});
 
 	myDocument.paragraphStyles.add({
 		name: "Verse",
@@ -206,8 +207,8 @@ function create_paragraph_styles(){
 			alignment: TabStopAlignment.LEFT_ALIGN,
 			leader: ""
 		}]
-	})
-		
+	});
+
 	myDocument.paragraphStyles.add({
 		name: "metricalVerse",
 		appliedFont: baseFont,
@@ -217,7 +218,7 @@ function create_paragraph_styles(){
 		alignToBaseline: true,
 		keepLinesTogether: true,
 		keepFirstLines: 2,
-		keepLastLines: 2,			
+		keepLastLines: 2,
 		leftIndent: "0",
 		spaceBefore: "5pt",
 		spaceAfter: "5pt",
@@ -239,8 +240,8 @@ function create_paragraph_styles(){
 			alignment: TabStopAlignment.LEFT_ALIGN,
 			leader: ""
 		}]
-	})
-	
+	});
+
 	myDocument.paragraphStyles.add({
 		name: "metricalVerseTwoColumn",
 		appliedFont: baseFont,
@@ -251,7 +252,7 @@ function create_paragraph_styles(){
 		alignToBaseline: true,
 		keepLinesTogether: true,
 		keepFirstLines: 2,
-		keepLastLines: 2,			
+		keepLastLines: 2,
 		leftIndent: leftIndentVal,
 		rightIndent: meta.gutter,
 		spaceBefore: "2mm",
@@ -278,8 +279,8 @@ function create_paragraph_styles(){
 			alignment: TabStopAlignment.LEFT_ALIGN,
 			leader: ""
 		}]
-	})
-	
+	});
+
 	myDocument.paragraphStyles.add({
 		name: "quoteVerse",
 		basedOn: myDocument.paragraphStyles.item("metricalVerse"),
@@ -297,8 +298,8 @@ function create_paragraph_styles(){
 			alignment: TabStopAlignment.RIGHT_ALIGN,
 			leader: ""
 		}]
-	})
-		
+	});
+
 	myDocument.paragraphStyles.add({
 		name: "Verse1",
 		basedOn: myDocument.paragraphStyles.item("Verse"),
@@ -306,14 +307,14 @@ function create_paragraph_styles(){
 		keepLinesTogether: true,
 		keepFirstLines: 2,
 		leftIndent: leftIndentVal,
-		rightIndent: rightIndentVal,			
+		rightIndent: rightIndentVal,
 		keepLastLines: 2,
 		keepWithNext: 0,
 		hyphenation: true,
 		spaceBefore: ".706 mm"
 
-	})
-		
+	});
+
 	myDocument.paragraphStyles.add({
 		name: "ChapterNum",
 		dropCapCharacters: 2,
@@ -323,8 +324,8 @@ function create_paragraph_styles(){
 		keepFirstLines: 1,
 		keepLastLines: 2,
 		keepWithNext: 0,
-	})
-	
+	});
+
 	myDocument.paragraphStyles.add({
 		name: "mVerse1",
 		appliedFont: baseFont,
@@ -333,7 +334,7 @@ function create_paragraph_styles(){
 		leading: baseLeading,
 		alignToBaseline: true,
 		keepLinesTogether: true,
-		keepFirstLines: 2,	
+		keepFirstLines: 2,
 		keepLastLines: 2,
 		keepWithNext: 0,
 		hyphenation: false,
@@ -365,11 +366,11 @@ function create_paragraph_styles(){
 	})
 
 	myDocument.paragraphStyles.add({
-		name: "Verse2",	
+		name: "Verse2",
 		basedOn: myDocument.paragraphStyles.item("Verse1"),
 		dropCapCharacters: 3
-	})
-	
+	});
+
 	myParagraphStyle = myDocument.paragraphStyles.add({
 		name: "mVerse2",
 		basedOn: myDocument.paragraphStyles.item("Verse2"),
@@ -395,13 +396,13 @@ function create_paragraph_styles(){
 			alignment: TabStopAlignment.LEFT_ALIGN,
 			leader: ""
 		}]
-	})	
-	
+	});
+
 	myDocument.paragraphStyles.add({
 		name: "Verse3",
 		basedOn: myDocument.paragraphStyles.item("Verse1"),
 		dropCapCharacters: 4
-	})
+	});
 
 	myDocument.paragraphStyles.add({
 		name: "bookName",
@@ -417,17 +418,17 @@ function create_paragraph_styles(){
 		keepAllLinesTogether: true,
 		hyphenation: false,
 		tracking:90
-	})
+	});
 
 	if (size == "large"){
-		myParagraphStyle = myDocument.paragraphStyles.item("bookName")
+		myParagraphStyle = myDocument.paragraphStyles.item("bookName");
 		myParagraphStyle.properties = {
 			pointSize: 10.9,
 			tracking:50,
 
-		}
+		};
 	}
-	
+
 	myDocument.paragraphStyles.add({
 		name: "intro",
 		appliedFont: baseFont,
@@ -452,8 +453,8 @@ function create_paragraph_styles(){
 			alignment: TabStopAlignment.LEFT_ALIGN,
 			leader: ""
 		}]
-	})
-	
+	});
+
 	myParagraphStyle = myDocument.paragraphStyles.add({
 		name: "intro-center",
 		basedOn: myDocument.paragraphStyles.item("intro"),
@@ -464,7 +465,6 @@ function create_paragraph_styles(){
 		leading: baseLeading,
 		leftIndent: meta.page_width/2 - meta.column_width/2- meta.left_margin - meta.gutter,
 		rightIndent: meta.page_width/2 - meta.column_width/2- meta.right_margin - meta.gutter,
-	})
+	});
 
-	
 }

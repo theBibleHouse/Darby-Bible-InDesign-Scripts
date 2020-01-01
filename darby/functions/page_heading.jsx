@@ -4,15 +4,17 @@ function add_running_head(myPage, aContents) {
 	aFrame.contents = aContents;
 	aFrame.parentStory.characters.item(0).appliedParagraphStyle = myDocument.paragraphStyles.item("Heading");
 
+	var myX1,myX2;
+
 	if (myPage.side == PageSideOptions.leftHand) {
-		var myX1 = meta.bottom_margin;
-		var myX2 = meta.page_width - meta.right_margin;
+		myX1 = meta.bottom_margin;
+		myX2 = meta.page_width - meta.right_margin;
 		aFrame.parentStory.characters.item(0).justification = Justification.leftAlign;
 		aFrame.textFramePreferences.autoSizingReferencePoint = AutoSizingReferenceEnum.LEFT_CENTER_POINT;
 
 	} else {
-		var myX1 = meta.right_margin;
-		var myX2 = meta.page_width - meta.bottom_margin
+		myX1 = meta.right_margin;
+		myX2 = meta.page_width - meta.bottom_margin;
 		aFrame.parentStory.characters.item(0).justification = Justification.rightAlign;
 		aFrame.textFramePreferences.autoSizingReferencePoint = AutoSizingReferenceEnum.RIGHT_CENTER_POINT;
 
@@ -21,12 +23,12 @@ function add_running_head(myPage, aContents) {
 		aFrame.geometricBounds = [meta.top_margin/1.2/1.2/1.2 , meta.page_width / 2 - 40, meta.top_margin/1.2/1.2, meta.page_width / 2 + 40];
 		aFrame.parentStory.characters.item(0).appliedParagraphStyle = myDocument.paragraphStyles.item("Heading Large");
 		aFrame.textFramePreferences.verticalJustification = VerticalJustification.BOTTOM_ALIGN;
-		aFrame.appliedObjectStyle = myDocument.objectStyles.item("Page Heading")
+		aFrame.appliedObjectStyle = myDocument.objectStyles.item("Page Heading");
 
 	} else {
 		aFrame.geometricBounds = [4, myX1, 9.5, myX2];
 		aFrame.textFramePreferences.autoSizingType = AutoSizingTypeEnum.WIDTH_ONLY;
-		aFrame.appliedObjectStyle = myDocument.objectStyles.item("Page Heading Small")
+		aFrame.appliedObjectStyle = myDocument.objectStyles.item("Page Heading Small");
 		aFrame.parentStory.characters.item(0).appliedParagraphStyle = myDocument.paragraphStyles.item("Heading Small");
 
 	}
@@ -39,27 +41,26 @@ function create_page_heading(firstPage, myFrame) {
 		return true;
 	}
 
-	myPage = myFrame.parentPage
+	myPage = myFrame.parentPage;
 
 	if (lastChapter == chapter) {
 		chapter_number = chapter;
 	}
 
 	else if (lastChapter == chapter - 1) {
-		chapter_number = lastChapter + ", " + chapter;		
-	} 
+		chapter_number = lastChapter + ", " + chapter;
+	}
 
 	else if (lastChapter !== chapter) {
 			chapter_number = lastChapter + "-" + chapter;
 	}
-	
+
 	add_running_head(myPage, String(book_name + " " + chapter_number));
 
 	// didnt want to erase old stuff yet
-	return true
+	return true;
 
-
-	
+	/*
 	var found = [],
 		styleBool = false
 	try {
@@ -131,4 +132,5 @@ function create_page_heading(firstPage, myFrame) {
 	if (myStyle !== "bookName" && firstPage != 1) {
 		add_running_head(myPage, String(book_name + " " + chapter_number));
 	}
+	*/
 }
