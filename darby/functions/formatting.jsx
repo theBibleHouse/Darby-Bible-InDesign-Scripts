@@ -360,19 +360,21 @@ function apply_verse_number_style(myFrame) {
 
 
 	// added this function to fix the spaceBefore when a metrical verse is followed by a normal verse.
-	app.findGrepPreferences = app.changeGrepPreferences = null;
-	app.findGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("metricalVerseTwoColumn");
-	myFinds = myFrame.parentStory.findGrep();
-	for(g=0; g<myFinds.length; g++)
-	{
-		q = myFinds[g].characters[-1];
+	try{
+		app.findGrepPreferences = app.changeGrepPreferences = null;
+		app.findGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("metricalVerseTwoColumn");
+		myFinds = myFrame.parentStory.findGrep();
+		for(g=0; g<myFinds.length; g++)
+		{
+			q = myFinds[g].characters[-1];
 
-		a = myFrame.parentStory.characters[q.index + 1].appliedParagraphStyle.name;
-		if(a == "Verse" || a == "Normal"){
-			myParagraph = myFrame.parentStory.characters[q.index + 1].paragraphs[0];
-			myParagraph.spaceBefore = "2mm";
+			a = myFrame.parentStory.characters[q.index + 1].appliedParagraphStyle.name;
+			if(a == "Verse" || a == "Normal"){
+				myParagraph = myFrame.parentStory.characters[q.index + 1].paragraphs[0];
+				myParagraph.spaceBefore = "2mm";
+			}
 		}
-	}
+	} catch(e){$.writeln(e);}
 }
 
 function twoColMetricalFix(myFrame){
@@ -383,7 +385,11 @@ function twoColMetricalFix(myFrame){
 
 		if((line.characters[-1].contents === ' ' || line.characters[-1].contents === SpecialCharacters.DISCRETIONARY_LINE_BREAK) && (line.characters[-1].appliedParagraphStyle.name === 'metricalVerseTwoColumn' || line.characters[-1].appliedParagraphStyle.name === 'mVerse1' || line.characters[-1].appliedParagraphStyle.name === 'mVerse2')){
 			// get number of tabs in front of line and add 1.
-			var lastTabs = line.contents.match(/^\t+\d*\t*/).toString().replace(/\d+/, "");
+			try{
+				var lastTabs = line.contents.match(/^\t+\d*\t*/).toString().replace(/\d+/, "");
+			}catch(e){
+				lastTabs = '\t';
+			}
 
 			line.characters[-1].contents = '\n' + lastTabs + '\t';
 		}
@@ -413,7 +419,12 @@ function metricalChapterNumFix(myFrame){
 		var line = myFrame.lines[x];
 		if((line.characters[-1].contents === ' ' || line.characters[-1].contents === SpecialCharacters.DISCRETIONARY_LINE_BREAK) && (line.characters[-1].appliedParagraphStyle.name === 'mVerse1' || line.characters[-1].appliedParagraphStyle.name === 'mVerse2')){
 			// get number of tabs in front of line and add 1.
-			var lastTabs = line.contents.match(/^\t+\d*\t*/).toString().replace(/\d+/, "");
+			// get number of tabs in front of line and add 1.
+			try{
+				var lastTabs = line.contents.match(/^\t+\d*\t*/).toString().replace(/\d+/, "");
+			}catch(e){
+				lastTabs = '\t';
+			}
 			line.characters[-1].contents = '\n' + lastTabs + '\t';
 		}
 	}
