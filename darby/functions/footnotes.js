@@ -88,7 +88,7 @@ function word_on_page_search_group(number, wordNum, word, myFrame, verseNum, ind
 		myGrep = number + "(?=(..)?" + word + ")";
 		app.findGrepPreferences.findWhat = myGrep;
 
-		 $.writeln(myGrep)
+		 //$.writeln(myGrep)
 
 		if(searchText){
 			foundItem = searchText.findGrep();
@@ -107,7 +107,7 @@ function word_on_page_search_group(number, wordNum, word, myFrame, verseNum, ind
 	myGrep = "^"+number+"\\s*(\\b\\w+?(-\\b\\w+?)?\\b[^`]+?){"+wordNum.toString() +"}(?=" + word + ")";
 	app.findGrepPreferences.findWhat = myGrep;
 
-	$.writeln(myGrep)
+	//$.writeln(myGrep)
 
 	if(searchText){
 		foundItem = searchText.findGrep();
@@ -125,7 +125,7 @@ function word_on_page_search_group(number, wordNum, word, myFrame, verseNum, ind
 	wordNum--;
 	myGrep = number + "[^`]+?(\\b\\w+?(-\\b\\w+?)?\\b[^`]+?){"+wordNum.toString() +"}(?=" + word + ")";
 	app.findGrepPreferences.findWhat = myGrep;
-	$.writeln(myGrep);
+	//$.writeln(myGrep);
 
 	if(searchText){
 		foundItem = searchText.findGrep();
@@ -177,17 +177,17 @@ function word_on_page(myFrame,verseNum,wordNum,word,nextVerseNum,indexOffset, ne
 	app.findGrepPreferences = app.changeGrepPreferences = null;
 	myGrep =  "\\<"+number+"(?=[^\\d])"; //"\\s"+number;
 	app.findGrepPreferences.findWhat = myGrep;
-	$.writeln(myGrep)
+	//$.writeln(myGrep)
 	// if we are searching the next frame then check previous frame for number.
 	if(nextFrameSearch == 1)
 	{
 		me = myFrame.previousTextFrame.findGrep()
-		$.writeln('previous frame')
+		//$.writeln('previous frame')
 	}
 	else {
 		me = myFrame.findGrep();
 	}
-	$.writeln(me.length)
+	//$.writeln(me.length)
 	// if nothing found then possible the verse number has gone from
 	// frame2 to frame1 during a "repagination" 🤮
 
@@ -197,7 +197,7 @@ function word_on_page(myFrame,verseNum,wordNum,word,nextVerseNum,indexOffset, ne
 		// if it is not, then return false
 		//$.writeln('special search = no # but check for word in frame ' + myFrame.name)
 		myGrep = nextVerseNum == false ? "[^\\d](?="+word+"[^\\d])" : "[^\\d](?="+word+"[^\\d]*"+nextVerseNum.toString()+")";
-		$.writeln(myGrep)
+		//$.writeln(myGrep)
 		app.findGrepPreferences.findWhat = myGrep;
 		foundItem = myFrame.findGrep();
 		//$.writeln(foundItem.length)
@@ -217,29 +217,29 @@ function word_on_page(myFrame,verseNum,wordNum,word,nextVerseNum,indexOffset, ne
 	var endIndex;
 
 	// if we are searching on the next frame, then we don't care if we go over the page.
-	$.writeln(nextFrameSearch)
-	$.writeln(me[me.length-1].contents)
+	//$.writeln(nextFrameSearch)
+	//$.writeln(me[me.length-1].contents)
 	// end index should be where the next verse starts.
 		// some verses are multi paragraph.
 		// do a grep from here to next number
 		myGrep = "[^\\d]+\\d";
-		$.writeln(myGrep);
+		//$.writeln(myGrep);
 		// search area is current number to end of next text frame.
 
 		searchArea = myFrame.parentStory.insertionPoints.itemByRange(startIndex, me[me.length-1].parentTextFrames[0].nextTextFrame.characters[-1].insertionPoints[-1].index).getElements()[0];
-		$.writeln(searchArea);
+		//$.writeln(searchArea);
 		app.findGrepPreferences.findWhat = myGrep;
 		foundItem = searchArea.findGrep();
 		endIndex = foundItem[0].insertionPoints[-1].index;
-		$.writeln(endIndex)
+		//$.writeln(endIndex)
 	//	endIndex = me[me.length-1].paragraphs[0].insertionPoints[-1].index;
 	if(nextFrameSearch !== 1){
 
 		endIndex = Math.min(endOfPage, me[me.length-1].paragraphs[0].insertionPoints[-1].index);
 	}
-	$.writeln(startIndex, endIndex, endOfPage)
+	//$.writeln(startIndex, endIndex, endOfPage)
 	var searchText = myFrame.parentStory.insertionPoints.itemByRange(startIndex,endIndex).getElements()[0];
-	$.writeln(searchText.contents)
+	//$.writeln(searchText.contents)
 
 	// try to find here in this text block using same search group....
 	var checkTwo = word_on_page_search_group(number, wordNum, word, myFrame, verseNum,indexOffset, searchText);
@@ -355,8 +355,26 @@ function add_footnotes(myFrame){
 
 				// verify that the word is still on the page.
 
-				var wordOnPage = myFindWordNum < 0 ? wordOnPage : timeit(word_on_page,[myFrame,myNumber,myFindWordNum,myFindWord[0],myNextNumber,indexOffset]);
+				var wordOnPage;
+				//$.writeln(myFindWordNum)
+				if (myFindWordNum <= 0) {
+					// this is for notes that are on the whole ch. typically psalms,
+					// or are on the first word of the vs
+					// get the verse to search
+					var currentInsertion = numbers[me].insertionPoints[0].index + indexOffset;
+					var nextInsertion = me+1 < numbers.length ? numbers[me+1].insertionPoints[0].index + indexOffset : myFrame.parentStory.insertionPoints[-1].index - indexOffset - tempIndexOffset;
+					var searchText = myFrame.parentStory.insertionPoints.itemByRange(currentInsertion,nextInsertion + tempIndexOffset).getElements()[0];
+					var myGrep = '';
+					app.changeGrepPreferences = app.findGrepPreferences = null;
 
+					myGrep = "\\d+\\s*";
+					app.findGrepPreferences.findWhat = myGrep;
+					foundItem = searchText.findGrep()
+					wordOnPage = foundItem[0].insertionPoints[-1];
+				}
+				else {
+					wordOnPage = timeit(word_on_page,[myFrame,myNumber,myFindWordNum,myFindWord[0],myNextNumber,indexOffset]);
+				}
 				//$.writeln('291 first word on page check: ' + wordOnPage.index)
 				// if there was a word found that was after the verse #, then it is then we assume safe?
 				// possibly I should be checking for the word # as well in case a word is repeated?

@@ -18,6 +18,8 @@ function create_paragraph_styles(){
 	}
 
 	var baseLeading = 8;
+	var tabStop = [7.9,10.1,12.3,14.5,16.7,18.9]
+
 
 	myDocument.paragraphStyles.add({
 		name: "Heading",
@@ -195,15 +197,15 @@ function create_paragraph_styles(){
 		hyphenateLadderLimit: 2,
 		hyphenWeight: 6,
 		tabList: [{
-			position: 7.9,
+			position: tabStop[0],
 			alignment: TabStopAlignment.LEFT_ALIGN,
 			leader: ""
 		}, {
-			position: 12.7,
+			position: tabStop[1],
 			alignment: TabStopAlignment.LEFT_ALIGN,
 			leader: ""
 		}, {
-			position: 17,
+			position: tabStop[2],
 			alignment: TabStopAlignment.LEFT_ALIGN,
 			leader: ""
 		}]
@@ -263,19 +265,27 @@ function create_paragraph_styles(){
 			alignment: TabStopAlignment.LEFT_ALIGN,
 			leader: ""
 		}, {
-			position: 7.9,
+			position: tabStop[0],
 			alignment: TabStopAlignment.LEFT_ALIGN,
 			leader: ""
 		}, {
-			position: 10.1,
+			position: tabStop[1],
 			alignment: TabStopAlignment.LEFT_ALIGN,
 			leader: ""
 		}, {
-			position: 12.7,
+			position: tabStop[2],
 			alignment: TabStopAlignment.LEFT_ALIGN,
 			leader: ""
 		}, {
-			position: 17,
+			position: tabStop[3],
+			alignment: TabStopAlignment.LEFT_ALIGN,
+			leader: ""
+		}, {
+			position: tabStop[4],
+			alignment: TabStopAlignment.LEFT_ALIGN,
+			leader: ""
+		}, {
+			position: tabStop[5],
 			alignment: TabStopAlignment.LEFT_ALIGN,
 			leader: ""
 		}]
@@ -347,19 +357,27 @@ function create_paragraph_styles(){
 			alignment: TabStopAlignment.LEFT_ALIGN,
 			leader: ""
 		}, {
-			position: 7.9,
+			position: tabStop[0],
 			alignment: TabStopAlignment.LEFT_ALIGN,
 			leader: ""
 		}, {
-			position: 10.1,
+			position: tabStop[1],
 			alignment: TabStopAlignment.LEFT_ALIGN,
 			leader: ""
 		}, {
-			position: 12.7,
+			position: tabStop[2],
 			alignment: TabStopAlignment.LEFT_ALIGN,
 			leader: ""
 		}, {
-			position: 17,
+			position: tabStop[3],
+			alignment: TabStopAlignment.LEFT_ALIGN,
+			leader: ""
+		}, {
+			position: tabStop[4],
+			alignment: TabStopAlignment.LEFT_ALIGN,
+			leader: ""
+		}, {
+			position: tabStop[5],
 			alignment: TabStopAlignment.LEFT_ALIGN,
 			leader: ""
 		}]

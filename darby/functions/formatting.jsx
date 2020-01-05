@@ -286,6 +286,8 @@ function apply_verse_number_style(myFrame) {
 	app.findGrepPreferences.appliedParagraphStyle !== myDocument.paragraphStyles.item("quoteVerse");
 	found = myFrame.parentStory.findGrep();
 
+//if(1==1){asdf;}
+
 	app.changeGrepPreferences.appliedCharacterStyle = myDocument.characterStyles.item("VerseNum");
 	app.changeGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("Verse");
 	//app.changeGrepPreferences.changeTo = ("$1").concat(String.fromCharCode(8198));
@@ -443,7 +445,7 @@ function apply_chapter_number_styles(myFrame) { // search text, paragraph style
 	app.findGrepPreferences.findWhat = "Chapter (\\d\\d)~b\\t";
 	app.changeGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("mVerse2");
 	app.changeGrepPreferences.appliedCharacterStyle = myDocument.characterStyles.item("ChapterNum");
-	app.changeGrepPreferences.changeTo = ("$1").concat(String.fromCharCode(0009));
+	app.changeGrepPreferences.changeTo = ("$1");//.concat(String.fromCharCode(0009));
 	myFrame.parentStory.changeGrep();
 
 	app.findGrepPreferences = app.changeGrepPreferences = null;
@@ -457,7 +459,7 @@ function apply_chapter_number_styles(myFrame) { // search text, paragraph style
 	app.findGrepPreferences.findWhat = "Chapter (\\d)~b\\t";
 	app.changeGrepPreferences.appliedParagraphStyle = myDocument.paragraphStyles.item("mVerse1");
 	app.changeGrepPreferences.appliedCharacterStyle = myDocument.characterStyles.item("ChapterNum");
-	app.changeGrepPreferences.changeTo = ("$1").concat(String.fromCharCode(0009));
+	app.changeGrepPreferences.changeTo = ("$1");//.concat(String.fromCharCode(0009));
 	myFrame.parentStory.changeGrep();
 
 	app.findGrepPreferences = app.changeGrepPreferences = null;

@@ -93,7 +93,21 @@ function dates_and_cross(myFrame, chapter, verse){
 
 		// get current baseline.
 
-		var x = (my_baseline - Math.round(cross_frame.insertionPoints[-1].baseline));
+		// if insertionPoint[-1.baseline is error, then we have "overflowed" the frame
+		// with a linebreak. somehow line breaks don't count as "overflow" property.
+		// and need to remove spaces in order to add new notes.
+		try{
+			var x = (my_baseline - Math.round(cross_frame.insertionPoints[-1].baseline));
+		} catch(e){
+			// $.writeln(e)
+			// $.writeln("in catch")
+				app.findGrepPreferences = null;
+				app.findGrepPreferences.findWhat = "~b~b";
+			 	found = cross_frame.findGrep();
+			 	found[found.length-1].insertionPoints[0].parentStory.characters[(found[found.length-1].insertionPoints[0].index)].remove();
+			 	var x = (my_baseline - Math.round(cross_frame.insertionPoints[-1].baseline));
+		}
+
 		var l = cross_frame.parentStory.appliedParagraphStyle.properties.leading*0.352778;
 		// add break char until enough are added to get to verse # that belongs to the cross ref.
 		x > 0 && cross_frame.contents += Array(Math.round(x/l + 1)).join(break_char);

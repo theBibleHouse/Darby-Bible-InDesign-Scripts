@@ -1,5 +1,9 @@
 
 var myDocument = app.activeDocument;
 
-var startindex = myDocument.selection[0].insertionPoints[0].index
-$.writeln(myDocument.selection[0].insertionPoints[0].index) // start index
+var la = myDocument.selection[0].parentTextFrames[0]
+
+var x = (la.insertionPoints[910].baseline);
+
+$.writeln(la.name)
+$.writeln(x)
