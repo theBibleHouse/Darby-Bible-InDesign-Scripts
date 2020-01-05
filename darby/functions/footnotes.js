@@ -220,18 +220,21 @@ function word_on_page(myFrame,verseNum,wordNum,word,nextVerseNum,indexOffset, ne
 	//$.writeln(nextFrameSearch)
 	//$.writeln(me[me.length-1].contents)
 	// end index should be where the next verse starts.
-		// some verses are multi paragraph.
-		// do a grep from here to next number
-		myGrep = "[^\\d]+\\d";
-		//$.writeln(myGrep);
-		// search area is current number to end of next text frame.
-
-		searchArea = myFrame.parentStory.insertionPoints.itemByRange(startIndex, me[me.length-1].parentTextFrames[0].nextTextFrame.characters[-1].insertionPoints[-1].index).getElements()[0];
-		//$.writeln(searchArea);
-		app.findGrepPreferences.findWhat = myGrep;
-		foundItem = searchArea.findGrep();
-		endIndex = foundItem[0].insertionPoints[-1].index;
-		//$.writeln(endIndex)
+	// some verses are multi paragraph.
+	// do a grep from here to next number
+	myGrep = "[^\\d]+\\d";
+	//$.writeln(myGrep);
+	// search area is current number to end of next text frame.
+	// if this is last frame and overflows we should add another frame first. 
+	if(me[me.length-1].parentTextFrames[0].overflows){
+		timeit(create_page,[me[me.length-1].parentTextFrames[0].parentPage]);
+	}
+	searchArea = myFrame.parentStory.insertionPoints.itemByRange(startIndex, me[me.length-1].parentTextFrames[0].nextTextFrame.characters[-1].insertionPoints[-1].index).getElements()[0];
+	//$.writeln(searchArea);
+	app.findGrepPreferences.findWhat = myGrep;
+	foundItem = searchArea.findGrep();
+	endIndex = foundItem[0].insertionPoints[-1].index;
+	//$.writeln(endIndex)
 	//	endIndex = me[me.length-1].paragraphs[0].insertionPoints[-1].index;
 	if(nextFrameSearch !== 1){
 
