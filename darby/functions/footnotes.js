@@ -20,7 +20,6 @@ function get_foot_array_val(array,chapter,verse){
 }
 
 
-var alpha = 'z';
 function alpha_increment()
 {
     alpha = alpha === 'z' ? 'a' : String.fromCharCode(alpha.charCodeAt()+1);
@@ -66,7 +65,7 @@ function verse_num_on_page(myFrame,item,indexOffset){
 }
 
 function word_on_page_search_group(number, wordNum, word, myFrame, verseNum, indexOffset, searchText) {
-
+//$.writeln(myFrame.contents)
 	/*
 
 		this is the grep used to find the word for the footnote.
@@ -103,7 +102,7 @@ function word_on_page_search_group(number, wordNum, word, myFrame, verseNum, ind
 		}
 	}
 
-	// for chapter numbers
+	// for verse numbers
 	myGrep = "^"+number+"\\s*(\\b\\w+?(-\\b\\w+?)?\\b[^`]+?){"+wordNum.toString() +"}(?=" + word + ")";
 	app.findGrepPreferences.findWhat = myGrep;
 
@@ -121,24 +120,31 @@ function word_on_page_search_group(number, wordNum, word, myFrame, verseNum, ind
 		return foundItem[0].insertionPoints[-1];
 	}
 
-	// for verse numbers
+	// for chapter numbers
 	wordNum--;
 	myGrep = number + "[^`]+?(\\b\\w+?(-\\b\\w+?)?\\b[^`]+?){"+wordNum.toString() +"}(?=" + word + ")";
 	app.findGrepPreferences.findWhat = myGrep;
 	//$.writeln(myGrep);
 
 	if(searchText){
+		//$.writeln("here")
 		foundItem = searchText.findGrep();
+		//$.writeln("after here")
 	}
 	else {
 		foundItem = myFrame.findGrep();
 	}
-
+	//$.writeln(searchText)
 	//$.writeln(myFrame.contents)
 	//$.writeln(foundItem.length)
-	if (foundItem.length > 0 && foundItem[0].insertionPoints[-1].index >= verseNum.insertionPoints[0].index + indexOffset && foundItem[0].insertionPoints[-1].index <= myFrame.insertionPoints[-1].index ){
-		return foundItem[0].insertionPoints[-1];
+	if(foundItem.length > 0){
+		for(l=0;l<foundItem.length;l++){
+			if (foundItem[l].insertionPoints[-1].index >= verseNum.insertionPoints[0].index + indexOffset && foundItem[l].insertionPoints[-1].index <= myFrame.insertionPoints[-1].index ){
+				return foundItem[l].insertionPoints[-1];
+			}
+		}
 	}
+
 
 	// reset wordNum
 	// wordNum++;
@@ -147,7 +153,7 @@ function word_on_page_search_group(number, wordNum, word, myFrame, verseNum, ind
 }
 
 function word_on_page(myFrame,verseNum,wordNum,word,nextVerseNum,indexOffset, nextFrameSearch){
-
+	//$.writeln(myFrame.name, verseNum.contents.toString(),wordNum,word)
 	/*
 		this function returns the insertion point where the note marker should go.
 
@@ -163,6 +169,7 @@ function word_on_page(myFrame,verseNum,wordNum,word,nextVerseNum,indexOffset, ne
     word = word.replace("'",".");
 
 	// if frame is emtpy return false
+	//$.writeln(myFrame.name)
 	if(myFrame.contents.length < 1){return false;}
 
 	var checkOne = word_on_page_search_group(number, wordNum, word, myFrame, verseNum,indexOffset);
@@ -207,7 +214,7 @@ function word_on_page(myFrame,verseNum,wordNum,word,nextVerseNum,indexOffset, ne
 		}
 
 		//$.writeln(myFrame.contents)
-		$.writeln('failed to find verse number or word on frame ' + myFrame.name)
+		//$.writeln('failed to find verse number or word on frame ' + myFrame.name)
 		return false;
 	}
 
@@ -229,8 +236,15 @@ function word_on_page(myFrame,verseNum,wordNum,word,nextVerseNum,indexOffset, ne
 	if(me[me.length-1].parentTextFrames[0].overflows){
 		timeit(create_page,[me[me.length-1].parentTextFrames[0].parentPage]);
 	}
-	searchArea = myFrame.parentStory.insertionPoints.itemByRange(startIndex, me[me.length-1].parentTextFrames[0].nextTextFrame.characters[-1].insertionPoints[-1].index).getElements()[0];
-	//$.writeln(searchArea);
+
+	// if this try fails it is because we are on the last page and there is no "next text frame".. so use current one.
+	try{
+		searchArea = myFrame.parentStory.insertionPoints.itemByRange(startIndex, me[me.length-1].parentTextFrames[0].nextTextFrame.characters[-1].insertionPoints[-1].index).getElements()[0];
+	} catch(e){
+		searchArea = myFrame.parentStory.insertionPoints.itemByRange(startIndex, me[me.length-1].parentTextFrames[0].characters[-1].insertionPoints[-1].index).getElements()[0];
+	}
+
+	//$.writeln(searchArea.contents);
 	app.findGrepPreferences.findWhat = myGrep;
 	foundItem = searchArea.findGrep();
 	endIndex = foundItem[0].insertionPoints[-1].index;
@@ -248,7 +262,7 @@ function word_on_page(myFrame,verseNum,wordNum,word,nextVerseNum,indexOffset, ne
 	var checkTwo = word_on_page_search_group(number, wordNum, word, myFrame, verseNum,indexOffset, searchText);
 	if(checkTwo !== false){ return checkTwo;}
 
-	$.writeln("word not on frame " + myFrame.name)
+	//$.writeln("word not on frame " + myFrame.name)
 	return false;
 }
 
@@ -371,20 +385,23 @@ function add_footnotes(myFrame){
 					app.changeGrepPreferences = app.findGrepPreferences = null;
 
 					myGrep = "\\d+\\s*";
+					//$.writeln(myGrep)
 					app.findGrepPreferences.findWhat = myGrep;
 					foundItem = searchText.findGrep()
 					wordOnPage = foundItem[0].insertionPoints[-1];
+					//$.writeln(wordOnPage.index)
 				}
 				else {
 					wordOnPage = timeit(word_on_page,[myFrame,myNumber,myFindWordNum,myFindWord[0],myNextNumber,indexOffset]);
 				}
-				//$.writeln('291 first word on page check: ' + wordOnPage.index)
+				//$.writeln(wordOnPage.index)
+				//$.writeln('381 first word on page check: ' + notechapter.toString() + ":" + noteverse.toString() + " note word: " + myFindWord[0].toString() + " word number: " + myFindWordNum.toString());
 				// if there was a word found that was after the verse #, then it is then we assume safe?
 				// possibly I should be checking for the word # as well in case a word is repeated?
 				// if the word was not found after the verse number, then...
 				//$.writeln(wordOnPage)
 				if (wordOnPage == false){
-
+					//$.writeln("false")
 					// the word was not found on the page.. it must be on the next page!
 					// if its found we need to add it to the next page.
 					// $.writeln('checking next page for potentional note location')
@@ -476,7 +493,7 @@ function add_footnotes(myFrame){
 
 				// add the marker to the verse.
 				// insertion point = wordOnPage.
-				$.writeln("457 note word location for " + notechapter.toString() + ":" + noteverse.toString() + " note word: " + myFindWord[0].toString() + " on word number: " + + myFindWordNum.toString());
+				//$.writeln("457 note word location for " + notechapter.toString() + ":" + noteverse.toString() + " note word: " + myFindWord[0].toString() + " on word number: " + + myFindWordNum.toString());
 				// $.writeln(wordOnPage)
 				// $.writeln(wordOnPage.index)
 		 		var startIndex = wordOnPage.index;
@@ -505,7 +522,12 @@ function add_footnotes(myFrame){
 				var q = 0;
 
 				verseOnPage = timeit(verse_num_on_page,[myFrame,myNumber,indexOffset]);
-				wordOnPage = timeit(word_on_page,[myFrame,myNumber,myFindWordNum,myFindWord[0],myNextNumber,indexOffset]);
+				try{
+					wordOnPage = timeit(word_on_page,[myFrame,myNumber,myFindWordNum,myFindWord[0],myNextNumber,indexOffset]);
+				} catch(e){
+					wordOnPage = true;
+				}
+
 				//$.writeln('416 check if verse and word are on page. ',verseOnPage, wordOnPage)
 				// reset text frame to the current page. we may have already added one on the next page
 				// and don't care about it yet..

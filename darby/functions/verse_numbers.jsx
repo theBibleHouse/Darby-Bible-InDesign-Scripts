@@ -66,8 +66,17 @@ function move_verse_numbers_to_frame(me) {
 
 		if(newBaseline == lastBaseline){
 			// use baseline shift on text. using a different obj style did not work.
-			lastNote.parentStory.baselineShift = '3pt';
-			newNote.parentStory.baselineShift = '-3pt';
+			//$.writeln(newNote.characters[0].appliedFont.name)
+			if(newNote.characters[0].appliedFont.name == 'Bible Stars	Regular'){
+				newNote.parentStory.baselineShift = '-1.2pt';
+				newNote.anchoredObjectSettings.anchorXoffset = ".44mm";
+			} else {
+				lastNote.parentStory.baselineShift = '-3pt';
+				newNote.parentStory.baselineShift = '3pt';
+
+			}
+
+
 		}
 	}
 	lastNote = newNote;

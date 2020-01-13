@@ -173,7 +173,7 @@ function dates_and_cross(myFrame, chapter, verse){
 		// get last line
 		if (myLines[-1].length > 3){
 			// most do not end in a ;, but just in case, swap it with a .
-			if(myLines[-1].characters[myLines[-1].characters.length-3].contents === ";" && myLines[k].characters[myLines[k].characters.length-2].contents === SpecialCharacters.SIXTH_SPACE){
+			if(myLines[-1].characters[myLines[-1].characters.length-3].contents === ";" && myLines[-1].characters[myLines[-1].characters.length-2].contents === SpecialCharacters.SIXTH_SPACE){
 		 		myLines[-1].characters[myLines[-1].characters.length-3].contents = ".";
 		 	}
 		 	else {

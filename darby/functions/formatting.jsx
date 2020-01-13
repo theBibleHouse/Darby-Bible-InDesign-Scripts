@@ -20,7 +20,10 @@ function format_text(myFrame) {
 	apply_verse_number_style(myFrame);
 	apply_chapter_number_styles(myFrame);
 
-		// don't hyphenate words with hyphen
+	// fixe quotes
+	find_and_replace(myFrame, "\"", "\"");
+
+	// don't hyphenate words with hyphen
 	// words before hyphen
 	noBreak(myFrame,"-\\K.+?\\w\\b");
 	// words after hyphen
@@ -31,6 +34,12 @@ function format_text(myFrame) {
 
 	// elipses
 	noBreak(myFrame,".\\.~k?\\s\\.~k?\\s\\.~k?\\s?[;,!,\\.]?");
+
+	// fix sos elispses
+	app.findGrepPreferences = app.changeGrepPreferences = null;
+	app.findGrepPreferences.findWhat = "^\\t\\t~8\\s~8\\s~8$";
+	app.changeGrepPreferences.spaceAfter = "2mm";
+	myFrame.parentStory.changeGrep();
 
 	app.findGrepPreferences = app.changeGrepPreferences = null;
 	app.findGrepPreferences.findWhat = "-";
@@ -514,14 +523,31 @@ function apply_chapter_number_styles(myFrame) { // search text, paragraph style
 	app.changeGrepPreferences.changeTo = ("$1");
 	myFrame.parentStory.changeGrep();
 
+	// there is no leading on verse1's any more. next code block added to add the space before back when needed.
 	// remove leading on verse 1's with a heading
-	app.findGrepPreferences = app.changeGrepPreferences = null;
+	/*app.findGrepPreferences = app.changeGrepPreferences = null;
 	app.findGrepPreferences.findWhat = "\\^.+?\\^~b\\K(\\d+)";
 	app.changeGrepPreferences.appliedCharacterStyle = myDocument.characterStyles.item("ChapterNum");
 	app.changeGrepPreferences.leading = 0;
 	app.changeGrepPreferences.spaceBefore = 0;
 	app.changeGrepPreferences.changeTo = ("$1");
 	myFrame.parentStory.changeGrep();
+*/
+	// go through ch's, if previous style is not a heading then add space before.
+	app.findGrepPreferences = app.changeGrepPreferences = null;
+	app.findGrepPreferences.findWhat = "^\\d";
+	app.findGrepPreferences.appliedCharacterStyle = myDocument.characterStyles.item("ChapterNum");
+	var chnums = myFrame.parentStory.findGrep();
+
+	if (chnums.length > 0){
+		for(var l=0;l<chnums.length;l++){
+			myindex = chnums[l].insertionPoints[0].index;
+			if(myFrame.parentStory.characters[myindex-1].appliedParagraphStyle.name != "SectionHeading"){
+				chnums[l].spaceBefore = '2mm';
+			}
+		}
+	}
+
 
 	// section section
 	/*
