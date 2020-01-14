@@ -10,11 +10,23 @@ function format_text(myFrame) {
 	// double space
 	find_and_replace(myFrame, "  +", " ");
 
-	// add section headings
+	// add section headings - there are non in pslams fyi
 	section_headings(myFrame);
 
 	special_breaks(myFrame);
 	italics(myFrame);
+
+	// psalm number
+	find_and_replace_w_p_style(myFrame,"(^0?\\s?PSALM\\s\\d+$)","$1","psalmNumber");
+	// psalm chapter number
+	find_and_replace_w_c_style(myFrame,"(?<=PSALM\\s)(\\d+)","$1","psalmChapter");
+	// psalm intro
+	find_and_replace_w_p_style(myFrame,"PSALM\\s\\d+$~b\\K([\\l|\\u].+?$)","$1","psalmIntro");
+	// psalm book number
+	find_and_replace_w_p_style(myFrame,"(^.+?BOOK$(?=~bPSALM))","$1","psalmBook");
+	// remove space between 0 and Psalm
+	find_and_replace(myFrame,"^0?\\s?(?=PSALM)","0");
+
 	// heading
 	apply_book_name_style(currentPage, myFrame);
 	apply_verse_number_style(myFrame);

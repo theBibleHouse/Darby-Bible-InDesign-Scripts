@@ -485,4 +485,36 @@ function create_paragraph_styles(){
 		rightIndent: meta.page_width/2 - meta.column_width/2- meta.right_margin - meta.gutter,
 	});
 
+	myParagraphStyle = myDocument.paragraphStyles.add({
+		name: "psalmNumber",
+		basedOn: myDocument.paragraphStyles.item("Verse"),
+		justification: Justification.CENTER_ALIGN,
+		appliedFont: baseFont,
+		fontStyle: "Normal",
+		leading: baseLeading,
+		spaceBefore: "2mm",
+		pointSize: '10.9pt',
+		keepWithNext:1,
+	});
+
+	myParagraphStyle = myDocument.paragraphStyles.add({
+		name: "psalmIntro",
+		basedOn: myDocument.paragraphStyles.item("Verse"),
+		justification: Justification.CENTER_ALIGN,
+		appliedFont: baseFont,
+		fontStyle: "Normal",
+		leading: baseLeading,
+		pointSize:7,
+		keepWithNext:1,
+	});
+
+	myParagraphStyle = myDocument.paragraphStyles.add({
+		name: "psalmBook",
+		basedOn: myDocument.paragraphStyles.item("Verse"),
+		justification: Justification.CENTER_ALIGN,
+		appliedFont: boldFont,
+		fontStyle: "Normal",
+		leading: baseLeading,
+	});
+
 }

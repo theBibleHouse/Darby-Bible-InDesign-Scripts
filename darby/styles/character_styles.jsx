@@ -76,4 +76,12 @@ function create_character_styles(){
 		appliedFont: boldFont,
 		fontStyle: "Italic"
 	});
+
+	myDocument.characterStyles.add({
+		name: "psalmChapter",
+	});
+
+	myDocument.characterStyles.add({
+		name: "psalmChapterProcessed",
+	});
 }

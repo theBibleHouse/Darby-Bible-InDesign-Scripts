@@ -5,8 +5,23 @@ function new_ref(myFrame){
 	var lastNote;
 	while(me){
 		me = timeit(find_number,[myFrame]);
+		// $.writeln(i)
+		if(me == false || me == '') {break;}
+		// 		$.writeln(me.contents.length)
+		// $.writeln(me.contents)
+		// $.writeln(me.appliedCharacterStyle.name)
 
-		if(me.appliedCharacterStyle == myDocument.characterStyles.item("ChapterNum")){
+		if(me.appliedCharacterStyle == myDocument.characterStyles.item("psalmChapter")){
+			my_baseline = Math.round(me.baseline - myDocument.gridPreferences.baselineDivision/3*2);
+			i === 0 && lastChapter = chapter;
+			chapter = me.contents;
+			verse = 0;
+			me.appliedCharacterStyle = myDocument.characterStyles.item("psalmChapterProcessed");
+			var nextChar = me.parentStory.insertionPoints[me.insertionPoints[-1].index + 1].characters[0];
+			//timeit(dates_and_cross,[myFrame, me, 1]);
+			//timeit(move_chapter_num_to_anchored_frames,[me]);
+			//metricalChapterNumFix(myFrame);
+		} else if(me.appliedCharacterStyle == myDocument.characterStyles.item("ChapterNum")){
 			//$.writeln("chapter")
 			// if this is the first number on the page then update last chapter for heading
 			my_baseline = Math.round(me.baseline - myDocument.gridPreferences.baselineDivision/3*2);
@@ -48,11 +63,20 @@ function find_number(myFrame){
 
 	app.changeGrepPreferences = app.findGrepPreferences = null;
 	app.findGrepPreferences.findWhat = "\\d+";
-
 	try{
 		var me = myFrame.findGrep();
-		return me.length < 1 ? false : me[0];
-	} catch(e){ return false; }
+	    if(me.length > 0){
+			for(var x=0;x<me.length; x++){
+				if(me[x].appliedCharacterStyle.name !== "psalmChapterProcessed"){
+					return me[x];
+				}
+			}
+			return false;
+		}
+		return false;
+	} catch(e){
+		return false;
+	}
 }
 
 function get_array_val(array,chapter,verse){

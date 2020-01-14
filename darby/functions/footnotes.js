@@ -129,13 +129,15 @@ function word_on_page_search_group(number, wordNum, word, myFrame, verseNum, ind
 	if(searchText){
 		//$.writeln("here")
 		foundItem = searchText.findGrep();
+	//	$.writeln(searchText.contents)
 		//$.writeln("after here")
 	}
 	else {
 		foundItem = myFrame.findGrep();
+	//	$.writeln(myFrame.contents)
 	}
-	//$.writeln(searchText)
-	//$.writeln(myFrame.contents)
+
+
 	//$.writeln(foundItem.length)
 	if(foundItem.length > 0){
 		for(l=0;l<foundItem.length;l++){
@@ -298,7 +300,7 @@ function add_footnotes(myFrame){
 	if(numbers.length > 0){
 		var arr = [];
 		for (var i = 0; i < numbers.length; i++) {
-			if(numbers[i].appliedCharacterStyle == myDocument.characterStyles.item("ChapterNum") || numbers[i].appliedCharacterStyle == myDocument.characterStyles.item('VerseNum') || numbers[i].appliedCharacterStyle == myDocument.characterStyles.item('VerseNumM') ){
+			if(numbers[i].appliedCharacterStyle == myDocument.characterStyles.item("ChapterNum") || numbers[i].appliedCharacterStyle == myDocument.characterStyles.item('VerseNum') || numbers[i].appliedCharacterStyle == myDocument.characterStyles.item('VerseNumM') || numbers[i].appliedCharacterStyle == myDocument.characterStyles.item("psalmChapter") ){
 			    arr.push(numbers[i]);
 			}
 		}
@@ -336,6 +338,10 @@ function add_footnotes(myFrame){
 		}
 
 		// set chapter and verse variables
+		if(myNumber.appliedCharacterStyle == myDocument.characterStyles.item("psalmChapter")){
+			notechapter = myNumber.contents;
+			noteverse = 0;
+		}
 		if(myNumber.appliedCharacterStyle == myDocument.characterStyles.item("ChapterNum")){
 
 			notechapter = myNumber.contents;
